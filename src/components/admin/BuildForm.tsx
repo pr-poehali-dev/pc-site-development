@@ -5,7 +5,7 @@ import { saveBuild, type ApiBuild, type BuildInput } from '@/lib/buildsApi';
 interface Props {
   build: ApiBuild | null;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: (isNew: boolean) => void;
 }
 
 const DRAFT_KEY = 'wf_build_draft';
@@ -131,7 +131,7 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
     try {
       await saveBuild(form);
       localStorage.removeItem(DRAFT_KEY);
-      onSaved();
+      onSaved(!build);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка сохранения');
     } finally {

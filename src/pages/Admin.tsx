@@ -20,6 +20,7 @@ const Admin = () => {
   const [editing, setEditing] = useState<ApiBuild | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [showAdminCreate, setShowAdminCreate] = useState(false);
+  const [toast, setToast] = useState('');
 
   const load = async () => {
     try {
@@ -63,10 +64,12 @@ const Admin = () => {
     setShowForm(true);
   };
 
-  const onSaved = async () => {
+  const onSaved = async (isNew: boolean) => {
     setShowForm(false);
     setEditing(null);
     await load();
+    setToast(isNew ? 'Сборка успешно добавлена!' : 'Изменения сохранены!');
+    setTimeout(() => setToast(''), 3500);
   };
 
   if (loading) {
@@ -79,6 +82,12 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-background grid-bg">
+      {toast && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-3 px-6 py-4 bg-green-600 text-white font-display uppercase text-sm tracking-wide clip-corner shadow-lg animate-fade-up">
+          <Icon name="CircleCheck" size={20} />
+          {toast}
+        </div>
+      )}
       <header className="border-b border-border bg-card/70 backdrop-blur sticky top-0 z-40">
         <div className="container flex items-center justify-between h-16">
           <h1 className="font-display text-xl uppercase tracking-wide">Админ-панель · White Friday PC</h1>
