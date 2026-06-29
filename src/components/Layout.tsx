@@ -28,12 +28,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
             />
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1 shrink-0">
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`px-3 py-2 font-display uppercase text-sm tracking-wider transition-colors ${
+                className={`px-2 lg:px-3 py-2 font-display uppercase text-xs lg:text-sm tracking-wider whitespace-nowrap transition-colors ${
                   location.pathname === item.to
                     ? 'text-white'
                     : 'text-black/70 hover:text-white'
@@ -101,17 +101,23 @@ const Layout = ({ children }: { children: ReactNode }) => {
             <p className="text-black/80 max-w-sm mt-2">
               Собираем игровые и рабочие ПК с душой. Каждая сборка — произведение инженерного искусства.
             </p>
-            <div className="flex items-center gap-3 mt-4">
-              <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="w-9 h-9 flex items-center justify-center bg-black/20 hover:bg-black text-white transition-colors clip-corner">
-                <Icon name="Users" size={18} />
-              </a>
-              <a href="https://t.me/White_Friday_PC" target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="w-9 h-9 flex items-center justify-center bg-black/20 hover:bg-black text-white transition-colors clip-corner">
-                <Icon name="Send" size={18} />
-              </a>
-              <a href="https://www.youtube.com/@WhiteFriday-PC" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="w-9 h-9 flex items-center justify-center bg-black/20 hover:bg-black text-white transition-colors clip-corner">
-                <Icon name="Youtube" size={18} />
-              </a>
-            </div>
+            <ul className="space-y-2 mt-4 text-black/80">
+              <li>
+                <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
+                  <Icon name="MessagesSquare" size={16} className="text-white shrink-0" /> Наш ВК
+                </a>
+              </li>
+              <li>
+                <a href="https://t.me/White_Friday_PC" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
+                  <Icon name="Send" size={16} className="text-white shrink-0" /> Наш Телеграмм канал
+                </a>
+              </li>
+              <li>
+                <a href="https://www.youtube.com/@WhiteFriday-PC" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
+                  <Icon name="Youtube" size={16} className="text-white shrink-0" /> Наш YouTube канал
+                </a>
+              </li>
+            </ul>
           </div>
           <div>
             <h4 className="font-display uppercase tracking-wider text-white mb-4">Навигация</h4>
@@ -140,21 +146,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
               </li>
               <li className="flex items-center gap-2">
                 <Icon name="MapPin" size={16} className="text-white shrink-0" /> Нагатинская ул., дом 28к2
-              </li>
-              <li>
-                <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
-                  <Icon name="Users" size={16} className="text-white shrink-0" /> vk.com/whitefriday_pc
-                </a>
-              </li>
-              <li>
-                <a href="https://t.me/White_Friday_PC" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
-                  <Icon name="Send" size={16} className="text-white shrink-0" /> t.me/White_Friday_PC
-                </a>
-              </li>
-              <li>
-                <a href="https://www.youtube.com/@WhiteFriday-PC" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
-                  <Icon name="Youtube" size={16} className="text-white shrink-0" /> youtube.com/@WhiteFriday-PC
-                </a>
               </li>
             </ul>
           </div>
