@@ -11,6 +11,10 @@ const BuildsCarousel = ({ builds }: { builds: Build[] }) => {
   const [selected, setSelected] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const stopAutoplay = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+  }, []);
+
   const resetAutoplay = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     if (!emblaApi) return;
@@ -34,7 +38,7 @@ const BuildsCarousel = ({ builds }: { builds: Build[] }) => {
   }, [emblaApi, resetAutoplay]);
 
   return (
-    <div className="relative">
+    <div className="relative" onMouseEnter={stopAutoplay} onMouseLeave={resetAutoplay}>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {builds.map((b) => (
