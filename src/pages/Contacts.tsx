@@ -2,9 +2,15 @@ import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 
 const contacts = [
-  { icon: 'Phone', title: 'Телефон', value: '8 800 555-35-35', sub: 'Звонок бесплатный' },
-  { icon: 'Mail', title: 'Почта', value: 'hello@neonrig.ru', sub: 'Ответим в течение часа' },
-  { icon: 'MapPin', title: 'Шоурум', value: 'Москва, ул. Кибер, 1', sub: 'Ежедневно 10:00 — 21:00' },
+  { icon: 'Phone', title: 'Телефон', value: '8 909 909-95-90', sub: 'Звоните в любое время', href: 'tel:+79099099590' },
+  { icon: 'Mail', title: 'Почта', value: 'whitefriday.pc@gmail.com', sub: 'Ответим в течение часа', href: 'mailto:whitefriday.pc@gmail.com' },
+  { icon: 'MapPin', title: 'Адрес', value: 'Нагатинская ул., дом 28к2', sub: 'Ежедневно 10:00 — 21:00' },
+];
+
+const socials = [
+  { icon: 'MessagesSquare', title: 'Наш ВК', href: 'https://vk.com/whitefriday_pc' },
+  { icon: 'Send', title: 'Наш Телеграмм канал', href: 'https://t.me/White_Friday_PC' },
+  { icon: 'Youtube', title: 'Наш YouTube канал', href: 'https://www.youtube.com/@WhiteFriday-PC' },
 ];
 
 const delivery = [
@@ -28,18 +34,40 @@ const Contacts = () => {
 
       <section className="container py-16 grid lg:grid-cols-2 gap-12">
         <div className="space-y-4">
-          {contacts.map((c, i) => (
-            <div key={i} className="flex items-center gap-4 p-6 bg-card border border-border clip-corner hover:border-primary/40 transition-colors animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
-              <div className="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary clip-corner shrink-0">
-                <Icon name={c.icon} size={24} />
-              </div>
-              <div>
-                <p className="text-muted-foreground text-sm uppercase tracking-wide font-display">{c.title}</p>
-                <p className="font-display text-xl">{c.value}</p>
-                <p className="text-muted-foreground text-sm">{c.sub}</p>
-              </div>
+          {contacts.map((c, i) => {
+            const inner = (
+              <>
+                <div className="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary clip-corner shrink-0">
+                  <Icon name={c.icon} size={24} />
+                </div>
+                <div>
+                  <p className="text-muted-foreground text-sm uppercase tracking-wide font-display">{c.title}</p>
+                  <p className="font-display text-xl break-all">{c.value}</p>
+                  <p className="text-muted-foreground text-sm">{c.sub}</p>
+                </div>
+              </>
+            );
+            const cls = "flex items-center gap-4 p-6 bg-card border border-border clip-corner hover:border-primary/40 transition-colors animate-fade-up";
+            return c.href ? (
+              <a key={i} href={c.href} className={cls} style={{ animationDelay: `${i * 0.1}s` }}>{inner}</a>
+            ) : (
+              <div key={i} className={cls} style={{ animationDelay: `${i * 0.1}s` }}>{inner}</div>
+            );
+          })}
+
+          <div className="p-6 bg-card border border-border clip-corner animate-fade-up" style={{ animationDelay: '0.3s' }}>
+            <p className="text-muted-foreground text-sm uppercase tracking-wide font-display mb-4">Мы в соцсетях</p>
+            <div className="space-y-3">
+              {socials.map((s, i) => (
+                <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-foreground hover:text-primary transition-colors">
+                  <div className="w-10 h-10 flex items-center justify-center bg-primary/10 text-primary clip-corner shrink-0">
+                    <Icon name={s.icon} size={20} />
+                  </div>
+                  <span className="font-display tracking-wide">{s.title}</span>
+                </a>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
 
         <form className="p-8 bg-card border border-border clip-corner space-y-5" onSubmit={(e) => e.preventDefault()}>
