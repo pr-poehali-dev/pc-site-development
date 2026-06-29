@@ -21,38 +21,6 @@ const Reviews = () => {
         </div>
       </section>
 
-      {/* Виджет отзывов Яндекс.Карт */}
-      <section className="container pt-12">
-        <div className="flex items-end justify-between mb-6">
-          <h2 className="font-display text-3xl md:text-4xl font-bold">
-            ОТЗЫВЫ НА <span className="text-primary text-glow-cyan">ЯНДЕКС.КАРТАХ</span>
-          </h2>
-          <a
-            href="https://yandex.ru/maps/org/white_friday_pc/86872558553/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-2 text-primary hover:gap-3 transition-all font-display uppercase tracking-wider text-sm"
-          >
-            Открыть на картах <Icon name="ExternalLink" size={16} />
-          </a>
-        </div>
-        <div className="bg-card border border-border clip-corner overflow-hidden animate-fade-up">
-          <iframe
-            title="Отзывы White Friday PC на Яндекс.Картах"
-            src="https://yandex.ru/maps-reviews-widget/86872558553?comments"
-            className="w-full h-[600px] border-0"
-          />
-          <a
-            href="https://yandex.ru/maps/org/white_friday_pc/86872558553/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block text-center text-muted-foreground text-xs py-2 hover:text-primary transition-colors"
-          >
-            White Friday PC на Яндекс Картах
-          </a>
-        </div>
-      </section>
-
       <section className="container py-12">
         <div className="grid grid-cols-3 gap-6 mb-16">
           {stats.map((s, i) => (
