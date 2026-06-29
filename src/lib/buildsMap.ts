@@ -23,6 +23,7 @@ export function apiToBuilds(list: ApiBuild[]): Build[] {
       motherboard: b.motherboard || '—',
       fans: b.fans || '',
       caseModel: b.case_model || '',
+      extras: b.extras || '',
     },
   }));
 }

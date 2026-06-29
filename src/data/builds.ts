@@ -16,6 +16,7 @@ export interface Build {
     motherboard?: string;
     fans?: string;
     caseModel?: string;
+    extras?: string;
   };
   fps: number;
 }
