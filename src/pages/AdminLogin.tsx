@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { login, needsSetup, setupAdmin } from '@/lib/buildsApi';
 
@@ -110,6 +110,13 @@ const AdminLogin = () => {
           {loading ? 'Подождите...' : isSetup ? 'Создать и войти' : 'Войти'}{' '}
           <Icon name={isSetup ? 'UserPlus' : 'LogIn'} size={18} />
         </button>
+
+        <Link
+          to="/"
+          className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors font-display uppercase tracking-wide"
+        >
+          <Icon name="ArrowLeft" size={16} /> На главную
+        </Link>
       </form>
     </div>
   );
