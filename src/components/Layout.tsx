@@ -20,7 +20,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <div className="container flex items-center justify-between h-20">
 
           {/* Логотип */}
-          <Link to="/" className="flex items-center group min-w-0">
+          <Link to="/" className="flex items-center group min-w-0 -ml-8 sm:-ml-12">
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/38d9c789-b717-45e5-8a7a-02221961fdbb.png"
               alt="White Friday PC"
@@ -89,12 +89,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <main className="flex-1">{children}</main>
 
       <footer className="border-t border-black/20 mt-20" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
-        <div className="container py-12 grid md:grid-cols-4 gap-8">
+        <div className="container py-6 grid md:grid-cols-4 gap-6">
           <div className="md:col-span-2">
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/38d9c789-b717-45e5-8a7a-02221961fdbb.png"
               alt="White Friday PC"
-              className="h-28 sm:h-36 w-auto object-contain mb-4 -ml-4"
+              className="h-20 w-auto object-contain mb-2 -ml-4"
             />
             <p className="text-black/80 max-w-sm">
               Собираем игровые и рабочие ПК с душой. Каждая сборка — произведение инженерного искусства.
@@ -121,7 +121,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-black/20 py-6 text-center text-black/70 text-sm">
+        <div className="border-t border-black/20 py-3 text-center text-black/70 text-sm">
           © 2026 White Friday PC. Все права защищены.
         </div>
       </footer>
