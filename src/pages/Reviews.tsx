@@ -52,6 +52,26 @@ const Reviews = () => {
             </div>
           ))}
         </div>
+
+        <div className="mt-16 p-8 md:p-10 bg-card border border-border clip-corner flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-up">
+          <div className="flex items-center gap-4 text-center md:text-left">
+            <div className="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary clip-corner shrink-0">
+              <Icon name="MapPin" size={24} />
+            </div>
+            <div>
+              <h3 className="font-display text-xl md:text-2xl uppercase tracking-wide">Больше отзывов</h3>
+              <p className="text-muted-foreground text-sm">Реальные оценки наших клиентов на Яндекс.Картах</p>
+            </div>
+          </div>
+          <a
+            href="https://yandex.ru/maps/org/white_friday_pc/86872558553/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan shrink-0"
+          >
+            Читать на Яндекс.Картах <Icon name="ExternalLink" size={18} />
+          </a>
+        </div>
       </section>
     </Layout>
   );
