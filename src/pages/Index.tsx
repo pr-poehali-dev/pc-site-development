@@ -38,10 +38,6 @@ const Index = () => {
         </div>
         <div className="relative container py-20 md:py-28 grid lg:grid-cols-2 gap-12 items-center">
           <div className="animate-fade-up">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 border border-primary/50 text-primary text-sm font-display uppercase tracking-widest mb-6">
-              <span className="w-2 h-2 bg-primary rounded-full animate-pulse-glow" />
-              Новое поколение 2026
-            </div>
             <h1 className="font-display text-5xl md:text-7xl font-bold leading-none mb-6">
               СОБЕРИ СВОЮ <span className="text-primary text-glow-cyan">МАШИНУ</span> <br />
               <span className="text-secondary text-glow-magenta">МЕЧТЫ</span>
