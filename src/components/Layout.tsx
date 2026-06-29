@@ -16,15 +16,16 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border">
+      <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-border" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
         <div className="container flex items-center justify-between h-16">
 
-          {/* Название */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <span className="font-display text-xl font-bold tracking-widest text-secondary">
-              WHITE<span className="text-primary">FRIDAY</span>
-              <span className="text-muted-foreground text-sm font-normal ml-2">PC</span>
-            </span>
+          {/* Логотип */}
+          <Link to="/" className="flex items-center group">
+            <img
+              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/38d9c789-b717-45e5-8a7a-02221961fdbb.png"
+              alt="White Friday PC"
+              className="h-12 w-auto object-contain"
+            />
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
@@ -34,8 +35,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 to={item.to}
                 className={`px-3 py-2 font-display uppercase text-sm tracking-wider transition-colors ${
                   location.pathname === item.to
-                    ? 'text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-white'
+                    : 'text-black/70 hover:text-white'
                 }`}
               >
                 {item.label}
@@ -46,26 +47,26 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <div className="flex items-center gap-3">
             <Link
               to="/contacts"
-              className="hidden md:flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan"
+              className="hidden md:flex items-center gap-2 px-5 py-2 bg-black text-white font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity"
             >
               <Icon name="MessageCircle" size={16} />
               Заказать
             </Link>
-            <button className="md:hidden text-foreground" onClick={() => setOpen(!open)}>
+            <button className="md:hidden text-white" onClick={() => setOpen(!open)}>
               <Icon name={open ? 'X' : 'Menu'} size={28} />
             </button>
           </div>
         </div>
 
         {open && (
-          <nav className="md:hidden border-t border-border bg-background/95 backdrop-blur-xl">
+          <nav className="md:hidden border-t border-black/20 backdrop-blur-xl" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
                 onClick={() => setOpen(false)}
-                className={`block px-6 py-4 font-display uppercase tracking-wider border-b border-border ${
-                  location.pathname === item.to ? 'text-primary' : 'text-muted-foreground'
+                className={`block px-6 py-4 font-display uppercase tracking-wider border-b border-black/20 ${
+                  location.pathname === item.to ? 'text-white' : 'text-black/70'
                 }`}
               >
                 {item.label}
@@ -75,7 +76,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               <Link
                 to="/contacts"
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner"
+                className="flex items-center justify-center gap-2 px-5 py-3 bg-black text-white font-display uppercase text-sm tracking-wider clip-corner"
               >
                 <Icon name="MessageCircle" size={16} />
                 Заказать
