@@ -36,10 +36,10 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
       </div>
       <div className="p-6">
         <h3 className={`font-display text-2xl font-bold mb-1 ${b.accent === 'cyan' ? 'text-primary' : 'text-secondary'}`}>{b.name}</h3>
-        <p className="text-muted-foreground text-sm mb-4">{b.tagline}</p>
+        <p className="text-muted-foreground text-sm mb-4 font-sans">{b.tagline}</p>
 
         {/* Краткий список */}
-        <ul className="space-y-2 mb-4 text-sm">
+        <ul className="space-y-2 mb-4 text-sm font-sans">
           <li className="flex items-center gap-2"><Icon name="Cpu" size={14} className="text-primary shrink-0" /> {b.specs.cpu}</li>
           <li className="flex items-center gap-2"><Icon name="MonitorPlay" size={14} className="text-primary shrink-0" /> {b.specs.gpu}</li>
           <li className="flex items-center gap-2"><Icon name="MemoryStick" size={14} className="text-primary shrink-0" /> {b.specs.ram}</li>
@@ -50,7 +50,7 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
         <div className={`overflow-hidden transition-all duration-300 ${open ? 'max-h-[600px] opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
           <div className="pt-2 border-t border-border">
             <p className="font-display uppercase text-xs tracking-wider text-muted-foreground mb-3">Полная конфигурация</p>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3 text-sm font-sans">
               {visible.map((s, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <Icon name={s.icon} size={14} className="text-primary shrink-0 mt-0.5" />
@@ -72,9 +72,14 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
           <Icon name={open ? 'ChevronUp' : 'ChevronDown'} size={16} />
         </button>
 
-        <div className="flex items-center justify-between">
-          <span className="font-display text-2xl font-bold">{fmt(b.price)}</span>
-          <Link to="/contacts" className="px-4 py-2 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <span className="font-display text-2xl font-bold block">{fmt(b.price)}</span>
+            <span className="text-muted-foreground text-[11px] font-sans leading-tight block max-w-[160px]">
+              Стоимость указана на момент сборки данной конфигурации
+            </span>
+          </div>
+          <Link to="/contacts" className="px-4 py-2 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity shrink-0 self-start">
             Заказать
           </Link>
         </div>

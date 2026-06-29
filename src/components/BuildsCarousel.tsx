@@ -58,32 +58,37 @@ const BuildsCarousel = ({ builds }: { builds: Build[] }) => {
                 {/* Текст справа */}
                 <div>
                   <h3 className="font-display text-2xl md:text-3xl font-bold text-secondary mb-1">{b.name}</h3>
-                  <p className="text-muted-foreground text-sm mb-4">{b.tagline}</p>
+                  <p className="text-muted-foreground text-sm mb-4 font-sans">{b.tagline}</p>
 
-                  <ul className="space-y-2 mb-5">
+                  <ul className="space-y-2 mb-5 font-sans">
                     <li className="flex items-center gap-2 text-sm">
                       <Icon name="Cpu" size={16} className="text-primary shrink-0" />
                       <span className="text-muted-foreground">Процессор:</span>
-                      <span className="font-display">{b.specs.cpu}</span>
+                      <span>{b.specs.cpu}</span>
                     </li>
                     <li className="flex items-center gap-2 text-sm">
                       <Icon name="MonitorPlay" size={16} className="text-primary shrink-0" />
                       <span className="text-muted-foreground">Видеокарта:</span>
-                      <span className="font-display">{b.specs.gpu}</span>
+                      <span>{b.specs.gpu}</span>
                     </li>
                     <li className="flex items-center gap-2 text-sm">
                       <Icon name="MemoryStick" size={16} className="text-primary shrink-0" />
                       <span className="text-muted-foreground">ОЗУ:</span>
-                      <span className="font-display">{b.specs.ram}</span>
+                      <span>{b.specs.ram}</span>
                     </li>
                     <li className="flex items-center gap-2 text-sm">
                       <Icon name="HardDrive" size={16} className="text-primary shrink-0" />
                       <span className="text-muted-foreground">Накопитель:</span>
-                      <span className="font-display">{b.specs.storage}</span>
+                      <span>{b.specs.storage}</span>
                     </li>
                   </ul>
 
-                  <p className="font-display text-xl md:text-2xl font-bold text-primary mb-4">{fmt(b.price)}</p>
+                  <div className="mb-4">
+                    <p className="font-display text-xl md:text-2xl font-bold text-primary">{fmt(b.price)}</p>
+                    <p className="text-muted-foreground text-[11px] font-sans leading-tight">
+                      Стоимость указана на момент сборки данной конфигурации
+                    </p>
+                  </div>
 
                   <div className="flex flex-wrap gap-3">
                     <Link to="/contacts" className="px-5 py-2.5 bg-primary text-primary-foreground font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
