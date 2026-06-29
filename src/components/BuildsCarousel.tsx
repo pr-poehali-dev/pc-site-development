@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
@@ -9,20 +9,29 @@ const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 const BuildsCarousel = ({ builds }: { builds: Build[] }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
   const [selected, setSelected] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const scrollTo = useCallback((i: number) => emblaApi && emblaApi.scrollTo(i), [emblaApi]);
-  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const resetAutoplay = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (!emblaApi) return;
+    timerRef.current = setInterval(() => emblaApi.scrollNext(), 9000);
+  }, [emblaApi]);
+
+  const scrollTo = useCallback((i: number) => { if (emblaApi) emblaApi.scrollTo(i); resetAutoplay(); }, [emblaApi, resetAutoplay]);
+  const scrollPrev = useCallback(() => { if (emblaApi) emblaApi.scrollPrev(); resetAutoplay(); }, [emblaApi, resetAutoplay]);
+  const scrollNext = useCallback(() => { if (emblaApi) emblaApi.scrollNext(); resetAutoplay(); }, [emblaApi, resetAutoplay]);
 
   useEffect(() => {
     if (!emblaApi) return;
     const onSelect = () => setSelected(emblaApi.selectedScrollSnap());
     emblaApi.on('select', onSelect);
     onSelect();
+    resetAutoplay();
     return () => {
       emblaApi.off('select', onSelect);
+      if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [emblaApi]);
+  }, [emblaApi, resetAutoplay]);
 
   return (
     <div className="relative">
