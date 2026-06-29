@@ -68,7 +68,7 @@ const Index = () => {
           {/* Правая колонка — карточка с метриками */}
           <div className="relative animate-fade-up flex flex-col gap-4" style={{ animationDelay: '0.2s' }}>
             <div className="absolute -inset-4 bg-gradient-to-tr from-primary/10 to-transparent blur-3xl pointer-events-none" />
-            <div className="relative p-8 bg-card border border-border clip-corner grid grid-cols-2 gap-6">
+            <div className="relative p-8 bg-card/40 backdrop-blur-sm border border-border clip-corner grid grid-cols-2 gap-6">
               {[
                 { value: '500+', label: 'Собранных ПК' },
                 { value: '3 года', label: 'Гарантия' },
