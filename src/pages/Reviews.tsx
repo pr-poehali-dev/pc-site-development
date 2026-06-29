@@ -16,8 +16,40 @@ const Reviews = () => {
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Отзывы</p>
           <h1 className="font-display text-5xl md:text-6xl font-bold">НАМ <span className="text-primary text-glow-cyan">ДОВЕРЯЮТ</span></h1>
           <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
-            Тысячи геймеров, дизайнеров и профессионалов уже выбрали NEONRIG.
+            Геймеры, дизайнеры и профессионалы уже выбрали White Friday PC.
           </p>
+        </div>
+      </section>
+
+      {/* Виджет отзывов Яндекс.Карт */}
+      <section className="container pt-12">
+        <div className="flex items-end justify-between mb-6">
+          <h2 className="font-display text-3xl md:text-4xl font-bold">
+            ОТЗЫВЫ НА <span className="text-primary text-glow-cyan">ЯНДЕКС.КАРТАХ</span>
+          </h2>
+          <a
+            href="https://yandex.ru/maps/org/white_friday_pc/86872558553/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:flex items-center gap-2 text-primary hover:gap-3 transition-all font-display uppercase tracking-wider text-sm"
+          >
+            Открыть на картах <Icon name="ExternalLink" size={16} />
+          </a>
+        </div>
+        <div className="bg-card border border-border clip-corner overflow-hidden animate-fade-up">
+          <iframe
+            title="Отзывы White Friday PC на Яндекс.Картах"
+            src="https://yandex.ru/maps-reviews-widget/86872558553?comments"
+            className="w-full h-[600px] border-0"
+          />
+          <a
+            href="https://yandex.ru/maps/org/white_friday_pc/86872558553/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-center text-muted-foreground text-xs py-2 hover:text-primary transition-colors"
+          >
+            White Friday PC на Яндекс Картах
+          </a>
         </div>
       </section>
 
