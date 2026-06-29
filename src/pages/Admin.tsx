@@ -7,6 +7,7 @@ import {
   verifyToken,
   fetchBuilds,
   deleteBuild,
+  updateSortOrder,
   clearToken,
   type ApiBuild,
 } from '@/lib/buildsApi';
@@ -47,6 +48,25 @@ const Admin = () => {
     if (!confirm('Удалить эту сборку?')) return;
     await deleteBuild(id);
     await load();
+  };
+
+  const handleMove = async (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= builds.length) return;
+    const reordered = [...builds];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    // Оптимистично обновляем UI
+    setBuilds(reordered);
+    try {
+      // Назначаем порядок по позиции в списке
+      await Promise.all(
+        reordered.map((b, i) =>
+          b.sort_order !== i ? updateSortOrder(b.id, i) : Promise.resolve()
+        )
+      );
+    } catch {
+      await load();
+    }
   };
 
   const handleLogout = () => {
@@ -112,7 +132,7 @@ const Admin = () => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="font-display text-2xl md:text-3xl font-bold">Конфигурации ({builds.length})</h2>
-            <p className="text-muted-foreground text-sm">Управление сборками на сайте</p>
+            <p className="text-muted-foreground text-sm">Стрелками меняйте порядок показа в каруселе</p>
           </div>
           <button
             onClick={openNew}
@@ -129,11 +149,29 @@ const Admin = () => {
           </div>
         ) : (
           <div className="space-y-3">
-            {builds.map((b) => (
+            {builds.map((b, index) => (
               <div
                 key={b.id}
                 className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 bg-card border border-border clip-corner"
               >
+                <div className="flex sm:flex-col gap-1 justify-center">
+                  <button
+                    onClick={() => handleMove(index, -1)}
+                    disabled={index === 0}
+                    aria-label="Поднять выше"
+                    className="w-8 h-8 flex items-center justify-center border border-border text-foreground clip-corner hover:border-primary/50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <Icon name="ChevronUp" size={16} />
+                  </button>
+                  <button
+                    onClick={() => handleMove(index, 1)}
+                    disabled={index === builds.length - 1}
+                    aria-label="Опустить ниже"
+                    className="w-8 h-8 flex items-center justify-center border border-border text-foreground clip-corner hover:border-primary/50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <Icon name="ChevronDown" size={16} />
+                  </button>
+                </div>
                 {b.image_url ? (
                   <img src={b.image_url} alt={b.name} className="w-full sm:w-28 h-20 object-cover clip-corner border border-border" />
                 ) : (
