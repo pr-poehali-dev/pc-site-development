@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '@/components/ui/icon';
 import { saveBuild, type ApiBuild, type BuildInput } from '@/lib/buildsApi';
 
@@ -7,6 +7,8 @@ interface Props {
   onClose: () => void;
   onSaved: () => void;
 }
+
+const DRAFT_KEY = 'wf_build_draft';
 
 const fields: { key: keyof BuildInput; label: string; icon: string }[] = [
   { key: 'cpu', label: 'Процессор', icon: 'Cpu' },
@@ -21,43 +23,102 @@ const fields: { key: keyof BuildInput; label: string; icon: string }[] = [
   { key: 'case_model', label: 'Модель корпуса', icon: 'Box' },
 ];
 
+const buildDefault = (build: ApiBuild | null): BuildInput => ({
+  id: build?.id,
+  name: build?.name || '',
+  tagline: build?.tagline || '',
+  price: build?.price || 0,
+  image_url: build?.image_url || '',
+  build_date: build?.build_date || '',
+  cpu: build?.cpu || '',
+  gpu: build?.gpu || '',
+  motherboard: build?.motherboard || '',
+  ram: build?.ram || '',
+  storage: build?.storage || '',
+  psu: build?.psu || '',
+  cpu_cooling: build?.cpu_cooling || '',
+  fans: build?.fans || '',
+  extras: build?.extras || '',
+  case_model: build?.case_model || '',
+  is_published: build?.is_published ?? true,
+});
+
 const BuildForm = ({ build, onClose, onSaved }: Props) => {
-  const [form, setForm] = useState<BuildInput>({
-    id: build?.id,
-    name: build?.name || '',
-    tagline: build?.tagline || '',
-    price: build?.price || 0,
-    image_url: build?.image_url || '',
-    build_date: build?.build_date || '',
-    cpu: build?.cpu || '',
-    gpu: build?.gpu || '',
-    motherboard: build?.motherboard || '',
-    ram: build?.ram || '',
-    storage: build?.storage || '',
-    psu: build?.psu || '',
-    cpu_cooling: build?.cpu_cooling || '',
-    fans: build?.fans || '',
-    extras: build?.extras || '',
-    case_model: build?.case_model || '',
-    is_published: build?.is_published ?? true,
+  const [form, setForm] = useState<BuildInput>(() => {
+    // Восстановление черновика только для новой сборки
+    if (!build) {
+      try {
+        const draft = localStorage.getItem(DRAFT_KEY);
+        if (draft) return JSON.parse(draft);
+      } catch {
+        /* ignore */
+      }
+    }
+    return buildDefault(build);
   });
-  const [imagePreview, setImagePreview] = useState(build?.image_url || '');
+  const [imagePreview, setImagePreview] = useState(form.image_url || build?.image_url || '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+
+  // Автосохранение черновика для новой сборки
+  useEffect(() => {
+    if (build) return;
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(form));
+    } catch {
+      /* ignore */
+    }
+  }, [form, build]);
 
   const set = (key: keyof BuildInput, value: string | number | boolean) =>
     setForm((f) => ({ ...f, [key]: value }));
 
-  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const maxSize = 1600;
+          let { width, height } = img;
+          if (width > maxSize || height > maxSize) {
+            if (width > height) {
+              height = Math.round((height * maxSize) / width);
+              width = maxSize;
+            } else {
+              width = Math.round((width * maxSize) / height);
+              height = maxSize;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Не удалось обработать изображение'));
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.onerror = () => reject(new Error('Не удалось загрузить изображение'));
+        img.src = reader.result as string;
+      };
+      reader.onerror = () => reject(new Error('Не удалось прочитать файл'));
+      reader.readAsDataURL(file);
+    });
+
+  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setForm((f) => ({ ...f, image_base64: result }));
-      setImagePreview(result);
-    };
-    reader.readAsDataURL(file);
+    try {
+      const compressed = await compressImage(file);
+      setForm((f) => ({ ...f, image_base64: compressed }));
+      setImagePreview(compressed);
+      setError('');
+    } catch {
+      setError('Не удалось обработать изображение. Попробуйте другое фото.');
+    }
   };
 
   const handleSave = async () => {
@@ -69,6 +130,7 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
     setSaving(true);
     try {
       await saveBuild(form);
+      localStorage.removeItem(DRAFT_KEY);
       onSaved();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка сохранения');
@@ -201,6 +263,18 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
             >
               Отмена
             </button>
+            {!build && (
+              <button
+                onClick={() => {
+                  localStorage.removeItem(DRAFT_KEY);
+                  setForm(buildDefault(null));
+                  setImagePreview('');
+                }}
+                className="px-7 py-3 border border-border text-muted-foreground font-display uppercase text-sm tracking-wider clip-corner hover:border-destructive/50 hover:text-destructive transition-colors"
+              >
+                Очистить
+              </button>
+            )}
           </div>
         </div>
       </div>
