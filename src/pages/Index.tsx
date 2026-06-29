@@ -55,25 +55,21 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Правая колонка — логотип с чипом + баннер */}
+          {/* Правая колонка — карточка с метриками */}
           <div className="relative animate-fade-up flex flex-col gap-4" style={{ animationDelay: '0.2s' }}>
             <div className="absolute -inset-4 bg-gradient-to-tr from-primary/10 to-transparent blur-3xl pointer-events-none" />
-            {/* Логотип с чипом — основной визуал */}
-            <div className="relative flex items-center justify-center p-6 bg-card border border-border clip-corner">
-              <img
-                src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/809fef97-d746-42c7-a1bf-f4bb8df4fd3e.jpg"
-                alt="White Friday PC"
-                className="w-full max-w-xs object-contain"
-              />
-            </div>
-            {/* Баннер с компонентами */}
-            <div className="relative overflow-hidden clip-corner border border-border">
-              <img
-                src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/876292cf-604d-444d-88bb-1c8fbcdb4a29.jpg"
-                alt="Комплектующие White Friday PC"
-                className="w-full h-44 object-cover object-top"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+            <div className="relative p-8 bg-card border border-border clip-corner grid grid-cols-2 gap-6">
+              {[
+                { value: '500+', label: 'Собранных ПК' },
+                { value: '3 года', label: 'Гарантия' },
+                { value: '48ч', label: 'Стресс-тест' },
+                { value: '24/7', label: 'Поддержка' },
+              ].map((m, i) => (
+                <div key={i} className="text-center">
+                  <p className="font-display text-4xl font-bold text-primary mb-1">{m.value}</p>
+                  <p className="text-muted-foreground text-sm uppercase tracking-wide">{m.label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -214,15 +210,7 @@ const Index = () => {
 
       {/* CTA */}
       <section className="container pb-20">
-        <div className="relative p-12 md:p-16 text-center bg-card border border-border clip-corner overflow-hidden">
-          {/* Логотип широкий как фоновый акцент */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-            <img
-              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a23410fd-5997-4866-a911-e0492eb4b0f6.png"
-              alt=""
-              className="w-full"
-            />
-          </div>
+        <div className="relative p-12 md:p-16 text-center bg-card border border-border clip-corner overflow-hidden grid-bg">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
           <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
           <Link to="/contacts" className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">

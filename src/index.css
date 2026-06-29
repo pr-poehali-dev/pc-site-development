@@ -4,36 +4,36 @@
 
 @layer base {
   :root {
-    /* Тёмный фон — глубокий антрацит */
-    --background: 0 0% 7%;
-    --foreground: 0 0% 95%;
+    /* Тёмный фон — глубокий чёрный/антрацит */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 96%;
 
-    --card: 0 0% 11%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 0 0% 11%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 96%;
 
-    /* primary — янтарный/оранжевый акцент */
-    --primary: 38 100% 55%;
-    --primary-foreground: 0 0% 5%;
+    /* primary — светло-серый акцент */
+    --primary: 0 0% 85%;
+    --primary-foreground: 0 0% 8%;
 
     /* secondary — чистый белый */
     --secondary: 0 0% 100%;
-    --secondary-foreground: 0 0% 5%;
+    --secondary-foreground: 0 0% 8%;
 
-    --muted: 0 0% 16%;
-    --muted-foreground: 0 0% 55%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 38 100% 55%;
-    --accent-foreground: 0 0% 5%;
+    --accent: 0 0% 75%;
+    --accent-foreground: 0 0% 8%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 38 100% 55%;
+    --border: 0 0% 24%;
+    --input: 0 0% 24%;
+    --ring: 0 0% 70%;
 
     --radius: 0.25rem;
 
@@ -55,11 +55,11 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: "Share Tech Mono", monospace;
+    font-family: "Courier New", Courier, monospace;
     background-image:
       radial-gradient(
         circle at 15% 20%,
-        hsl(38 100% 55% / 0.06),
+        hsl(0 0% 100% / 0.04),
         transparent 40%
       ),
       radial-gradient(circle at 85% 80%, hsl(0 0% 100% / 0.03), transparent 40%);
@@ -71,7 +71,7 @@
   h3,
   h4,
   .font-display {
-    font-family: "Oswald", sans-serif;
+    font-family: Consolas, "Courier New", monospace;
     letter-spacing: 0.02em;
   }
 }
@@ -79,22 +79,22 @@
 @layer utilities {
   .text-glow-cyan {
     text-shadow:
-      0 0 10px hsl(38 100% 55% / 0.8),
-      0 0 30px hsl(38 100% 55% / 0.4);
+      0 0 10px hsl(0 0% 100% / 0.5),
+      0 0 30px hsl(0 0% 100% / 0.25);
   }
   .text-glow-magenta {
     text-shadow:
-      0 0 10px hsl(0 0% 100% / 0.9),
-      0 0 20px hsl(0 0% 100% / 0.4);
+      0 0 10px hsl(0 0% 100% / 0.6),
+      0 0 20px hsl(0 0% 100% / 0.3);
   }
   .border-glow-cyan {
     box-shadow:
-      0 0 15px hsl(38 100% 55% / 0.35),
-      inset 0 0 15px hsl(38 100% 55% / 0.05);
+      0 0 15px hsl(0 0% 100% / 0.15),
+      inset 0 0 15px hsl(0 0% 100% / 0.04);
   }
   .border-glow-magenta {
     box-shadow:
-      0 0 15px hsl(0 0% 100% / 0.15),
+      0 0 15px hsl(0 0% 100% / 0.12),
       inset 0 0 10px hsl(0 0% 100% / 0.03);
   }
   .grid-bg {

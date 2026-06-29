@@ -19,14 +19,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border">
         <div className="container flex items-center justify-between h-16">
 
-          {/* Логотип */}
+          {/* Название */}
           <Link to="/" className="flex items-center gap-3 group">
-            <img
-              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/809fef97-d746-42c7-a1bf-f4bb8df4fd3e.jpg"
-              alt="White Friday PC"
-              className="h-9 w-9 object-contain rounded-sm"
-            />
-            <span className="font-display text-xl font-bold tracking-widest text-secondary hidden sm:block">
+            <span className="font-display text-xl font-bold tracking-widest text-secondary">
               WHITE<span className="text-primary">FRIDAY</span>
               <span className="text-muted-foreground text-sm font-normal ml-2">PC</span>
             </span>
@@ -95,12 +90,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <footer className="border-t border-border bg-card/50 mt-20">
         <div className="container py-12 grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            {/* Широкий логотип в подвале */}
-            <img
-              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a23410fd-5997-4866-a911-e0492eb4b0f6.png"
-              alt="White Friday PC"
-              className="h-10 object-contain mb-4"
-            />
+            <span className="font-display text-2xl font-bold tracking-widest text-secondary block mb-4">
+              WHITE<span className="text-primary">FRIDAY</span>
+              <span className="text-muted-foreground text-base font-normal ml-2">PC</span>
+            </span>
             <p className="text-muted-foreground max-w-sm">
               Собираем игровые и рабочие ПК с душой. Каждая сборка — произведение инженерного искусства.
             </p>
