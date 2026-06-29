@@ -10,12 +10,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
-const features = [
-  { icon: 'Wrench', title: 'Ручная сборка', text: 'Каждый ПК собирают инженеры с опытом 10+ лет' },
-  { icon: 'Zap', title: 'Тест 48 часов', text: 'Прогоняем стресс-тесты перед отправкой' },
-  { icon: 'Truck', title: 'Доставка по РФ', text: 'Бережная упаковка и страховка груза' },
-];
-
 const warranties = [
   { icon: 'ShieldCheck', title: '3 года гарантии', text: 'Полное покрытие всех комплектующих' },
   { icon: 'RefreshCw', title: 'Замена за 24ч', text: 'Привезём подменный ПК на время ремонта' },
@@ -82,21 +76,6 @@ const Index = () => {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* О НАС */}
-      <section className="container py-20">
-        <div className="grid md:grid-cols-3 gap-6">
-          {features.map((f, i) => (
-            <div key={i} className="p-8 bg-card border border-border clip-corner hover:border-primary/40 transition-colors animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
-              <div className="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary clip-corner mb-4">
-                <Icon name={f.icon} size={24} />
-              </div>
-              <h3 className="font-display text-xl uppercase tracking-wide mb-2">{f.title}</h3>
-              <p className="text-muted-foreground">{f.text}</p>
-            </div>
-          ))}
         </div>
       </section>
 
