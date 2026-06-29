@@ -32,7 +32,17 @@ const Index = () => {
     <Layout>
       {/* HERO */}
       <section className="relative grid-bg overflow-hidden">
-        <div className="container py-20 md:py-28 grid lg:grid-cols-2 gap-12 items-center">
+        {/* Фоновое фото сборки */}
+        <div className="absolute inset-0 pointer-events-none">
+          <img
+            src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/502be915-c80c-4f45-a30e-d7b83c85f1f5.jpg"
+            alt=""
+            className="w-full h-full object-cover blur-[2px] opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/40" />
+          <div className="absolute inset-0 bg-background/30" />
+        </div>
+        <div className="relative container py-20 md:py-28 grid lg:grid-cols-2 gap-12 items-center">
           <div className="animate-fade-up">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 border border-primary/50 text-primary text-sm font-display uppercase tracking-widest mb-6">
               <span className="w-2 h-2 bg-primary rounded-full animate-pulse-glow" />
