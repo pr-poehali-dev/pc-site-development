@@ -32,9 +32,9 @@ const Index = () => {
     <Layout>
       {/* HERO */}
       <section className="relative grid-bg overflow-hidden">
-        <div className="container py-24 md:py-32 grid lg:grid-cols-2 gap-12 items-center">
+        <div className="container py-20 md:py-28 grid lg:grid-cols-2 gap-12 items-center">
           <div className="animate-fade-up">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 border border-primary/40 text-primary text-sm font-display uppercase tracking-widest mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 border border-primary/50 text-primary text-sm font-display uppercase tracking-widest mb-6">
               <span className="w-2 h-2 bg-primary rounded-full animate-pulse-glow" />
               Новое поколение 2026
             </div>
@@ -43,24 +43,38 @@ const Index = () => {
               <span className="text-secondary text-glow-magenta">МЕЧТЫ</span>
             </h1>
             <p className="text-muted-foreground text-lg mb-8 max-w-md">
-              Игровые и рабочие станции с неоновой душой. Максимальная мощность, киберпанк-эстетика и гарантия 3 года.
+              Игровые и рабочие станции с характером. Максимальная мощность, строгий стиль и гарантия 3 года.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link to="/catalog" className="flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
                 Смотреть сборки <Icon name="ArrowRight" size={18} />
               </Link>
-              <Link to="/contacts" className="flex items-center gap-2 px-7 py-3.5 border border-secondary text-secondary font-display uppercase tracking-wider clip-corner hover:bg-secondary/10 transition-colors">
+              <Link to="/contacts" className="flex items-center gap-2 px-7 py-3.5 border border-border text-foreground font-display uppercase tracking-wider clip-corner hover:border-primary/50 transition-colors">
                 <Icon name="MessageCircle" size={18} /> Консультация
               </Link>
             </div>
           </div>
-          <div className="relative animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-secondary/20 blur-3xl" />
-            <img
-              src={builds[1].image}
-              alt="Игровой компьютер NEONRIG"
-              className="relative w-full clip-corner border border-primary/30 border-glow-cyan"
-            />
+
+          {/* Правая колонка — логотип с чипом + баннер */}
+          <div className="relative animate-fade-up flex flex-col gap-4" style={{ animationDelay: '0.2s' }}>
+            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/10 to-transparent blur-3xl pointer-events-none" />
+            {/* Логотип с чипом — основной визуал */}
+            <div className="relative flex items-center justify-center p-6 bg-card border border-border clip-corner">
+              <img
+                src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/809fef97-d746-42c7-a1bf-f4bb8df4fd3e.jpg"
+                alt="White Friday PC"
+                className="w-full max-w-xs object-contain"
+              />
+            </div>
+            {/* Баннер с компонентами */}
+            <div className="relative overflow-hidden clip-corner border border-border">
+              <img
+                src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/876292cf-604d-444d-88bb-1c8fbcdb4a29.jpg"
+                alt="Комплектующие White Friday PC"
+                className="w-full h-44 object-cover object-top"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+            </div>
           </div>
         </div>
       </section>
@@ -84,8 +98,8 @@ const Index = () => {
       <section className="container py-12">
         <div className="flex items-end justify-between mb-10">
           <div>
-            <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Наши сборки</p>
-            <h2 className="font-display text-4xl md:text-5xl font-bold">ВЫБЕРИ СВОЙ <span className="text-primary text-glow-cyan">RIG</span></h2>
+            <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">Наши сборки</p>
+            <h2 className="font-display text-4xl md:text-5xl font-bold">ВЫБЕРИ СВОЙ <span className="text-primary text-glow-cyan">ПК</span></h2>
           </div>
           <Link to="/catalog" className="hidden md:flex items-center gap-2 text-primary hover:gap-3 transition-all font-display uppercase tracking-wider">
             Все сборки <Icon name="ArrowRight" size={18} />
@@ -101,7 +115,7 @@ const Index = () => {
                 </div>
               </div>
               <div className="p-6">
-                <h3 className={`font-display text-2xl font-bold mb-1 ${b.accent === 'cyan' ? 'text-primary' : 'text-secondary'}`}>{b.name}</h3>
+                <h3 className="font-display text-2xl font-bold mb-1 text-secondary">{b.name}</h3>
                 <p className="text-muted-foreground text-sm mb-4">{b.tagline}</p>
                 <ul className="space-y-2 mb-6 text-sm">
                   <li className="flex items-center gap-2"><Icon name="Cpu" size={14} className="text-primary" /> {b.specs.cpu}</li>
@@ -109,7 +123,7 @@ const Index = () => {
                   <li className="flex items-center gap-2"><Icon name="MemoryStick" size={14} className="text-primary" /> {b.specs.ram}</li>
                 </ul>
                 <div className="flex items-center justify-between">
-                  <span className="font-display text-2xl font-bold">{fmt(b.price)}</span>
+                  <span className="font-display text-2xl font-bold text-primary">{fmt(b.price)}</span>
                   <Link to="/catalog" className="px-4 py-2 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity">
                     Подробнее
                   </Link>
@@ -123,7 +137,7 @@ const Index = () => {
       {/* ОТЗЫВЫ */}
       <section className="container py-20">
         <div className="text-center mb-12">
-          <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Отзывы</p>
+          <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">Отзывы</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold">НАМ <span className="text-secondary text-glow-magenta">ДОВЕРЯЮТ</span></h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
@@ -136,7 +150,7 @@ const Index = () => {
               </div>
               <p className="text-foreground mb-6">«{r.text}»</p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 flex items-center justify-center bg-secondary/20 text-secondary font-display font-bold clip-corner">
+                <div className="w-10 h-10 flex items-center justify-center bg-primary/10 text-primary font-display font-bold clip-corner">
                   {r.name[0]}
                 </div>
                 <div>
@@ -146,6 +160,11 @@ const Index = () => {
               </div>
             </div>
           ))}
+        </div>
+        <div className="text-center mt-8">
+          <Link to="/reviews" className="inline-flex items-center gap-2 text-primary font-display uppercase tracking-wider hover:gap-3 transition-all">
+            Все отзывы <Icon name="ArrowRight" size={16} />
+          </Link>
         </div>
       </section>
 
@@ -173,8 +192,8 @@ const Index = () => {
       {/* FAQ */}
       <section className="container py-20 max-w-3xl">
         <div className="text-center mb-12">
-          <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">FAQ</p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold">ЧАСТЫЕ <span className="text-secondary text-glow-magenta">ВОПРОСЫ</span></h2>
+          <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">FAQ</p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold">ЧАСТЫЕ <span className="text-primary text-glow-cyan">ВОПРОСЫ</span></h2>
         </div>
         <Accordion type="single" collapsible className="space-y-3">
           {homeFaq.map((item, i) => (
@@ -186,14 +205,27 @@ const Index = () => {
             </AccordionItem>
           ))}
         </Accordion>
+        <div className="text-center mt-8">
+          <Link to="/faq" className="inline-flex items-center gap-2 text-primary font-display uppercase tracking-wider hover:gap-3 transition-all">
+            Все вопросы <Icon name="ArrowRight" size={16} />
+          </Link>
+        </div>
       </section>
 
       {/* CTA */}
       <section className="container pb-20">
-        <div className="relative p-12 md:p-16 text-center bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 clip-corner overflow-hidden">
+        <div className="relative p-12 md:p-16 text-center bg-card border border-border clip-corner overflow-hidden">
+          {/* Логотип широкий как фоновый акцент */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+            <img
+              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a23410fd-5997-4866-a911-e0492eb4b0f6.png"
+              alt=""
+              className="w-full"
+            />
+          </div>
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
           <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
-          <Link to="/contacts" className="inline-flex items-center gap-2 px-8 py-4 bg-secondary text-secondary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-magenta">
+          <Link to="/contacts" className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
             Получить консультацию <Icon name="MessageCircle" size={18} />
           </Link>
         </div>

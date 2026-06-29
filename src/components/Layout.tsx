@@ -16,14 +16,19 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border">
         <div className="container flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 flex items-center justify-center bg-primary clip-corner border-glow-cyan">
-              <Icon name="Cpu" size={20} className="text-primary-foreground" />
-            </div>
-            <span className="font-display text-2xl font-bold tracking-widest text-primary text-glow-cyan">
-              NEON<span className="text-secondary text-glow-magenta">RIG</span>
+
+          {/* Логотип */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <img
+              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/809fef97-d746-42c7-a1bf-f4bb8df4fd3e.jpg"
+              alt="White Friday PC"
+              className="h-9 w-9 object-contain rounded-sm"
+            />
+            <span className="font-display text-xl font-bold tracking-widest text-secondary hidden sm:block">
+              WHITE<span className="text-primary">FRIDAY</span>
+              <span className="text-muted-foreground text-sm font-normal ml-2">PC</span>
             </span>
           </Link>
 
@@ -32,9 +37,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`px-4 py-2 font-display uppercase text-sm tracking-wider transition-colors ${
+                className={`px-3 py-2 font-display uppercase text-sm tracking-wider transition-colors ${
                   location.pathname === item.to
-                    ? 'text-primary text-glow-cyan'
+                    ? 'text-primary'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -44,7 +49,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link to="/contacts" className="hidden md:flex items-center gap-2 px-5 py-2 bg-secondary text-secondary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-magenta">
+            <Link
+              to="/contacts"
+              className="hidden md:flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan"
+            >
               <Icon name="MessageCircle" size={16} />
               Заказать
             </Link>
@@ -68,6 +76,16 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 {item.label}
               </Link>
             ))}
+            <div className="p-4">
+              <Link
+                to="/contacts"
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner"
+              >
+                <Icon name="MessageCircle" size={16} />
+                Заказать
+              </Link>
+            </div>
           </nav>
         )}
       </header>
@@ -77,11 +95,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <footer className="border-t border-border bg-card/50 mt-20">
         <div className="container py-12 grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <span className="font-display text-2xl font-bold tracking-widest text-primary">
-              NEON<span className="text-secondary">RIG</span>
-            </span>
-            <p className="text-muted-foreground mt-3 max-w-sm">
-              Собираем игровые и рабочие станции мечты. Каждая сборка — произведение инженерного искусства.
+            {/* Широкий логотип в подвале */}
+            <img
+              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a23410fd-5997-4866-a911-e0492eb4b0f6.png"
+              alt="White Friday PC"
+              className="h-10 object-contain mb-4"
+            />
+            <p className="text-muted-foreground max-w-sm">
+              Собираем игровые и рабочие ПК с душой. Каждая сборка — произведение инженерного искусства.
             </p>
           </div>
           <div>
@@ -100,13 +121,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
             <h4 className="font-display uppercase tracking-wider text-foreground mb-4">Контакты</h4>
             <ul className="space-y-2 text-muted-foreground">
               <li className="flex items-center gap-2"><Icon name="Phone" size={16} className="text-primary" /> 8 800 555-35-35</li>
-              <li className="flex items-center gap-2"><Icon name="Mail" size={16} className="text-primary" /> hello@neonrig.ru</li>
+              <li className="flex items-center gap-2"><Icon name="Mail" size={16} className="text-primary" /> hello@whitefriday.ru</li>
               <li className="flex items-center gap-2"><Icon name="MapPin" size={16} className="text-primary" /> Москва, ул. Кибер, 1</li>
             </ul>
           </div>
         </div>
         <div className="border-t border-border py-6 text-center text-muted-foreground text-sm">
-          © 2026 NEONRIG. Все права защищены.
+          © 2026 White Friday PC. Все права защищены.
         </div>
       </footer>
     </div>
