@@ -5,6 +5,7 @@ export interface Build {
   price: number;
   image: string;
   accent: 'cyan' | 'magenta';
+  buildDate?: string;
   specs: {
     cpu: string;
     gpu: string;
@@ -12,6 +13,9 @@ export interface Build {
     storage: string;
     cooling: string;
     psu: string;
+    motherboard?: string;
+    fans?: string;
+    caseModel?: string;
   };
   fps: number;
 }

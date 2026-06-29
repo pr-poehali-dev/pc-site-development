@@ -1,11 +1,24 @@
+import { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
-import { builds } from '@/data/builds';
+import { builds as fallbackBuilds, type Build } from '@/data/builds';
+import { fetchBuilds } from '@/lib/buildsApi';
+import { apiToBuilds } from '@/lib/buildsMap';
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 
 const Catalog = () => {
+  const [builds, setBuilds] = useState<Build[]>(fallbackBuilds);
+
+  useEffect(() => {
+    fetchBuilds()
+      .then((list) => {
+        if (list.length > 0) setBuilds(apiToBuilds(list));
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <Layout>
       <section className="grid-bg border-b border-border">
@@ -24,9 +37,12 @@ const Catalog = () => {
             <div key={b.id} className="group bg-card border border-border clip-corner overflow-hidden hover:border-primary/50 transition-all animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
               <div className="relative overflow-hidden">
                 <img src={b.image} alt={b.name} className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute top-4 right-4 px-3 py-1 bg-background/80 backdrop-blur border border-primary/40 text-primary text-sm font-display">
-                  {b.fps}+ FPS
-                </div>
+                {b.buildDate && (
+                  <div className="absolute top-4 right-4 px-3 py-1 bg-background/80 backdrop-blur border border-primary/40 text-primary text-sm font-display flex items-center gap-1">
+                    <Icon name="Calendar" size={13} />
+                    {new Date(b.buildDate).toLocaleDateString('ru-RU')}
+                  </div>
+                )}
               </div>
               <div className="p-6">
                 <h3 className={`font-display text-2xl font-bold mb-1 ${b.accent === 'cyan' ? 'text-primary' : 'text-secondary'}`}>{b.name}</h3>

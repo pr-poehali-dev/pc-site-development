@@ -1,7 +1,10 @@
+import { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
-import { builds } from '@/data/builds';
+import { builds as fallbackBuilds, type Build } from '@/data/builds';
+import { apiToBuilds } from '@/lib/buildsMap';
+import { fetchBuilds } from '@/lib/buildsApi';
 import BuildsCarousel from '@/components/BuildsCarousel';
 import { reviews, faq } from '@/data/content';
 import {
@@ -21,6 +24,16 @@ const homeReviews = reviews.slice(0, 3);
 const homeFaq = faq.slice(0, 4);
 
 const Index = () => {
+  const [builds, setBuilds] = useState<Build[]>(fallbackBuilds);
+
+  useEffect(() => {
+    fetchBuilds()
+      .then((list) => {
+        if (list.length > 0) setBuilds(apiToBuilds(list));
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <Layout>
       {/* HERO */}

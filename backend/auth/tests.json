@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS CORS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Login без данных возвращает ошибку",
+      "method": "POST",
+      "path": "/",
+      "body": {"action": "login"},
+      "expectedStatus": 400
+    },
+    {
+      "name": "Login с неверным паролем",
+      "method": "POST",
+      "path": "/",
+      "body": {"action": "login", "username": "nouser", "password": "wrong"},
+      "expectedStatus": 401
+    }
+  ]
+}
