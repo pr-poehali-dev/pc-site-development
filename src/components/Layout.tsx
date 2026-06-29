@@ -33,7 +33,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`px-2 lg:px-3 py-2 font-display uppercase text-xs lg:text-sm tracking-wider whitespace-nowrap transition-colors ${
+                className={`px-2 lg:px-3 py-2 font-display uppercase text-sm lg:text-base tracking-wider whitespace-nowrap transition-colors ${
                   location.pathname === item.to
                     ? 'text-white'
                     : 'text-black/70 hover:text-white'
