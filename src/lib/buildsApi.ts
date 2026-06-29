@@ -132,6 +132,18 @@ export async function updateSortOrder(id: number, sort_order: number) {
   }
 }
 
+export async function togglePublished(id: number, is_published: boolean) {
+  const res = await fetch(BUILDS_URL, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Auth-Token': getToken() || '' },
+    body: JSON.stringify({ id, is_published }),
+  });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || 'Ошибка изменения видимости');
+  }
+}
+
 export async function deleteBuild(id: number) {
   const res = await fetch(BUILDS_URL, {
     method: 'DELETE',

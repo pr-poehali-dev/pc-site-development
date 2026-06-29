@@ -8,6 +8,7 @@ import {
   fetchBuilds,
   deleteBuild,
   updateSortOrder,
+  togglePublished,
   clearToken,
   type ApiBuild,
 } from '@/lib/buildsApi';
@@ -48,6 +49,16 @@ const Admin = () => {
     if (!confirm('Удалить эту сборку?')) return;
     await deleteBuild(id);
     await load();
+  };
+
+  const handleToggle = async (b: ApiBuild) => {
+    const next = !b.is_published;
+    setBuilds((list) => list.map((x) => (x.id === b.id ? { ...x, is_published: next } : x)));
+    try {
+      await togglePublished(b.id, next);
+    } catch {
+      await load();
+    }
   };
 
   const handleMove = async (index: number, direction: -1 | 1) => {
@@ -197,6 +208,18 @@ const Admin = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
+                  <button
+                    onClick={() => handleToggle(b)}
+                    aria-label={b.is_published ? 'Скрыть с сайта' : 'Показать на сайте'}
+                    className={`flex items-center gap-1 px-4 py-2 border font-display uppercase text-xs tracking-wider clip-corner transition-colors ${
+                      b.is_published
+                        ? 'border-green-600/50 text-green-500 hover:border-green-500'
+                        : 'border-border text-muted-foreground hover:border-primary/50'
+                    }`}
+                  >
+                    <Icon name={b.is_published ? 'Eye' : 'EyeOff'} size={14} />
+                    <span className="hidden md:inline">{b.is_published ? 'Видна' : 'Скрыта'}</span>
+                  </button>
                   <button
                     onClick={() => openEdit(b)}
                     className="flex items-center gap-1 px-4 py-2 border border-border text-foreground font-display uppercase text-xs tracking-wider clip-corner hover:border-primary/50 transition-colors"
