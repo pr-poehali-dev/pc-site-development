@@ -29,69 +29,54 @@ const BuildsCarousel = ({ builds }: { builds: Build[] }) => {
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {builds.map((b) => (
-            <div key={b.id} className="flex-[0_0_100%] min-w-0">
-              <div className="grid lg:grid-cols-2 gap-8 items-center bg-card/60 backdrop-blur-sm border border-border clip-corner p-6 md:p-10">
-                {/* Левая часть — характеристики */}
-                <div className="order-2 lg:order-1">
-                  <div className="inline-block px-3 py-1 mb-4 bg-primary/10 border border-primary/40 text-primary text-sm font-display tracking-wide">
+            <div key={b.id} className="flex-[0_0_100%] min-w-0 px-1">
+              <div className="grid md:grid-cols-2 gap-6 items-center bg-card/60 backdrop-blur-sm border border-border clip-corner p-5 md:p-6">
+                {/* Фото слева */}
+                <div className="relative overflow-hidden clip-corner border border-border">
+                  <img src={b.image} alt={b.name} className="w-full h-52 md:h-72 object-cover" />
+                  <div className="absolute top-3 right-3 px-3 py-1 bg-background/80 backdrop-blur border border-primary/40 text-primary text-xs font-display tracking-wide">
                     {b.fps}+ FPS
-                  </div>
-                  <h3 className="font-display text-3xl md:text-4xl font-bold text-secondary mb-2">{b.name}</h3>
-                  <p className="text-muted-foreground mb-6">{b.tagline}</p>
-
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-center gap-3">
-                      <div className="w-9 h-9 flex items-center justify-center bg-primary/10 text-primary clip-corner shrink-0">
-                        <Icon name="Cpu" size={18} />
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs uppercase tracking-wide">Процессор</p>
-                        <p className="font-display">{b.specs.cpu}</p>
-                      </div>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <div className="w-9 h-9 flex items-center justify-center bg-primary/10 text-primary clip-corner shrink-0">
-                        <Icon name="MonitorPlay" size={18} />
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs uppercase tracking-wide">Видеокарта</p>
-                        <p className="font-display">{b.specs.gpu}</p>
-                      </div>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <div className="w-9 h-9 flex items-center justify-center bg-primary/10 text-primary clip-corner shrink-0">
-                        <Icon name="MemoryStick" size={18} />
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs uppercase tracking-wide">Оперативная память</p>
-                        <p className="font-display">{b.specs.ram}</p>
-                      </div>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <div className="w-9 h-9 flex items-center justify-center bg-primary/10 text-primary clip-corner shrink-0">
-                        <Icon name="HardDrive" size={18} />
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs uppercase tracking-wide">Накопитель</p>
-                        <p className="font-display">{b.specs.storage}</p>
-                      </div>
-                    </li>
-                  </ul>
-
-                  <div className="flex flex-wrap items-center gap-4">
-                    <span className="font-display text-2xl md:text-3xl font-bold text-primary">{fmt(b.price)}</span>
-                    <Link to="/contacts" className="px-6 py-3 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
-                      Нужен этот вариант
-                    </Link>
-                    <Link to="/contacts" className="px-6 py-3 border border-border text-foreground font-display uppercase text-sm tracking-wider clip-corner hover:border-primary/50 transition-colors">
-                      Другой вариант
-                    </Link>
                   </div>
                 </div>
 
-                {/* Правая часть — фото */}
-                <div className="order-1 lg:order-2 relative overflow-hidden clip-corner border border-border">
-                  <img src={b.image} alt={b.name} className="w-full h-64 md:h-96 object-cover" />
+                {/* Текст справа */}
+                <div>
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-secondary mb-1">{b.name}</h3>
+                  <p className="text-muted-foreground text-sm mb-4">{b.tagline}</p>
+
+                  <ul className="space-y-2 mb-5">
+                    <li className="flex items-center gap-2 text-sm">
+                      <Icon name="Cpu" size={16} className="text-primary shrink-0" />
+                      <span className="text-muted-foreground">Процессор:</span>
+                      <span className="font-display">{b.specs.cpu}</span>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Icon name="MonitorPlay" size={16} className="text-primary shrink-0" />
+                      <span className="text-muted-foreground">Видеокарта:</span>
+                      <span className="font-display">{b.specs.gpu}</span>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Icon name="MemoryStick" size={16} className="text-primary shrink-0" />
+                      <span className="text-muted-foreground">ОЗУ:</span>
+                      <span className="font-display">{b.specs.ram}</span>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <Icon name="HardDrive" size={16} className="text-primary shrink-0" />
+                      <span className="text-muted-foreground">Накопитель:</span>
+                      <span className="font-display">{b.specs.storage}</span>
+                    </li>
+                  </ul>
+
+                  <p className="font-display text-xl md:text-2xl font-bold text-primary mb-4">{fmt(b.price)}</p>
+
+                  <div className="flex flex-wrap gap-3">
+                    <Link to="/contacts" className="px-5 py-2.5 bg-primary text-primary-foreground font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
+                      Нужен этот вариант
+                    </Link>
+                    <Link to="/contacts" className="px-5 py-2.5 border border-border text-foreground font-display uppercase text-xs tracking-wider clip-corner hover:border-primary/50 transition-colors">
+                      Другой вариант
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
