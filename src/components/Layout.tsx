@@ -17,14 +17,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-border" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
-        <div className="container flex items-center justify-between h-16">
+        <div className="container flex items-center justify-between h-24">
 
           {/* Логотип */}
           <Link to="/" className="flex items-center group">
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/38d9c789-b717-45e5-8a7a-02221961fdbb.png"
               alt="White Friday PC"
-              className="h-12 w-auto object-contain"
+              className="h-20 w-auto object-contain"
             />
           </Link>
 
@@ -88,23 +88,24 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
       <main className="flex-1">{children}</main>
 
-      <footer className="border-t border-border bg-card/50 mt-20">
+      <footer className="border-t border-black/20 mt-20" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
         <div className="container py-12 grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <span className="font-display text-2xl font-bold tracking-widest text-secondary block mb-4">
-              WHITE<span className="text-primary">FRIDAY</span>
-              <span className="text-muted-foreground text-base font-normal ml-2">PC</span>
-            </span>
-            <p className="text-muted-foreground max-w-sm">
+            <img
+              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/38d9c789-b717-45e5-8a7a-02221961fdbb.png"
+              alt="White Friday PC"
+              className="h-16 w-auto object-contain mb-4"
+            />
+            <p className="text-black/80 max-w-sm">
               Собираем игровые и рабочие ПК с душой. Каждая сборка — произведение инженерного искусства.
             </p>
           </div>
           <div>
-            <h4 className="font-display uppercase tracking-wider text-foreground mb-4">Навигация</h4>
+            <h4 className="font-display uppercase tracking-wider text-white mb-4">Навигация</h4>
             <ul className="space-y-2">
               {navItems.map((item) => (
                 <li key={item.to}>
-                  <Link to={item.to} className="text-muted-foreground hover:text-primary transition-colors">
+                  <Link to={item.to} className="text-black/80 hover:text-white transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -112,15 +113,15 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </ul>
           </div>
           <div>
-            <h4 className="font-display uppercase tracking-wider text-foreground mb-4">Контакты</h4>
-            <ul className="space-y-2 text-muted-foreground">
-              <li className="flex items-center gap-2"><Icon name="Phone" size={16} className="text-primary" /> 8 800 555-35-35</li>
-              <li className="flex items-center gap-2"><Icon name="Mail" size={16} className="text-primary" /> hello@whitefriday.ru</li>
-              <li className="flex items-center gap-2"><Icon name="MapPin" size={16} className="text-primary" /> Москва, ул. Кибер, 1</li>
+            <h4 className="font-display uppercase tracking-wider text-white mb-4">Контакты</h4>
+            <ul className="space-y-2 text-black/80">
+              <li className="flex items-center gap-2"><Icon name="Phone" size={16} className="text-white" /> 8 800 555-35-35</li>
+              <li className="flex items-center gap-2"><Icon name="Mail" size={16} className="text-white" /> hello@whitefriday.ru</li>
+              <li className="flex items-center gap-2"><Icon name="MapPin" size={16} className="text-white" /> Москва, ул. Кибер, 1</li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-border py-6 text-center text-muted-foreground text-sm">
+        <div className="border-t border-black/20 py-6 text-center text-black/70 text-sm">
           © 2026 White Friday PC. Все права защищены.
         </div>
       </footer>
