@@ -17,14 +17,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-border" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
-        <div className="container flex items-center justify-between h-24">
+        <div className="container flex items-center justify-between h-auto py-3">
 
           {/* Логотип */}
           <Link to="/" className="flex items-center group">
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/38d9c789-b717-45e5-8a7a-02221961fdbb.png"
               alt="White Friday PC"
-              className="h-20 w-auto object-contain"
+              className="h-[200px] w-auto object-contain"
             />
           </Link>
 
@@ -94,7 +94,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/38d9c789-b717-45e5-8a7a-02221961fdbb.png"
               alt="White Friday PC"
-              className="h-16 w-auto object-contain mb-4"
+              className="h-40 w-auto object-contain mb-4"
             />
             <p className="text-black/80 max-w-sm">
               Собираем игровые и рабочие ПК с душой. Каждая сборка — произведение инженерного искусства.
