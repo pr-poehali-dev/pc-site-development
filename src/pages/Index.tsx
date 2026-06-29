@@ -2,6 +2,7 @@ import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
 import { builds } from '@/data/builds';
+import { reviews, faq } from '@/data/content';
 import {
   Accordion,
   AccordionContent,
@@ -15,24 +16,14 @@ const features = [
   { icon: 'Truck', title: 'Доставка по РФ', text: 'Бережная упаковка и страховка груза' },
 ];
 
-const reviews = [
-  { name: 'Алексей М.', role: 'Стример', text: 'NEON PRO тянет всё на ультрах и в стрим одновременно. Зверь!', rating: 5 },
-  { name: 'Дарья К.', role: 'Дизайнер 3D', text: 'TITAN X рендерит сцены в 3 раза быстрее старого ПК. Окупился.', rating: 5 },
-  { name: 'Игорь В.', role: 'Геймер', text: 'Собрали за день, всё работает идеально. Подсветка просто космос.', rating: 5 },
-];
-
 const warranties = [
   { icon: 'ShieldCheck', title: '3 года гарантии', text: 'Полное покрытие всех комплектующих' },
   { icon: 'RefreshCw', title: 'Замена за 24ч', text: 'Привезём подменный ПК на время ремонта' },
   { icon: 'Headphones', title: 'Поддержка 24/7', text: 'Живые инженеры на связи круглосуточно' },
 ];
 
-const faq = [
-  { q: 'Можно ли изменить комплектацию сборки?', a: 'Да, любую сборку можно кастомизировать под ваши задачи и бюджет. Напишите нам — подберём оптимальный вариант.' },
-  { q: 'Сколько занимает сборка и доставка?', a: 'Сборка и тестирование — 1-2 дня. Доставка по Москве — на следующий день, по России — 2-7 дней.' },
-  { q: 'Есть ли рассрочка?', a: 'Да, доступна рассрочка 0% до 24 месяцев от банков-партнёров.' },
-  { q: 'Что входит в гарантию?', a: 'Полное покрытие всех комплектующих 3 года, бесплатная диагностика и подменный ПК на время ремонта.' },
-];
+const homeReviews = reviews.slice(0, 3);
+const homeFaq = faq.slice(0, 4);
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 
@@ -58,8 +49,8 @@ const Index = () => {
               <Link to="/catalog" className="flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
                 Смотреть сборки <Icon name="ArrowRight" size={18} />
               </Link>
-              <Link to="/compare" className="flex items-center gap-2 px-7 py-3.5 border border-secondary text-secondary font-display uppercase tracking-wider clip-corner hover:bg-secondary/10 transition-colors">
-                <Icon name="GitCompare" size={18} /> Сравнить
+              <Link to="/contacts" className="flex items-center gap-2 px-7 py-3.5 border border-secondary text-secondary font-display uppercase tracking-wider clip-corner hover:bg-secondary/10 transition-colors">
+                <Icon name="MessageCircle" size={18} /> Консультация
               </Link>
             </div>
           </div>
@@ -119,9 +110,9 @@ const Index = () => {
                 </ul>
                 <div className="flex items-center justify-between">
                   <span className="font-display text-2xl font-bold">{fmt(b.price)}</span>
-                  <button className="px-4 py-2 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity">
-                    В корзину
-                  </button>
+                  <Link to="/catalog" className="px-4 py-2 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity">
+                    Подробнее
+                  </Link>
                 </div>
               </div>
             </div>
@@ -136,7 +127,7 @@ const Index = () => {
           <h2 className="font-display text-4xl md:text-5xl font-bold">НАМ <span className="text-secondary text-glow-magenta">ДОВЕРЯЮТ</span></h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
-          {reviews.map((r, i) => (
+          {homeReviews.map((r, i) => (
             <div key={i} className="p-8 bg-card border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
               <div className="flex gap-1 mb-4">
                 {Array.from({ length: r.rating }).map((_, j) => (
@@ -186,7 +177,7 @@ const Index = () => {
           <h2 className="font-display text-4xl md:text-5xl font-bold">ЧАСТЫЕ <span className="text-secondary text-glow-magenta">ВОПРОСЫ</span></h2>
         </div>
         <Accordion type="single" collapsible className="space-y-3">
-          {faq.map((item, i) => (
+          {homeFaq.map((item, i) => (
             <AccordionItem key={i} value={`item-${i}`} className="bg-card border border-border clip-corner px-6">
               <AccordionTrigger className="font-display uppercase tracking-wide text-left hover:text-primary hover:no-underline">
                 {item.q}

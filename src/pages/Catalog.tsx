@@ -40,9 +40,9 @@ const Catalog = () => {
                 </ul>
                 <div className="flex items-center justify-between">
                   <span className="font-display text-2xl font-bold">{fmt(b.price)}</span>
-                  <button className="px-4 py-2 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity">
-                    В корзину
-                  </button>
+                  <Link to="/contacts" className="px-4 py-2 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity">
+                    Заказать
+                  </Link>
                 </div>
               </div>
             </div>
@@ -50,8 +50,8 @@ const Catalog = () => {
         </div>
 
         <div className="mt-12 text-center">
-          <Link to="/compare" className="inline-flex items-center gap-2 px-7 py-3.5 border border-secondary text-secondary font-display uppercase tracking-wider clip-corner hover:bg-secondary/10 transition-colors">
-            <Icon name="GitCompare" size={18} /> Сравнить характеристики
+          <Link to="/contacts" className="inline-flex items-center gap-2 px-7 py-3.5 border border-secondary text-secondary font-display uppercase tracking-wider clip-corner hover:bg-secondary/10 transition-colors">
+            <Icon name="Wrench" size={18} /> Собрать индивидуальную конфигурацию
           </Link>
         </div>
       </section>

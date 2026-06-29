@@ -4,9 +4,10 @@ import { ReactNode, useState } from 'react';
 
 const navItems = [
   { to: '/', label: 'Главная' },
-  { to: '/catalog', label: 'Сборки' },
-  { to: '/compare', label: 'Сравнение' },
-  { to: '/contacts', label: 'Контакты' },
+  { to: '/catalog', label: 'Наши сборки' },
+  { to: '/reviews', label: 'Отзывы' },
+  { to: '/faq', label: 'Вопрос-ответ' },
+  { to: '/contacts', label: 'Контакты и доставка' },
 ];
 
 const Layout = ({ children }: { children: ReactNode }) => {
@@ -43,10 +44,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <button className="hidden md:flex items-center gap-2 px-5 py-2 bg-secondary text-secondary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-magenta">
-              <Icon name="ShoppingCart" size={16} />
-              Корзина
-            </button>
+            <Link to="/contacts" className="hidden md:flex items-center gap-2 px-5 py-2 bg-secondary text-secondary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-magenta">
+              <Icon name="MessageCircle" size={16} />
+              Заказать
+            </Link>
             <button className="md:hidden text-foreground" onClick={() => setOpen(!open)}>
               <Icon name={open ? 'X' : 'Menu'} size={28} />
             </button>
