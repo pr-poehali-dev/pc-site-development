@@ -33,20 +33,35 @@ const Reviews = () => {
 
         <div className="grid md:grid-cols-3 gap-6">
           {reviews.map((r, i) => (
-            <div key={i} className="p-8 bg-card border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
-              <div className="flex gap-1 mb-4">
-                {Array.from({ length: r.rating }).map((_, j) => (
-                  <Icon key={j} name="Star" size={16} className="text-primary fill-primary" />
-                ))}
+            <div key={i} className="flex flex-col p-8 bg-card border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex gap-1">
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <Icon key={j} name="Star" size={16} className={j < r.rating ? 'text-primary fill-primary' : 'text-muted-foreground/30'} />
+                  ))}
+                </div>
+                {r.date && (
+                  <span className="text-muted-foreground text-xs font-sans">
+                    {new Date(r.date).toLocaleDateString('ru-RU')}
+                  </span>
+                )}
               </div>
-              <p className="text-foreground mb-6">«{r.text}»</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 flex items-center justify-center bg-secondary/20 text-secondary font-display font-bold clip-corner">
+
+              {r.photo && (
+                <div className="overflow-hidden clip-corner border border-border mb-5">
+                  <img src={r.photo} alt={`Фото от ${r.name}`} className="w-full aspect-[4/3] object-cover" />
+                </div>
+              )}
+
+              <p className="text-foreground mb-6 font-sans">«{r.text}»</p>
+
+              <div className="flex items-center gap-3 mt-auto">
+                <div className="w-10 h-10 flex items-center justify-center bg-secondary/20 text-secondary font-display font-bold clip-corner shrink-0">
                   {r.name[0]}
                 </div>
                 <div>
                   <p className="font-display tracking-wide">{r.name}</p>
-                  <p className="text-muted-foreground text-sm">{r.role}</p>
+                  {r.role && <p className="text-muted-foreground text-sm font-sans">{r.role}</p>}
                 </div>
               </div>
             </div>
