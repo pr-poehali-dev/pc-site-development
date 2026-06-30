@@ -39,7 +39,7 @@ const Index = () => {
   return (
     <Layout>
       {/* HERO */}
-      <section className="relative grid-bg overflow-hidden">
+      <section className="relative grid-bg overflow-hidden lg:min-h-screen flex items-center">
         {/* Фоновое фото сборки */}
         <div className="absolute inset-0 pointer-events-none">
           <img
@@ -50,8 +50,8 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/40" />
           <div className="absolute inset-0 bg-background/30" />
         </div>
-        <div className="relative container py-20 md:py-28 grid lg:grid-cols-2 gap-12 items-center">
-          <div className="animate-fade-up">
+        <div className="relative container py-20 md:py-28 w-full flex flex-col gap-12 lg:gap-16">
+          <div className="animate-fade-up max-w-3xl">
             <h1 className="font-display text-5xl md:text-7xl font-bold leading-none mb-6">
               СОБЕРИ СВОЮ <span className="text-primary text-glow-cyan">МАШИНУ</span> <br />
               <span className="text-secondary text-glow-magenta">МЕЧТЫ</span>
@@ -69,10 +69,10 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Правая колонка — карточка с метриками */}
-          <div className="relative animate-fade-up flex flex-col gap-4" style={{ animationDelay: '0.2s' }}>
+          {/* Карточка с метриками — снизу */}
+          <div className="relative animate-fade-up" style={{ animationDelay: '0.2s' }}>
             <div className="absolute -inset-4 bg-gradient-to-tr from-primary/10 to-transparent blur-3xl pointer-events-none" />
-            <div className="relative p-8 bg-card/40 backdrop-blur-sm border border-border clip-corner grid grid-cols-2 gap-6">
+            <div className="relative p-8 bg-card/40 backdrop-blur-sm border border-border clip-corner grid grid-cols-2 md:grid-cols-4 gap-6">
               {[
                 { value: '500+', label: 'Собранных ПК' },
                 { value: '3 года', label: 'Гарантия' },
