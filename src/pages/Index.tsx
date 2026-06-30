@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/accordion';
 
 const warranties = [
-  { icon: 'ShieldCheck', title: 'Гарантия до 10 лет', text: 'Гарантия на наши ПК от нас до 3-х лет, гарантия на железо до 10-и лет от производителя.' },
+  { icon: 'ShieldCheck', title: 'Гарантия до 10 лет', text: 'Гарантия на наши ПК от нас до 3-х лет.\nГарантия на железо до 10-и лет от производителя.' },
   { icon: 'RefreshCw', title: 'Быстрая диагностика', text: 'В 90% случаев диагностика и решение проблемы в день обращения' },
   { icon: 'Headphones', title: 'Поддержка 24/7', text: 'Живые инженеры на связи почти круглосуточно' },
 ];
@@ -181,7 +181,7 @@ const Index = () => {
                   <Icon name={w.icon} size={28} />
                 </div>
                 <h3 className="font-display text-xl uppercase tracking-wide whitespace-pre-line leading-snug">{w.title}</h3>
-                {w.text && <p className="text-muted-foreground mt-2">{w.text}</p>}
+                {w.text && <p className="text-muted-foreground mt-2 whitespace-pre-line">{w.text}</p>}
               </div>
             ))}
           </div>
