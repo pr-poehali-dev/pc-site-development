@@ -13,16 +13,16 @@ const FAQ = () => {
   return (
     <Layout>
       <section className="grid-bg border-b border-border">
-        <div className="container py-16 text-center">
+        <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">FAQ</p>
-          <h1 className="font-display text-5xl md:text-6xl font-bold">ВОПРОС — <span className="text-primary text-glow-cyan">ОТВЕТ</span></h1>
+          <h1 className="font-display text-4xl md:text-6xl font-bold">ВОПРОС — <span className="text-primary text-glow-cyan">ОТВЕТ</span></h1>
           <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
             Собрали ответы на самые частые вопросы о сборках, доставке и гарантии.
           </p>
         </div>
       </section>
 
-      <section className="container py-16 max-w-3xl">
+      <section className="container py-12 md:py-16 max-w-3xl">
         <Accordion type="single" collapsible className="space-y-3">
           {faq.map((item, i) => (
             <AccordionItem key={i} value={`item-${i}`} className="bg-card border border-border clip-corner px-6 animate-fade-up" style={{ animationDelay: `${i * 0.06}s` }}>
@@ -34,7 +34,7 @@ const FAQ = () => {
           ))}
         </Accordion>
 
-        <div className="mt-12 p-8 text-center bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 clip-corner">
+        <div className="mt-12 p-6 md:p-8 text-center bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 clip-corner">
           <h2 className="font-display text-2xl uppercase tracking-wide mb-3">Не нашли ответ?</h2>
           <p className="text-muted-foreground mb-6">Наши инженеры на связи 24/7 и помогут с любым вопросом.</p>
           <Link to="/contacts" className="inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">

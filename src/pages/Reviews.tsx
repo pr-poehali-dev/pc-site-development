@@ -6,9 +6,9 @@ const Reviews = () => {
   return (
     <Layout>
       <section className="grid-bg border-b border-border">
-        <div className="container py-16 text-center">
+        <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Отзывы</p>
-          <h1 className="font-display text-5xl md:text-6xl font-bold">НАМ <span className="text-primary text-glow-cyan">ДОВЕРЯЮТ</span></h1>
+          <h1 className="font-display text-4xl md:text-6xl font-bold">НАМ <span className="text-primary text-glow-cyan">ДОВЕРЯЮТ</span></h1>
           <p className="text-muted-foreground mt-4 max-w-3xl mx-auto leading-relaxed">
             Нам доверяют и верят потому что мы не оставляем своих клиентов в затруднительной ситуации и всегда пытаемся прийти на помощь. Весь наш проект изначально строился на том, чтобы предоставить по-настоящему человеческий сервис, где будет тёплое и дружелюбное общение, грамотный подбор железа, а также, конечно же, педантичная и дотошная сборка и настройка всего компьютера в целом.
           </p>
@@ -18,7 +18,7 @@ const Reviews = () => {
       <section className="container py-12">
         <div className="grid md:grid-cols-3 gap-6">
           {reviews.map((r, i) => (
-            <div key={i} className="flex flex-col p-8 bg-card border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
+            <div key={i} className="flex flex-col p-6 md:p-8 bg-card border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex gap-1">
                   {Array.from({ length: 5 }).map((_, j) => (
@@ -53,7 +53,7 @@ const Reviews = () => {
           ))}
         </div>
 
-        <div className="mt-16 p-8 md:p-10 bg-card border border-border clip-corner flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-up">
+        <div className="mt-12 md:mt-16 p-6 md:p-10 bg-card border border-border clip-corner flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-up">
           <div className="flex items-center gap-4 text-center md:text-left">
             <div className="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary clip-corner shrink-0">
               <Icon name="MapPin" size={24} />
@@ -73,7 +73,7 @@ const Reviews = () => {
           </a>
         </div>
 
-        <div className="mt-6 p-8 md:p-10 bg-secondary/5 border border-secondary/40 clip-corner flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-up">
+        <div className="mt-6 p-6 md:p-10 bg-secondary/5 border border-secondary/40 clip-corner flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-up">
           <div className="flex items-center gap-4 text-center md:text-left">
             <div className="w-12 h-12 flex items-center justify-center bg-secondary/10 text-secondary clip-corner shrink-0">
               <Icon name="Star" size={24} />

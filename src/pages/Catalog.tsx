@@ -21,16 +21,16 @@ const Catalog = () => {
   return (
     <Layout>
       <section className="grid-bg border-b border-border">
-        <div className="container py-16 text-center">
+        <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Каталог</p>
-          <h1 className="font-display text-5xl md:text-6xl font-bold">НАШИ <span className="text-primary text-glow-cyan">СБОРКИ</span></h1>
+          <h1 className="font-display text-4xl md:text-6xl font-bold">НАШИ <span className="text-primary text-glow-cyan">СБОРКИ</span></h1>
           <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
             Готовые конфигурации под любые задачи — от киберспорта до 3D-рендеринга.
           </p>
         </div>
       </section>
 
-      <section className="container py-16">
+      <section className="container py-12 md:py-16">
         <div className="grid md:grid-cols-3 gap-6 items-start">
           {builds.map((b, i) => (
             <CatalogCard key={b.id} build={b} index={i} />

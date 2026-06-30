@@ -50,9 +50,9 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/40" />
           <div className="absolute inset-0 bg-background/30" />
         </div>
-        <div className="relative container py-20 md:py-28 w-full flex flex-col gap-12 lg:gap-16">
+        <div className="relative container py-12 md:py-28 w-full flex flex-col gap-8 md:gap-12 lg:gap-16">
           <div className="animate-fade-up max-w-3xl">
-            <h1 className="font-display text-5xl md:text-7xl font-bold leading-none mb-6">
+            <h1 className="font-display text-4xl md:text-7xl font-bold leading-none mb-6">
               СОБЕРИ СВОЮ <span className="text-primary text-glow-cyan">МАШИНУ</span> <br />
               <span className="text-secondary text-glow-magenta">МЕЧТЫ</span>
             </h1>
@@ -72,7 +72,7 @@ const Index = () => {
           {/* Карточка с метриками — снизу */}
           <div className="relative animate-fade-up" style={{ animationDelay: '0.2s' }}>
             <div className="absolute -inset-4 bg-gradient-to-tr from-primary/10 to-transparent blur-3xl pointer-events-none" />
-            <div className="relative p-8 bg-card/40 backdrop-blur-sm border border-border clip-corner grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="relative p-5 md:p-8 bg-card/40 backdrop-blur-sm border border-border clip-corner grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {[
                 { value: '2400+', label: 'Собранных ПК' },
                 { value: 'до 10 лет', label: 'Гарантия на комплектующие' },
@@ -80,7 +80,7 @@ const Index = () => {
                 { value: '24/7', label: 'Поддержка (ну почти =))' },
               ].map((m, i) => (
                 <div key={i} className="text-center">
-                  <p className="font-display text-4xl font-bold text-primary mb-1">{m.value}</p>
+                  <p className="font-display text-3xl md:text-4xl font-bold text-primary mb-1">{m.value}</p>
                   <p className="text-muted-foreground text-sm uppercase tracking-wide">{m.label}</p>
                 </div>
               ))}
@@ -112,7 +112,7 @@ const Index = () => {
 
         <div className="relative z-10 container">
           <div className="mb-10">
-            <h2 className="font-display text-4xl md:text-5xl font-bold mb-3">ЗАКАЗЫ НАШИХ <span className="text-primary text-glow-cyan">КЛИЕНТОВ</span></h2>
+            <h2 className="font-display text-3xl md:text-5xl font-bold mb-3">ЗАКАЗЫ НАШИХ <span className="text-primary text-glow-cyan">КЛИЕНТОВ</span></h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
               Выбери подходящий тебе ПК или закажи индивидуальную конфигурацию!
             </p>
@@ -122,10 +122,10 @@ const Index = () => {
       </section>
 
       {/* ОТЗЫВЫ */}
-      <section className="container py-20">
-        <div className="text-center mb-12">
+      <section className="container py-12 md:py-20">
+        <div className="text-center mb-8 md:mb-12">
           <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">Отзывы</p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold">НАМ <span className="text-secondary text-glow-magenta">ДОВЕРЯЮТ</span></h2>
+          <h2 className="font-display text-3xl md:text-5xl font-bold">НАМ <span className="text-secondary text-glow-magenta">ДОВЕРЯЮТ</span></h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {homeReviews.map((r, i) => (
@@ -168,15 +168,15 @@ const Index = () => {
       </section>
 
       {/* ГАРАНТИЯ */}
-      <section className="py-20 grid-bg border-y border-border">
+      <section className="py-12 md:py-20 grid-bg border-y border-border">
         <div className="container">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8 md:mb-12">
             <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">Гарантия</p>
-            <h2 className="font-display text-4xl md:text-5xl font-bold">СПОКОЙСТВИЕ <span className="text-primary text-glow-cyan">В КОМПЛЕКТЕ</span></h2>
+            <h2 className="font-display text-3xl md:text-5xl font-bold">СПОКОЙСТВИЕ <span className="text-primary text-glow-cyan">В КОМПЛЕКТЕ</span></h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {warranties.map((w, i) => (
-              <div key={i} className="p-8 text-center bg-card/60 backdrop-blur border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+              <div key={i} className="p-6 md:p-8 text-center bg-card/60 backdrop-blur border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
                 <div className="w-14 h-14 mx-auto flex items-center justify-center bg-primary text-primary-foreground clip-corner mb-4 border-glow-cyan">
                   <Icon name={w.icon} size={28} />
                 </div>
@@ -189,10 +189,10 @@ const Index = () => {
       </section>
 
       {/* FAQ */}
-      <section className="container py-20 max-w-3xl">
-        <div className="text-center mb-12">
+      <section className="container py-12 md:py-20 max-w-3xl">
+        <div className="text-center mb-8 md:mb-12">
           <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">FAQ</p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold">ЧАСТЫЕ <span className="text-primary text-glow-cyan">ВОПРОСЫ</span></h2>
+          <h2 className="font-display text-3xl md:text-5xl font-bold">ЧАСТЫЕ <span className="text-primary text-glow-cyan">ВОПРОСЫ</span></h2>
         </div>
         <Accordion type="single" collapsible className="space-y-3">
           {homeFaq.map((item, i) => (
@@ -212,8 +212,8 @@ const Index = () => {
       </section>
 
       {/* CTA */}
-      <section className="container pb-20">
-        <div className="relative p-12 md:p-16 text-center bg-card border border-border clip-corner overflow-hidden grid-bg">
+      <section className="container pb-12 md:pb-20">
+        <div className="relative p-8 md:p-16 text-center bg-card border border-border clip-corner overflow-hidden grid-bg">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
           <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
           <Link to="/contacts" className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
