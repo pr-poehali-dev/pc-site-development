@@ -15,9 +15,9 @@ import {
 } from '@/components/ui/accordion';
 
 const warranties = [
-  { icon: 'ShieldCheck', title: '3 года гарантии', text: 'Полное покрытие всех комплектующих' },
-  { icon: 'RefreshCw', title: 'Замена за 24ч', text: 'Привезём подменный ПК на время ремонта' },
-  { icon: 'Headphones', title: 'Поддержка 24/7', text: 'Живые инженеры на связи круглосуточно' },
+  { icon: 'ShieldCheck', title: 'до 3-х лет гарантии на ПК от нас\nдо 10-и лет гарантии на комплектующие', text: '' },
+  { icon: 'RefreshCw', title: 'Быстрая диагностика', text: 'В 90% случаев диагностика и решение проблемы в день обращения' },
+  { icon: 'Headphones', title: 'Поддержка 24/7', text: 'Живые инженеры на связи почти круглосуточно' },
 ];
 
 const homeReviews = reviews.slice(0, 3);
@@ -180,8 +180,8 @@ const Index = () => {
                 <div className="w-14 h-14 mx-auto flex items-center justify-center bg-primary text-primary-foreground clip-corner mb-4 border-glow-cyan">
                   <Icon name={w.icon} size={28} />
                 </div>
-                <h3 className="font-display text-xl uppercase tracking-wide mb-2">{w.title}</h3>
-                <p className="text-muted-foreground">{w.text}</p>
+                <h3 className="font-display text-xl uppercase tracking-wide whitespace-pre-line leading-snug">{w.title}</h3>
+                {w.text && <p className="text-muted-foreground mt-2">{w.text}</p>}
               </div>
             ))}
           </div>
