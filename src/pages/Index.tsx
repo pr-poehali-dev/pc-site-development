@@ -80,7 +80,7 @@ const Index = () => {
                 { value: '24/7', label: 'Поддержка (почти =))' },
               ].map((m, i) => (
                 <div key={i} className="text-center">
-                  <p className="font-display text-3xl md:text-4xl font-bold text-primary mb-1">{m.value}</p>
+                  <p className="font-display text-3xl md:text-4xl font-bold text-primary mb-1 tracking-tight">{m.value}</p>
                   <p className="text-muted-foreground text-sm uppercase tracking-wide">{m.label}</p>
                 </div>
               ))}
