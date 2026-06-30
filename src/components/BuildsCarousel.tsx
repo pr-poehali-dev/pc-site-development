@@ -39,11 +39,27 @@ const BuildsCarousel = ({ builds }: { builds: Build[] }) => {
 
   return (
     <div className="relative" onMouseEnter={stopAutoplay} onMouseLeave={resetAutoplay}>
+      {/* Размытый фон с фото активной сборки */}
+      <div className="absolute inset-0 -z-10 overflow-hidden clip-corner">
+        {builds.map((b, i) => (
+          <img
+            key={b.id}
+            src={b.image}
+            alt=""
+            aria-hidden
+            className={`absolute inset-0 w-full h-full object-cover scale-110 blur-2xl transition-opacity duration-700 ${
+              selected === i ? 'opacity-40' : 'opacity-0'
+            }`}
+          />
+        ))}
+        <div className="absolute inset-0 bg-background/60" />
+      </div>
+
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {builds.map((b) => (
             <div key={b.id} className="flex-[0_0_100%] min-w-0 px-1">
-              <div className="grid md:grid-cols-2 gap-6 items-center bg-card/60 backdrop-blur-sm border border-border clip-corner p-5 md:p-6">
+              <div className="grid md:grid-cols-2 gap-6 items-center bg-card/30 backdrop-blur-md border border-border/60 clip-corner p-5 md:p-6">
                 {/* Фото слева */}
                 <div className="relative overflow-hidden clip-corner border border-border">
                   <img src={b.image} alt={b.name} className="w-full h-52 md:h-72 object-cover" />
