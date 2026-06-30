@@ -74,10 +74,10 @@ const Index = () => {
             <div className="absolute -inset-4 bg-gradient-to-tr from-primary/10 to-transparent blur-3xl pointer-events-none" />
             <div className="relative p-8 bg-card/40 backdrop-blur-sm border border-border clip-corner grid grid-cols-2 md:grid-cols-4 gap-6">
               {[
-                { value: '500+', label: 'Собранных ПК' },
-                { value: '3 года', label: 'Гарантия' },
-                { value: '48ч', label: 'Стресс-тест' },
-                { value: '24/7', label: 'Поддержка' },
+                { value: '2400+', label: 'Собранных ПК' },
+                { value: 'до 10 лет', label: 'Гарантия на комплектующие' },
+                { value: 'до 24ч', label: 'Стресс-тесты' },
+                { value: '24/7', label: 'Поддержка (ну почти =))' },
               ].map((m, i) => (
                 <div key={i} className="text-center">
                   <p className="font-display text-4xl font-bold text-primary mb-1">{m.value}</p>
