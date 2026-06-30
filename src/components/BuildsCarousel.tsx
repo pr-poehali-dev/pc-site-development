@@ -40,7 +40,7 @@ const BuildsCarousel = ({ builds }: { builds: Build[] }) => {
   return (
     <div className="relative" onMouseEnter={stopAutoplay} onMouseLeave={resetAutoplay}>
       {/* Размытый фон с фото активной сборки */}
-      <div className="absolute inset-0 -z-10 overflow-hidden clip-corner">
+      <div className="absolute inset-0 z-0 overflow-hidden clip-corner pointer-events-none">
         {builds.map((b, i) => (
           <img
             key={b.id}
@@ -48,14 +48,14 @@ const BuildsCarousel = ({ builds }: { builds: Build[] }) => {
             alt=""
             aria-hidden
             className={`absolute inset-0 w-full h-full object-cover scale-110 blur-2xl transition-opacity duration-700 ${
-              selected === i ? 'opacity-40' : 'opacity-0'
+              selected === i ? 'opacity-50' : 'opacity-0'
             }`}
           />
         ))}
-        <div className="absolute inset-0 bg-background/60" />
+        <div className="absolute inset-0 bg-background/50" />
       </div>
 
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div className="relative z-10 overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {builds.map((b) => (
             <div key={b.id} className="flex-[0_0_100%] min-w-0 px-1">
