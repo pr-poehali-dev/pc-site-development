@@ -99,12 +99,12 @@ const Index = () => {
               src={b.image}
               alt=""
               aria-hidden
-              className={`absolute inset-0 w-full h-full object-cover blur-3xl scale-110 transition-opacity duration-700 ${
-                activeBuild === i ? 'opacity-40' : 'opacity-0'
+              className={`absolute inset-0 w-full h-full object-cover blur-lg scale-105 transition-opacity duration-700 ${
+                activeBuild === i ? 'opacity-80' : 'opacity-0'
               }`}
             />
           ))}
-          <div className="absolute inset-0 bg-background/60" />
+          <div className="absolute inset-0 bg-background/40" />
         </div>
 
         <div className="relative z-10 container">
