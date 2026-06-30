@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
@@ -25,6 +25,8 @@ const homeFaq = faq.slice(0, 4);
 
 const Index = () => {
   const [builds, setBuilds] = useState<Build[]>(fallbackBuilds);
+  const [activeBuild, setActiveBuild] = useState(0);
+  const handleBuildSelect = useCallback((i: number) => setActiveBuild(i), []);
 
   useEffect(() => {
     fetchBuilds()
@@ -88,14 +90,32 @@ const Index = () => {
       </section>
 
       {/* ЗАКАЗЫ НАШИХ КЛИЕНТОВ */}
-      <section className="container py-12">
-        <div className="mb-10">
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-3">ЗАКАЗЫ НАШИХ <span className="text-primary text-glow-cyan">КЛИЕНТОВ</span></h2>
-          <p className="text-muted-foreground text-lg max-w-2xl">
-            Выбери подходящий тебе ПК или закажи индивидуальную конфигурацию!
-          </p>
+      <section className="relative overflow-hidden py-12">
+        {/* Размытое фото активной сборки на фоне всей секции */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          {builds.map((b, i) => (
+            <img
+              key={b.id}
+              src={b.image}
+              alt=""
+              aria-hidden
+              className={`absolute inset-0 w-full h-full object-cover blur-3xl scale-110 transition-opacity duration-700 ${
+                activeBuild === i ? 'opacity-40' : 'opacity-0'
+              }`}
+            />
+          ))}
+          <div className="absolute inset-0 bg-background/60" />
         </div>
-        <BuildsCarousel builds={builds} />
+
+        <div className="relative z-10 container">
+          <div className="mb-10">
+            <h2 className="font-display text-4xl md:text-5xl font-bold mb-3">ЗАКАЗЫ НАШИХ <span className="text-primary text-glow-cyan">КЛИЕНТОВ</span></h2>
+            <p className="text-muted-foreground text-lg max-w-2xl">
+              Выбери подходящий тебе ПК или закажи индивидуальную конфигурацию!
+            </p>
+          </div>
+          <BuildsCarousel builds={builds} onSelect={handleBuildSelect} />
+        </div>
       </section>
 
       {/* ОТЗЫВЫ */}

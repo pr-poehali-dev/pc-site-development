@@ -6,7 +6,7 @@ import type { Build } from '@/data/builds';
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 
-const BuildsCarousel = ({ builds }: { builds: Build[] }) => {
+const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: number) => void }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
   const [selected, setSelected] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -27,39 +27,27 @@ const BuildsCarousel = ({ builds }: { builds: Build[] }) => {
 
   useEffect(() => {
     if (!emblaApi) return;
-    const onSelect = () => setSelected(emblaApi.selectedScrollSnap());
-    emblaApi.on('select', onSelect);
-    onSelect();
+    const handleSelect = () => {
+      const i = emblaApi.selectedScrollSnap();
+      setSelected(i);
+      onSelect?.(i);
+    };
+    emblaApi.on('select', handleSelect);
+    handleSelect();
     resetAutoplay();
     return () => {
-      emblaApi.off('select', onSelect);
+      emblaApi.off('select', handleSelect);
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [emblaApi, resetAutoplay]);
+  }, [emblaApi, resetAutoplay, onSelect]);
 
   return (
     <div className="relative" onMouseEnter={stopAutoplay} onMouseLeave={resetAutoplay}>
-      {/* Размытый фон с фото активной сборки */}
-      <div className="absolute inset-0 z-0 overflow-hidden clip-corner pointer-events-none">
-        {builds.map((b, i) => (
-          <img
-            key={b.id}
-            src={b.image}
-            alt=""
-            aria-hidden
-            className={`absolute inset-0 w-full h-full object-cover scale-110 blur-2xl transition-opacity duration-700 ${
-              selected === i ? 'opacity-50' : 'opacity-0'
-            }`}
-          />
-        ))}
-        <div className="absolute inset-0 bg-background/50" />
-      </div>
-
       <div className="relative z-10 overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {builds.map((b) => (
             <div key={b.id} className="flex-[0_0_100%] min-w-0 px-1">
-              <div className="grid md:grid-cols-2 gap-6 items-center bg-card/30 backdrop-blur-md border border-border/60 clip-corner p-5 md:p-6">
+              <div className="grid md:grid-cols-2 gap-6 items-center bg-card/15 backdrop-blur-md border border-border/50 clip-corner p-5 md:p-6">
                 {/* Фото слева */}
                 <div className="relative overflow-hidden clip-corner border border-border">
                   <img src={b.image} alt={b.name} className="w-full h-52 md:h-72 object-cover" />
