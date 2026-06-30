@@ -30,12 +30,11 @@ export const reviews: Review[] = [
     photo: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/233298fb-8abf-465a-9ff2-def29b154266.png',
   },
   {
-    name: 'Мария С.',
-    role: 'Монтажёр',
-    text: '4K-видео обрабатывается без единого фриза. Спасибо за консультацию и честный подбор комплектующих!',
+    name: 'Светлана',
+    text: 'Заказала сборку ПК у данных ребят на 2060 super. Теперь все парни у моих ног 😁',
     rating: 5,
-    date: '2026-01-14',
-    photo: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/502be915-c80c-4f45-a30e-d7b83c85f1f5.jpg',
+    date: '2023-03-12',
+    photo: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/1476eb92-2aee-4847-8085-96050944919e.png',
   },
   {
     name: 'Павел Р.',
