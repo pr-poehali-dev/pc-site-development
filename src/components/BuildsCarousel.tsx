@@ -50,7 +50,7 @@ const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: 
               <div className="grid md:grid-cols-2 gap-6 items-center bg-card/15 backdrop-blur-md border border-border/50 clip-corner p-5 md:p-6">
                 {/* Фото слева */}
                 <div className="relative overflow-hidden clip-corner border border-border">
-                  <img src={b.image} alt={b.name} className="w-full h-52 md:h-72 object-cover" />
+                  <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover" />
                   {b.buildDate && (
                     <div className="absolute top-3 right-3 px-3 py-1 bg-background/80 backdrop-blur border border-primary/40 text-primary text-xs font-display tracking-wide flex items-center gap-1">
                       <Icon name="Calendar" size={12} />

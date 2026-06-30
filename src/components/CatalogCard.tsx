@@ -26,7 +26,7 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
   return (
     <div className="group bg-card border border-border clip-corner overflow-hidden hover:border-primary/50 transition-all animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
       <div className="relative overflow-hidden">
-        <img src={b.image} alt={b.name} className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500" />
+        <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500" />
         {b.buildDate && (
           <div className="absolute top-4 right-4 px-3 py-1 bg-background/80 backdrop-blur border border-primary/40 text-primary text-sm font-display flex items-center gap-1">
             <Icon name="Calendar" size={13} />
