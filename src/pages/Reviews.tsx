@@ -87,6 +87,26 @@ const Reviews = () => {
             Читать на Яндекс.Картах <Icon name="ExternalLink" size={18} />
           </a>
         </div>
+
+        <div className="mt-6 p-8 md:p-10 bg-secondary/5 border border-secondary/40 clip-corner flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-up">
+          <div className="flex items-center gap-4 text-center md:text-left">
+            <div className="w-12 h-12 flex items-center justify-center bg-secondary/10 text-secondary clip-corner shrink-0">
+              <Icon name="Star" size={24} />
+            </div>
+            <div>
+              <h3 className="font-display text-xl md:text-2xl uppercase tracking-wide">Оставьте свой отзыв</h3>
+              <p className="text-muted-foreground text-sm">Уже собрали у нас ПК? Поделитесь впечатлениями на Яндекс.Картах</p>
+            </div>
+          </div>
+          <a
+            href="https://yandex.ru/maps/org/white_friday_pc/86872558553/reviews/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-7 py-3.5 bg-secondary text-secondary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity shrink-0"
+          >
+            Оставить отзыв <Icon name="PenLine" size={18} />
+          </a>
+        </div>
       </section>
     </Layout>
   );
