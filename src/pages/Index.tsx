@@ -105,6 +105,9 @@ const Index = () => {
             />
           ))}
           <div className="absolute inset-0 bg-background/40" />
+          {/* Плавное затухание сверху и снизу для мягкого перехода */}
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
         </div>
 
         <div className="relative z-10 container">
