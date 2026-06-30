@@ -2,12 +2,6 @@ import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { reviews } from '@/data/content';
 
-const stats = [
-  { value: '4.9', label: 'Средний рейтинг' },
-  { value: '2 500+', label: 'Довольных клиентов' },
-  { value: '98%', label: 'Рекомендуют нас' },
-];
-
 const Reviews = () => {
   return (
     <Layout>
@@ -22,15 +16,6 @@ const Reviews = () => {
       </section>
 
       <section className="container py-12">
-        <div className="grid grid-cols-3 gap-6 mb-16">
-          {stats.map((s, i) => (
-            <div key={i} className="p-6 text-center bg-card border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
-              <p className="font-display text-3xl md:text-5xl font-bold text-primary text-glow-cyan">{s.value}</p>
-              <p className="text-muted-foreground text-sm mt-1">{s.label}</p>
-            </div>
-          ))}
-        </div>
-
         <div className="grid md:grid-cols-3 gap-6">
           {reviews.map((r, i) => (
             <div key={i} className="flex flex-col p-8 bg-card border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
