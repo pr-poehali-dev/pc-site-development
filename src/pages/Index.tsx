@@ -75,9 +75,9 @@ const Index = () => {
             <div className="relative p-5 md:p-8 bg-card/40 backdrop-blur-sm border border-border clip-corner grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {[
                 { value: '2400+', label: 'Собранных ПК' },
-                { value: 'до 10 лет', label: 'Гарантия на комплектующие' },
                 { value: 'до 24ч', label: 'Стресс-тесты' },
-                { value: '24/7', label: 'Поддержка (ну почти =))' },
+                { value: 'до 10 лет', label: 'Гарантия на комплектующие' },
+                { value: '24/7', label: 'Поддержка (почти =))' },
               ].map((m, i) => (
                 <div key={i} className="text-center">
                   <p className="font-display text-3xl md:text-4xl font-bold text-primary mb-1">{m.value}</p>
