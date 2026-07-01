@@ -211,3 +211,16 @@
     0 0 16px hsl(145 80% 55% / 0.45),
     0 0 40px hsl(145 80% 55% / 0.22);
 }
+.btn-glow-green {
+  box-shadow:
+    0 0 10px hsl(145 80% 55% / 0.4),
+    0 0 22px hsl(145 80% 55% / 0.18);
+  transition:
+    box-shadow 0.35s ease,
+    opacity 0.2s ease;
+}
+.btn-glow-green:hover {
+  box-shadow:
+    0 0 18px hsl(145 80% 55% / 0.7),
+    0 0 45px hsl(145 80% 55% / 0.35);
+}

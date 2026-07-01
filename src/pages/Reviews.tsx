@@ -132,7 +132,7 @@ const Reviews = () => {
             href="https://yandex.ru/maps/org/white_friday_pc/86872558553/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan shrink-0"
+            className="flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 btn-glow-green shrink-0"
           >
             Читать на Яндекс.Картах <Icon name="ExternalLink" size={18} />
           </a>

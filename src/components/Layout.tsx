@@ -47,7 +47,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <div className="flex flex-1 justify-end items-center gap-3 -mr-2 sm:-mr-4">
             <Link
               to="/contacts"
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-black text-white font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 transition-opacity"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-black text-white font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 btn-glow-green"
             >
               <Icon name="MessageCircle" size={14} />
               Заказать
@@ -76,7 +76,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               <Link
                 to="/contacts"
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-center gap-2 px-5 py-3 bg-black text-white font-display uppercase text-sm tracking-wider clip-corner"
+                className="flex items-center justify-center gap-2 px-5 py-3 bg-black text-white font-display uppercase text-sm tracking-wider clip-corner btn-glow-green"
               >
                 <Icon name="MessageCircle" size={16} />
                 Заказать
