@@ -149,7 +149,7 @@ const Index = () => {
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {homeReviews.map((r, i) => (
-            <div key={i} className="flex flex-col p-8 bg-card border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+            <div key={i} className="flex flex-col p-8 bg-card/40 backdrop-blur-md border border-border/60 clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex gap-1">
                   {Array.from({ length: 5 }).map((_, j) => (
