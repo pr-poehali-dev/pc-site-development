@@ -24,7 +24,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/744ec6a5-630e-4ac2-a27c-9e5988bb0390.png"
               alt="White Friday PC"
-              className="h-20 sm:h-24 w-auto object-contain"
+              className="h-32 sm:h-36 w-auto object-contain -my-8"
             />
           </Link>
 
