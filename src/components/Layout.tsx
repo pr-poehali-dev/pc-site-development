@@ -20,7 +20,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <div className="container flex items-center justify-between h-20">
 
           {/* Логотип */}
-          <Link to="/" className="flex items-center group min-w-0 -ml-6 sm:-ml-12 mr-3">
+          <Link to="/" className="flex flex-1 items-center group min-w-0 -ml-6 sm:-ml-12">
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/744ec6a5-630e-4ac2-a27c-9e5988bb0390.png"
               alt="White Friday PC"
@@ -28,7 +28,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             />
           </Link>
 
-          <nav className="hidden md:flex flex-1 items-center justify-center gap-1">
+          <nav className="hidden md:flex items-center justify-center gap-1 shrink-0">
             {navItems.map((item) => (
               <Link
                 key={item.to}
@@ -44,7 +44,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3 -mr-2 sm:-mr-4">
+          <div className="flex flex-1 justify-end items-center gap-3 -mr-2 sm:-mr-4">
             <Link
               to="/contacts"
               className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-black text-white font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 transition-opacity"
