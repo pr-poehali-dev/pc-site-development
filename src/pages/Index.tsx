@@ -135,9 +135,9 @@ const Index = () => {
             src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/23672f98-5867-4a0b-beaa-46a15b2c51e5.jpg"
             alt=""
             aria-hidden
-            className="w-full h-full object-cover opacity-25"
+            className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-background/70" />
+          <div className="absolute inset-0 bg-background/55" />
           <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
         </div>
@@ -149,7 +149,7 @@ const Index = () => {
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {homeReviews.map((r, i) => (
-            <div key={i} className="flex flex-col p-8 bg-card/40 backdrop-blur-md border border-border/60 clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+            <div key={i} className="flex flex-col p-8 bg-card/25 backdrop-blur-md border border-border/50 clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex gap-1">
                   {Array.from({ length: 5 }).map((_, j) => (
