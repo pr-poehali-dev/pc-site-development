@@ -43,7 +43,7 @@ const Reviews = () => {
               id={`review-${i}`}
               className={`flex flex-col p-6 md:p-8 bg-card border clip-corner animate-fade-up scroll-mt-28 transition-all duration-700 ${
                 highlighted === i
-                  ? 'border-primary review-neon-glow'
+                  ? 'review-neon-glow'
                   : 'border-border'
               }`}
               style={{ animationDelay: `${i * 0.08}s` }}

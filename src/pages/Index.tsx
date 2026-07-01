@@ -217,7 +217,7 @@ const Index = () => {
         </div>
         <Accordion type="single" collapsible className="space-y-3">
           {homeFaq.map((item, i) => (
-            <AccordionItem key={i} value={`item-${i}`} className="bg-card border border-border clip-corner px-6">
+            <AccordionItem key={i} value={`item-${i}`} className="bg-card border border-border clip-corner px-6 transition-all duration-300 data-[state=open]:border-glow-green data-[state=open]:bg-card/80">
               <AccordionTrigger className="font-display uppercase tracking-wide text-left hover:text-primary hover:no-underline">
                 {item.q}
               </AccordionTrigger>
