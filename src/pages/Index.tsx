@@ -6,7 +6,7 @@ import { type Build } from '@/data/builds';
 import { apiToBuilds } from '@/lib/buildsMap';
 import { fetchBuilds } from '@/lib/buildsApi';
 import BuildsCarousel from '@/components/BuildsCarousel';
-import { reviews, faq } from '@/data/content';
+import { reviews, faq, truncateReview } from '@/data/content';
 import {
   Accordion,
   AccordionContent,
@@ -153,7 +153,22 @@ const Index = () => {
                   <img src={r.photo} alt={`Фото от ${r.name}`} className="w-full aspect-[4/3] object-cover" />
                 </div>
               )}
-              <p className="text-foreground mb-6 font-sans">«{r.text}»</p>
+              {(() => {
+                const { text, truncated } = truncateReview(r.text, !!r.photo);
+                return (
+                  <p className="text-foreground mb-6 font-sans">
+                    «{text}»
+                    {truncated && (
+                      <Link
+                        to={`/reviews#review-${i}`}
+                        className="ml-1 inline-flex items-center gap-1 text-primary font-display uppercase text-xs tracking-wider hover:underline whitespace-nowrap"
+                      >
+                        Читать далее <Icon name="ArrowRight" size={12} />
+                      </Link>
+                    )}
+                  </p>
+                );
+              })()}
               <div className="flex items-center gap-3 mt-auto">
                 <div className="w-10 h-10 flex items-center justify-center bg-primary/10 text-primary font-display font-bold clip-corner shrink-0">
                   {r.name[0]}

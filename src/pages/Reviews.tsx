@@ -1,8 +1,27 @@
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { reviews } from '@/data/content';
 
 const Reviews = () => {
+  const location = useLocation();
+  const [highlighted, setHighlighted] = useState<number | null>(null);
+
+  useEffect(() => {
+    const match = location.hash.match(/#review-(\d+)/);
+    if (!match) return;
+    const idx = Number(match[1]);
+    const el = document.getElementById(`review-${idx}`);
+    if (!el) return;
+    setHighlighted(idx);
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+    const timer = setTimeout(() => setHighlighted(null), 4000);
+    return () => clearTimeout(timer);
+  }, [location.hash]);
+
   return (
     <Layout>
       <section className="grid-bg border-b border-border">
@@ -18,7 +37,16 @@ const Reviews = () => {
       <section className="container py-12">
         <div className="grid md:grid-cols-3 gap-6">
           {reviews.map((r, i) => (
-            <div key={i} className="flex flex-col p-6 md:p-8 bg-card border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
+            <div
+              key={i}
+              id={`review-${i}`}
+              className={`flex flex-col p-6 md:p-8 bg-card border clip-corner animate-fade-up scroll-mt-28 transition-all duration-700 ${
+                highlighted === i
+                  ? 'border-primary review-neon-glow'
+                  : 'border-border'
+              }`}
+              style={{ animationDelay: `${i * 0.08}s` }}
+            >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex gap-1">
                   {Array.from({ length: 5 }).map((_, j) => (

@@ -54,6 +54,21 @@ export const reviews: Review[] = [...reviewsData].sort(
   (a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime()
 );
 
+export const REVIEW_LIMIT_WITH_PHOTO = 180;
+export const REVIEW_LIMIT_NO_PHOTO = 250;
+
+export function reviewLimit(hasPhoto: boolean): number {
+  return hasPhoto ? REVIEW_LIMIT_WITH_PHOTO : REVIEW_LIMIT_NO_PHOTO;
+}
+
+export function truncateReview(text: string, hasPhoto: boolean): { text: string; truncated: boolean } {
+  const limit = reviewLimit(hasPhoto);
+  if (text.length <= limit) return { text, truncated: false };
+  const cut = text.slice(0, limit);
+  const lastSpace = cut.lastIndexOf(' ');
+  return { text: (lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd() + '…', truncated: true };
+}
+
 export const faq = [
   { q: 'Можно ли изменить комплектацию сборки?', a: 'Да, любую сборку можно кастомизировать под ваши задачи и бюджет. Напишите нам — подберём оптимальный вариант.' },
   { q: 'Сколько занимает сборка и доставка?', a: 'Сборка и тестирование — 1-2 дня. Доставка по Москве — на следующий день, по России — 2-7 дней.' },
