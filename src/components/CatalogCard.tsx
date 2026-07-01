@@ -24,7 +24,7 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
   const visible = fullSpecs.filter((s) => s.value && s.value !== '—' && s.value !== '');
 
   return (
-    <div className="group bg-card border border-border clip-corner overflow-hidden hover:border-primary/50 transition-all animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
+    <div className="group bg-card border border-border clip-corner overflow-hidden hover-glow-green animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
       <div className="relative overflow-hidden">
         <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500" />
         {b.buildDate && (

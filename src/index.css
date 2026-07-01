@@ -199,3 +199,15 @@
     inset 0 0 16px hsl(145 80% 55% / 0.1);
   border-color: hsl(145 80% 55% / 0.8) !important;
 }
+.hover-glow-green {
+  transition:
+    box-shadow 0.4s ease,
+    border-color 0.4s ease,
+    transform 0.4s ease;
+}
+.hover-glow-green:hover {
+  border-color: hsl(145 80% 55% / 0.7) !important;
+  box-shadow:
+    0 0 16px hsl(145 80% 55% / 0.45),
+    0 0 40px hsl(145 80% 55% / 0.22);
+}
