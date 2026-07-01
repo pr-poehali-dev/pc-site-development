@@ -212,13 +212,21 @@
     0 0 40px hsl(145 80% 55% / 0.22);
 }
 .btn-glow-green {
-  filter: drop-shadow(0 0 5px hsl(145 90% 50% / 0.75))
-    drop-shadow(0 0 12px hsl(145 90% 50% / 0.5));
-  transition:
-    filter 0.35s ease,
-    opacity 0.2s ease;
+  position: relative;
+  isolation: isolate;
 }
-.btn-glow-green:hover {
-  filter: drop-shadow(0 0 9px hsl(145 90% 50% / 0.95))
-    drop-shadow(0 0 20px hsl(145 90% 50% / 0.65));
+.btn-glow-green::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  z-index: -1;
+  border-radius: 10px;
+  background: hsl(145 90% 50%);
+  filter: blur(12px);
+  opacity: 0.6;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.btn-glow-green:hover::after {
+  opacity: 0.95;
 }
