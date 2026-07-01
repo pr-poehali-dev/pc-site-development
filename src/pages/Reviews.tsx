@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
-import { reviews } from '@/data/content';
+import { reviews, truncateReview } from '@/data/content';
 
 const Reviews = () => {
   const location = useLocation();
   const [highlighted, setHighlighted] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState<number | null>(null);
 
   useEffect(() => {
     const match = location.hash.match(/#review-(\d+)/);
@@ -66,7 +67,24 @@ const Reviews = () => {
                 </div>
               )}
 
-              <p className="text-foreground mb-6 font-sans">«{r.text}»</p>
+              {(() => {
+                const { text, truncated } = truncateReview(r.text, !!r.photo);
+                const isExpanded = expanded === i || highlighted === i;
+                return (
+                  <p className="text-foreground mb-6 font-sans">
+                    «{isExpanded ? r.text : text}»
+                    {truncated && (
+                      <button
+                        onClick={() => setExpanded(isExpanded ? null : i)}
+                        className="ml-1 inline-flex items-center gap-1 text-primary font-display uppercase text-xs tracking-wider hover:underline whitespace-nowrap"
+                      >
+                        {isExpanded ? 'Свернуть' : 'Читать далее'}
+                        <Icon name={isExpanded ? 'ChevronUp' : 'ChevronDown'} size={12} />
+                      </button>
+                    )}
+                  </p>
+                );
+              })()}
 
               <div className="flex items-center gap-3 mt-auto">
                 <div className="w-10 h-10 flex items-center justify-center bg-secondary/20 text-secondary font-display font-bold clip-corner shrink-0">
