@@ -16,6 +16,7 @@ const Reviews = () => {
     const el = document.getElementById(`review-${idx}`);
     if (!el) return;
     setHighlighted(idx);
+    setExpanded(idx);
     setTimeout(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 200);
