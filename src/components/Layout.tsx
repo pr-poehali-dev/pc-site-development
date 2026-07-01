@@ -24,7 +24,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/7bf9fa33-a09e-4c27-be19-45ac3af366f0.png"
               alt="White Friday PC"
-              className="h-16 sm:h-16 w-16 sm:w-16 rounded-full object-cover"
+              className="h-40 sm:h-48 w-40 sm:w-48 rounded-full object-cover -my-8"
             />
           </Link>
 
@@ -33,7 +33,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`px-2 lg:px-3 py-2 font-display uppercase text-sm lg:text-base tracking-wider whitespace-nowrap transition-colors ${
+                className={`px-2 lg:px-3 py-2 font-display uppercase text-xs lg:text-sm tracking-wider whitespace-nowrap transition-colors ${
                   location.pathname === item.to
                     ? 'text-white'
                     : 'text-black/70 hover:text-white'
