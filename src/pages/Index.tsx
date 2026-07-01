@@ -52,7 +52,7 @@ const Index = () => {
         </div>
         <div className="relative container py-12 md:py-28 w-full flex flex-col gap-8 md:gap-12 lg:gap-16">
           <div className="animate-fade-up max-w-3xl">
-            <h1 className="font-display text-4xl md:text-7xl font-bold leading-none mb-6">
+            <h1 className="font-opensans text-4xl md:text-7xl font-bold leading-none mb-6">
               СОБЕРИ СВОЮ <span className="text-primary text-glow-cyan">МАШИНУ</span> <br />
               <span className="text-secondary text-glow-magenta">МЕЧТЫ</span>
             </h1>
