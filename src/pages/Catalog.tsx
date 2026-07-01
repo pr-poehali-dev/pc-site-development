@@ -2,20 +2,22 @@ import { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
-import { builds as fallbackBuilds, type Build } from '@/data/builds';
+import { type Build } from '@/data/builds';
 import { fetchBuilds } from '@/lib/buildsApi';
 import { apiToBuilds } from '@/lib/buildsMap';
 import CatalogCard from '@/components/CatalogCard';
 
 const Catalog = () => {
-  const [builds, setBuilds] = useState<Build[]>(fallbackBuilds);
+  const [builds, setBuilds] = useState<Build[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBuilds()
       .then((list) => {
-        if (list.length > 0) setBuilds(apiToBuilds(list));
+        setBuilds(list.length > 0 ? apiToBuilds(list) : []);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -31,11 +33,17 @@ const Catalog = () => {
       </section>
 
       <section className="container py-12 md:py-16">
-        <div className="grid md:grid-cols-3 gap-6 items-start">
-          {builds.map((b, i) => (
-            <CatalogCard key={b.id} build={b} index={i} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-20 text-muted-foreground">
+            <Icon name="LoaderCircle" size={28} className="animate-spin" />
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-6 items-start">
+            {builds.map((b, i) => (
+              <CatalogCard key={b.id} build={b} index={i} />
+            ))}
+          </div>
+        )}
 
         <div className="mt-12 text-center">
           <Link to="/contacts" className="inline-flex items-center gap-2 px-7 py-3.5 border border-secondary text-secondary font-display uppercase tracking-wider clip-corner hover:bg-secondary/10 transition-colors">

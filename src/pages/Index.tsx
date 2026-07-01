@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
-import { builds as fallbackBuilds, type Build } from '@/data/builds';
+import { type Build } from '@/data/builds';
 import { apiToBuilds } from '@/lib/buildsMap';
 import { fetchBuilds } from '@/lib/buildsApi';
 import BuildsCarousel from '@/components/BuildsCarousel';
@@ -24,14 +24,14 @@ const homeReviews = reviews.slice(0, 3);
 const homeFaq = faq.slice(0, 4);
 
 const Index = () => {
-  const [builds, setBuilds] = useState<Build[]>(fallbackBuilds);
+  const [builds, setBuilds] = useState<Build[]>([]);
   const [activeBuild, setActiveBuild] = useState(0);
   const handleBuildSelect = useCallback((i: number) => setActiveBuild(i), []);
 
   useEffect(() => {
     fetchBuilds()
       .then((list) => {
-        if (list.length > 0) setBuilds(apiToBuilds(list));
+        setBuilds(list.length > 0 ? apiToBuilds(list) : []);
       })
       .catch(() => {});
   }, []);
@@ -117,7 +117,13 @@ const Index = () => {
               Выбери подходящий тебе ПК или закажи индивидуальную конфигурацию!
             </p>
           </div>
-          <BuildsCarousel builds={builds} onSelect={handleBuildSelect} />
+          {builds.length > 0 ? (
+            <BuildsCarousel builds={builds} onSelect={handleBuildSelect} />
+          ) : (
+            <div className="flex items-center justify-center py-20 text-muted-foreground">
+              <Icon name="LoaderCircle" size={28} className="animate-spin" />
+            </div>
+          )}
         </div>
       </section>
 
