@@ -173,6 +173,25 @@
   animation: review-neon 1.8s ease-in-out infinite;
   border-color: hsl(145 80% 55% / 0.8) !important;
 }
+@keyframes review-neon-fade {
+  from {
+    box-shadow:
+      0 0 22px hsl(145 80% 55% / 0.65),
+      0 0 55px hsl(145 80% 55% / 0.4),
+      inset 0 0 22px hsl(145 80% 55% / 0.17);
+    border-color: hsl(145 80% 55% / 0.8);
+  }
+  to {
+    box-shadow:
+      0 0 0 hsl(145 80% 55% / 0),
+      0 0 0 hsl(145 80% 55% / 0),
+      inset 0 0 0 hsl(145 80% 55% / 0);
+    border-color: hsl(var(--border));
+  }
+}
+.review-neon-fade {
+  animation: review-neon-fade 2s ease-out forwards;
+}
 .border-glow-green {
   box-shadow:
     0 0 18px hsl(145 80% 55% / 0.55),

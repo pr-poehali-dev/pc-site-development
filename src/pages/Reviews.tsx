@@ -7,6 +7,7 @@ import { reviews, truncateReview } from '@/data/content';
 const Reviews = () => {
   const location = useLocation();
   const [highlighted, setHighlighted] = useState<number | null>(null);
+  const [fading, setFading] = useState<number | null>(null);
   const [expanded, setExpanded] = useState<number | null>(null);
 
   useEffect(() => {
@@ -20,8 +21,15 @@ const Reviews = () => {
     setTimeout(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 200);
-    const timer = setTimeout(() => setHighlighted(null), 4000);
-    return () => clearTimeout(timer);
+    const fadeTimer = setTimeout(() => {
+      setHighlighted(null);
+      setFading(idx);
+    }, 4000);
+    const doneTimer = setTimeout(() => setFading(null), 6000);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(doneTimer);
+    };
   }, [location.hash]);
 
   return (
@@ -42,10 +50,12 @@ const Reviews = () => {
             <div
               key={i}
               id={`review-${i}`}
-              className={`flex flex-col p-6 md:p-8 bg-card border clip-corner animate-fade-up scroll-mt-28 transition-all duration-700 ${
+              className={`flex flex-col p-6 md:p-8 bg-card border clip-corner animate-fade-up scroll-mt-28 ${
                 highlighted === i
                   ? 'review-neon-glow'
-                  : 'border-border'
+                  : fading === i
+                    ? 'review-neon-fade'
+                    : 'border-border'
               }`}
               style={{ animationDelay: `${i * 0.08}s` }}
             >
