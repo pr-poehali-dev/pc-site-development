@@ -46,7 +46,7 @@ const Catalog = () => {
         )}
 
         <div className="mt-12 text-center">
-          <Link to="/contacts" className="inline-flex items-center gap-2 px-7 py-3.5 border border-secondary text-secondary font-display uppercase tracking-wider clip-corner hover:bg-secondary/10 transition-colors">
+          <Link to="/contacts" className="inline-flex items-center gap-2 px-7 py-3.5 border border-secondary text-secondary font-display uppercase tracking-wider clip-corner hover:bg-secondary/10 transition-colors btn-glow-green">
             <Icon name="Wrench" size={18} /> Собрать индивидуальную конфигурацию
           </Link>
         </div>

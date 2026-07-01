@@ -63,7 +63,7 @@ const Index = () => {
               <Link to="/catalog" className="flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 btn-glow-green">
                 Смотреть сборки <Icon name="ArrowRight" size={18} />
               </Link>
-              <Link to="/contacts" className="flex items-center gap-2 px-7 py-3.5 border border-border text-foreground font-display uppercase tracking-wider clip-corner hover:border-primary/50 transition-colors">
+              <Link to="/contacts" className="flex items-center gap-2 px-7 py-3.5 border border-border text-foreground font-display uppercase tracking-wider clip-corner hover:border-primary/50 transition-colors btn-glow-green">
                 <Icon name="MessageCircle" size={18} /> Консультация
               </Link>
             </div>
