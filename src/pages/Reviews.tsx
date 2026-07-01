@@ -71,18 +71,26 @@ const Reviews = () => {
                 const { text, truncated } = truncateReview(r.text, !!r.photo);
                 const isExpanded = expanded === i || highlighted === i;
                 return (
-                  <p className="text-foreground mb-6 font-sans">
-                    «{isExpanded ? r.text : text}»
+                  <div className="mb-6">
+                    <div
+                      className="grid transition-[grid-template-rows] duration-500 ease-in-out"
+                      style={{ gridTemplateRows: isExpanded ? '1fr' : '0fr' }}
+                    >
+                      <p className="overflow-hidden text-foreground font-sans">«{r.text}»</p>
+                    </div>
+                    {!isExpanded && (
+                      <p className="text-foreground font-sans">«{truncated ? text : r.text}»</p>
+                    )}
                     {truncated && (
                       <button
                         onClick={() => setExpanded(isExpanded ? null : i)}
-                        className="ml-1 inline-flex items-center gap-1 text-primary font-display uppercase text-xs tracking-wider hover:underline whitespace-nowrap"
+                        className="mt-1 inline-flex items-center gap-1 text-primary font-display uppercase text-xs tracking-wider hover:underline whitespace-nowrap"
                       >
                         {isExpanded ? 'Свернуть' : 'Читать далее'}
                         <Icon name={isExpanded ? 'ChevronUp' : 'ChevronDown'} size={12} />
                       </button>
                     )}
-                  </p>
+                  </div>
                 );
               })()}
 
