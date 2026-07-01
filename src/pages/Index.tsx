@@ -128,7 +128,21 @@ const Index = () => {
       </section>
 
       {/* ОТЗЫВЫ */}
-      <section className="container py-12 md:py-20">
+      <section className="relative overflow-hidden py-12 md:py-20">
+        {/* Фоновое фото сборки */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img
+            src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/23672f98-5867-4a0b-beaa-46a15b2c51e5.jpg"
+            alt=""
+            aria-hidden
+            className="w-full h-full object-cover opacity-25"
+          />
+          <div className="absolute inset-0 bg-background/70" />
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        </div>
+
+        <div className="relative z-10 container">
         <div className="text-center mb-8 md:mb-12">
           <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">Отзывы</p>
           <h2 className="font-display text-3xl md:text-5xl font-bold">НАМ <span className="text-secondary text-glow-magenta">ДОВЕРЯЮТ</span></h2>
@@ -185,6 +199,7 @@ const Index = () => {
           <Link to="/reviews" className="inline-flex items-center gap-2 text-primary font-display uppercase tracking-wider hover:gap-3 transition-all">
             Все отзывы <Icon name="ArrowRight" size={16} />
           </Link>
+        </div>
         </div>
       </section>
 
