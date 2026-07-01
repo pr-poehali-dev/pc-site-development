@@ -212,11 +212,13 @@
     0 0 40px hsl(145 80% 55% / 0.22);
 }
 .btn-glow-green {
-  filter: drop-shadow(0 0 6px hsl(145 80% 55% / 0.55));
+  filter: drop-shadow(0 0 5px hsl(145 90% 50% / 0.75))
+    drop-shadow(0 0 12px hsl(145 90% 50% / 0.5));
   transition:
     filter 0.35s ease,
     opacity 0.2s ease;
 }
 .btn-glow-green:hover {
-  filter: drop-shadow(0 0 12px hsl(145 80% 55% / 0.9));
+  filter: drop-shadow(0 0 9px hsl(145 90% 50% / 0.95))
+    drop-shadow(0 0 20px hsl(145 90% 50% / 0.65));
 }
