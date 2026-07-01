@@ -28,7 +28,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             />
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1 shrink-0">
+          <nav className="hidden md:flex flex-1 items-center justify-center gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.to}
