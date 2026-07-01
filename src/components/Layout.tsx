@@ -22,7 +22,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           {/* Логотип */}
           <Link to="/" className="flex items-center group min-w-0 -ml-4 sm:-ml-6">
             <img
-              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/38d9c789-b717-45e5-8a7a-02221961fdbb.png"
+              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/files/2e2e3770-e07d-4471-959f-a83481eeb01a.jpg"
               alt="White Friday PC"
               className="h-28 sm:h-36 w-auto object-contain"
             />
