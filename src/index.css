@@ -92,14 +92,10 @@
 
 @layer utilities {
   .text-glow-cyan {
-    text-shadow:
-      0 0 10px hsl(0 0% 100% / 0.5),
-      0 0 30px hsl(0 0% 100% / 0.25);
+    text-shadow: none;
   }
   .text-glow-magenta {
-    text-shadow:
-      0 0 10px hsl(0 0% 100% / 0.6),
-      0 0 20px hsl(0 0% 100% / 0.3);
+    text-shadow: none;
   }
   .border-glow-cyan {
     box-shadow:
