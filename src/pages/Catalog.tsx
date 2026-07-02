@@ -38,7 +38,7 @@ const Catalog = () => {
             <Icon name="LoaderCircle" size={28} className="animate-spin" />
           </div>
         ) : (
-          <div className="grid md:grid-cols-3 gap-6 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
             {builds.map((b, i) => (
               <CatalogCard key={b.id} build={b} index={i} />
             ))}

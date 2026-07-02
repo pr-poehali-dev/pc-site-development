@@ -24,7 +24,7 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
   const visible = fullSpecs.filter((s) => s.value && s.value !== '—' && s.value !== '');
 
   return (
-    <div className="group bg-card border border-border clip-corner overflow-hidden hover-glow-green animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
+    <div className="group min-w-0 bg-card border border-border clip-corner overflow-hidden hover-glow-green animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
       <div className="relative overflow-hidden">
         <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500" />
         {b.buildDate && (
@@ -40,10 +40,10 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
 
         {/* Краткий список */}
         <ul className="space-y-2 mb-4 text-sm font-sans">
-          <li className="flex items-center gap-2"><Icon name="Cpu" size={14} className="text-primary shrink-0" /> {b.specs.cpu}</li>
-          <li className="flex items-center gap-2"><Icon name="MonitorPlay" size={14} className="text-primary shrink-0" /> {b.specs.gpu}</li>
-          <li className="flex items-center gap-2"><Icon name="MemoryStick" size={14} className="text-primary shrink-0" /> {b.specs.ram}</li>
-          <li className="flex items-center gap-2"><Icon name="HardDrive" size={14} className="text-primary shrink-0" /> {b.specs.storage}</li>
+          <li className="flex items-center gap-2"><Icon name="Cpu" size={14} className="text-primary shrink-0" /> <span className="min-w-0 break-words">{b.specs.cpu}</span></li>
+          <li className="flex items-center gap-2"><Icon name="MonitorPlay" size={14} className="text-primary shrink-0" /> <span className="min-w-0 break-words">{b.specs.gpu}</span></li>
+          <li className="flex items-center gap-2"><Icon name="MemoryStick" size={14} className="text-primary shrink-0" /> <span className="min-w-0 break-words">{b.specs.ram}</span></li>
+          <li className="flex items-center gap-2"><Icon name="HardDrive" size={14} className="text-primary shrink-0" /> <span className="min-w-0 break-words">{b.specs.storage}</span></li>
         </ul>
 
         {/* Раскрываемый полный список */}
