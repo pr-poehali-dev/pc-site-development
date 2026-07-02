@@ -22,7 +22,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           {/* Логотип */}
           <Link to="/" className="flex flex-1 items-center group min-w-0 -ml-6 sm:-ml-12">
             <img
-              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/744ec6a5-630e-4ac2-a27c-9e5988bb0390.png"
+              src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/85b4ce1f-a80b-4f4f-bbc3-300fafd4b67e.png"
               alt="White Friday PC"
               className="h-32 sm:h-36 w-auto object-contain -my-8"
             />
@@ -93,7 +93,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <div className="md:col-span-2">
             <div className="h-20 max-w-full overflow-hidden flex items-center">
               <img
-                src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/38d9c789-b717-45e5-8a7a-02221961fdbb.png"
+                src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/85b4ce1f-a80b-4f4f-bbc3-300fafd4b67e.png"
                 alt="White Friday PC"
                 className="h-20 w-auto max-w-full object-contain object-left origin-left scale-125"
               />
