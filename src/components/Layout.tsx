@@ -44,7 +44,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             ))}
           </nav>
 
-          <div className="flex flex-1 justify-end items-center gap-3 -mr-2 sm:-mr-4">
+          <div className="flex flex-1 min-w-0 justify-end items-center gap-3 -mr-2 sm:-mr-4">
             <div className="hidden md:flex items-center gap-3 mx-auto">
               <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
                 <Icon name="MessagesSquare" size={24} />
@@ -63,18 +63,18 @@ const Layout = ({ children }: { children: ReactNode }) => {
               <Icon name="MessageCircle" size={16} />
               Заказать
             </Link>
-            <div className="flex md:hidden items-center gap-4">
+            <div className="flex md:hidden items-center gap-3 shrink-0">
               <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="MessagesSquare" size={22} />
+                <Icon name="MessagesSquare" size={20} />
               </a>
               <a href="https://t.me/White_Friday_PC" target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="Send" size={22} />
+                <Icon name="Send" size={20} />
               </a>
               <a href="https://www.youtube.com/@WhiteFriday-PC" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="Youtube" size={22} />
+                <Icon name="Youtube" size={20} />
               </a>
               <button className="text-white" onClick={() => setOpen(!open)}>
-                <Icon name={open ? 'X' : 'Menu'} size={28} />
+                <Icon name={open ? 'X' : 'Menu'} size={26} />
               </button>
             </div>
           </div>
