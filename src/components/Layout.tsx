@@ -88,7 +88,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
       <main className="flex-1">{children}</main>
 
-      <footer className="border-t border-black/20 mt-12 md:mt-20" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
+      <footer className="border-t border-black/20" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
         <div className="container py-6 grid md:grid-cols-4 gap-6">
           <div className="md:col-span-2">
             <div className="h-20 max-w-full overflow-hidden flex items-center">
