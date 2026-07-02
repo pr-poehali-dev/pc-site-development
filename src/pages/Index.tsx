@@ -235,12 +235,12 @@ const Index = () => {
             className="w-full h-full object-contain object-center opacity-40"
           />
           <div className="absolute inset-0 bg-background/55" />
-          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent" />
         </div>
 
       {/* FAQ */}
-      <section className="relative z-10 container py-12 md:py-20 max-w-2xl">
+      <section className="relative z-10 container pt-24 md:pt-32 pb-12 md:pb-20 max-w-2xl">
         <div className="text-center mb-8 md:mb-12">
           <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">FAQ</p>
           <h2 className="font-display text-3xl md:text-5xl font-bold">ЧАСТЫЕ <span className="text-primary text-glow-cyan">ВОПРОСЫ</span></h2>
