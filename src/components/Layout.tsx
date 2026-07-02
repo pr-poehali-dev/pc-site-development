@@ -15,7 +15,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col overflow-x-hidden">
       <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-border overflow-hidden" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
         <div className="container flex items-center justify-between h-20">
 
