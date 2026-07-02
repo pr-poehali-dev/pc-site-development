@@ -264,7 +264,7 @@ const Index = () => {
 
       {/* CTA */}
       <section className="relative z-10 container pb-12 md:pb-20">
-        <div className="relative p-8 md:p-16 text-center bg-card/25 backdrop-blur-md border border-border/50 clip-corner overflow-hidden grid-bg">
+        <div className="relative w-[70%] mx-auto p-6 md:p-10 text-center bg-card/12 backdrop-blur-md border border-border/50 clip-corner overflow-hidden grid-bg">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
           <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
           <Link to="/contacts" className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
