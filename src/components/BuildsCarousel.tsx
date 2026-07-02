@@ -95,10 +95,10 @@ const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: 
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    <Link to="/contacts" className="px-5 py-2.5 bg-primary text-primary-foreground font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 btn-glow-green">
+                    <Link to="/contacts" className="px-5 py-2.5 btn-primary font-display uppercase text-xs tracking-wider clip-corner btn-glow-green">
                       Нужен этот вариант
                     </Link>
-                    <Link to="/contacts" className="px-5 py-2.5 border border-border text-foreground font-display uppercase text-xs tracking-wider clip-corner hover:border-primary/50 transition-colors">
+                    <Link to="/contacts" className="px-5 py-2.5 btn-primary font-display uppercase text-xs tracking-wider clip-corner">
                       Другой вариант
                     </Link>
                   </div>

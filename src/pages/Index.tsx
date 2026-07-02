@@ -60,10 +60,10 @@ const Index = () => {
               Игровые и рабочие станции с характером. Максимальная мощность, строгий стиль и гарантия 3 года.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link to="/catalog" className="flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 btn-glow-green">
+              <Link to="/catalog" className="flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green">
                 Смотреть сборки <Icon name="ArrowRight" size={18} />
               </Link>
-              <Link to="/contacts" className="flex items-center gap-2 px-7 py-3.5 border border-border text-foreground font-display uppercase tracking-wider clip-corner hover:border-primary/50 transition-colors">
+              <Link to="/contacts" className="flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner">
                 <Icon name="MessageCircle" size={18} /> Консультация
               </Link>
             </div>
@@ -273,7 +273,7 @@ const Index = () => {
         <div className="relative w-full md:w-[49%] mx-auto p-4 md:p-7 text-center">
           <h2 className="font-display text-2xl md:text-4xl font-bold mb-3">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
           <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
-          <Link to="/contacts" className="inline-flex items-center gap-2 px-6 py-3 text-sm bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
+          <Link to="/contacts" className="inline-flex items-center gap-2 px-6 py-3 text-sm btn-primary font-display uppercase tracking-wider clip-corner border-glow-cyan">
             Получить консультацию <Icon name="MessageCircle" size={18} />
           </Link>
         </div>

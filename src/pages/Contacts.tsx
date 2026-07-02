@@ -84,7 +84,7 @@ const Contacts = () => {
             <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Сообщение</label>
             <textarea rows={4} placeholder="Какая сборка интересует?" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors resize-none" />
           </div>
-          <button type="submit" className="w-full flex items-center justify-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 btn-glow-green">
+          <button type="submit" className="w-full flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green">
             Отправить заявку <Icon name="Send" size={18} />
           </button>
         </form>

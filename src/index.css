@@ -213,6 +213,20 @@
     0 0 16px hsl(145 80% 55% / 0.45),
     0 0 40px hsl(145 80% 55% / 0.22);
 }
+.btn-primary {
+  background: hsl(145 80% 55%);
+  color: hsl(0 0% 8%);
+  font-weight: 700;
+  transition:
+    filter 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+.btn-primary svg {
+  color: hsl(0 0% 8%);
+}
 .btn-glow-green {
   position: relative;
   isolation: isolate;

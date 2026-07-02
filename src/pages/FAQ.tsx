@@ -37,7 +37,7 @@ const FAQ = () => {
         <div className="mt-12 p-6 md:p-8 text-center bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 clip-corner">
           <h2 className="font-display text-2xl uppercase tracking-wide mb-3">Не нашли ответ?</h2>
           <p className="text-muted-foreground mb-6">Наши инженеры на связи 24/7 и помогут с любым вопросом.</p>
-          <Link to="/contacts" className="inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 btn-glow-green">
+          <Link to="/contacts" className="inline-flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green">
             Задать вопрос <Icon name="MessageCircle" size={18} />
           </Link>
         </div>
