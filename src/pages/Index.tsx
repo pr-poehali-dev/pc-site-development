@@ -232,7 +232,7 @@ const Index = () => {
             src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/5db2b1cb-2bc0-4352-ba72-45926de2ec1d.jpg"
             alt=""
             aria-hidden
-            className="w-full h-full object-contain object-bottom opacity-40"
+            className="w-full h-full object-contain object-top opacity-40"
           />
           <div className="absolute inset-0 bg-background/55" />
           <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background to-transparent" />
