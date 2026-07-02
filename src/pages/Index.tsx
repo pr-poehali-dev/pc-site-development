@@ -147,9 +147,9 @@ const Index = () => {
           <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">Отзывы</p>
           <h2 className="font-display text-3xl md:text-5xl font-bold">НАМ <span className="text-secondary text-glow-magenta">ДОВЕРЯЮТ</span></h2>
         </div>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {homeReviews.map((r, i) => (
-            <div key={i} className="flex flex-col p-8 bg-card/25 backdrop-blur-md border border-border/50 clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+            <div key={i} className="flex flex-col min-w-0 p-8 bg-card/25 backdrop-blur-md border border-border/50 clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex gap-1">
                   {Array.from({ length: 5 }).map((_, j) => (
@@ -175,7 +175,7 @@ const Index = () => {
                     {truncated && (
                       <Link
                         to={`/reviews#review-${i}`}
-                        className="ml-1 inline-flex items-center gap-1 text-primary font-display uppercase text-xs tracking-wider hover:underline whitespace-nowrap"
+                        className="ml-1 inline-flex items-center gap-1 text-primary font-display uppercase text-xs tracking-wider hover:underline"
                       >
                         Читать далее <Icon name="ArrowRight" size={12} />
                       </Link>
