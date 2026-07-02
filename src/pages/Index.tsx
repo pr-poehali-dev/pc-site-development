@@ -240,8 +240,8 @@ const Index = () => {
         </div>
 
       {/* FAQ */}
-      <section className="relative z-10 container pt-12 md:pt-16 pb-12 md:pb-20 max-w-2xl">
-        <div className="text-center mb-8 md:mb-12">
+      <section className="relative z-10 container pt-6 md:pt-8 pb-12 md:pb-20 max-w-2xl">
+        <div className="text-center mb-4 md:mb-6">
           <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">FAQ</p>
           <h2 className="font-display text-3xl md:text-5xl font-bold">ЧАСТЫЕ <span className="text-primary text-glow-cyan">ВОПРОСЫ</span></h2>
         </div>
