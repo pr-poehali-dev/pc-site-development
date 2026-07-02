@@ -91,11 +91,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <footer className="border-t border-black/20 mt-12 md:mt-20" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
         <div className="container py-6 grid md:grid-cols-4 gap-6">
           <div className="md:col-span-2">
-            <div className="h-20 overflow-hidden flex items-center">
+            <div className="h-20 max-w-full overflow-hidden flex items-center">
               <img
                 src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/38d9c789-b717-45e5-8a7a-02221961fdbb.png"
                 alt="White Friday PC"
-                className="h-20 w-auto object-contain origin-left scale-150"
+                className="h-20 w-auto max-w-full object-contain object-left origin-left scale-125"
               />
             </div>
             <p className="text-black/80 max-w-sm mt-2">
