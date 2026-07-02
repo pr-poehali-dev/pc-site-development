@@ -28,6 +28,18 @@ const Layout = ({ children }: { children: ReactNode }) => {
             />
           </Link>
 
+          <div className="hidden md:flex items-center gap-3 shrink-0 mr-4">
+            <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
+              <Icon name="MessagesSquare" size={24} />
+            </a>
+            <a href="https://t.me/White_Friday_PC" target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-black/70 hover:text-white transition-colors">
+              <Icon name="Send" size={24} />
+            </a>
+            <a href="https://www.youtube.com/@WhiteFriday-PC" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-black/70 hover:text-white transition-colors">
+              <Icon name="Youtube" size={24} />
+            </a>
+          </div>
+
           <nav className="hidden md:flex items-center justify-center gap-1 shrink-0">
             {navItems.map((item) => (
               <Link
@@ -45,17 +57,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </nav>
 
           <div className="flex flex-1 justify-end items-center gap-3 -mr-2 sm:-mr-4">
-            <div className="hidden md:flex items-center gap-3 mx-auto">
-              <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="MessagesSquare" size={24} />
-              </a>
-              <a href="https://t.me/White_Friday_PC" target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="Send" size={24} />
-              </a>
-              <a href="https://www.youtube.com/@WhiteFriday-PC" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="Youtube" size={24} />
-              </a>
-            </div>
             <Link
               to="/contacts"
               className="hidden md:flex items-center gap-2 px-3.5 py-2 btn-primary font-display uppercase text-sm tracking-wider clip-corner btn-glow-green"
