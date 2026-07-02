@@ -254,7 +254,7 @@ const Index = () => {
         <Accordion type="single" collapsible className="space-y-2">
           {homeFaq.map((item, i) => (
             <AccordionItem key={i} value={`item-${i}`} className="bg-card/12 backdrop-blur-md border border-border/50 clip-corner px-4 transition-all duration-300 data-[state=open]:border-glow-green data-[state=open]:bg-card/25">
-              <AccordionTrigger className="font-display uppercase tracking-wide text-left text-sm whitespace-nowrap hover:text-primary hover:no-underline">
+              <AccordionTrigger className="font-display uppercase tracking-wide text-left text-sm md:whitespace-nowrap hover:text-primary hover:no-underline">
                 {item.q}
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground">{item.a}</AccordionContent>
@@ -270,7 +270,7 @@ const Index = () => {
 
       {/* CTA */}
       <section className="relative z-10 container pb-2 md:pb-4">
-        <div className="relative w-[70%] md:w-[49%] mx-auto p-4 md:p-7 text-center">
+        <div className="relative w-full md:w-[49%] mx-auto p-4 md:p-7 text-center">
           <h2 className="font-display text-2xl md:text-4xl font-bold mb-3">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
           <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
           <Link to="/contacts" className="inline-flex items-center gap-2 px-6 py-3 text-sm bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
