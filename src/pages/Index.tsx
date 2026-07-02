@@ -263,7 +263,7 @@ const Index = () => {
       </section>
 
       {/* CTA */}
-      <section className="relative z-10 container pb-12 md:pb-20">
+      <section className="relative z-10 container pb-2 md:pb-4">
         <div className="relative w-[70%] md:w-[49%] mx-auto p-4 md:p-7 text-center">
           <h2 className="font-display text-2xl md:text-4xl font-bold mb-3">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
           <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
