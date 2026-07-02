@@ -224,15 +224,30 @@ const Index = () => {
         </div>
       </section>
 
+      {/* FAQ + CTA с фоном */}
+      <div className="relative overflow-hidden">
+        {/* Фоновое фото сборки */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img
+            src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/5db2b1cb-2bc0-4352-ba72-45926de2ec1d.jpg"
+            alt=""
+            aria-hidden
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-background/55" />
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        </div>
+
       {/* FAQ */}
-      <section className="container py-12 md:py-20 max-w-3xl">
+      <section className="relative z-10 container py-12 md:py-20 max-w-3xl">
         <div className="text-center mb-8 md:mb-12">
           <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">FAQ</p>
           <h2 className="font-display text-3xl md:text-5xl font-bold">ЧАСТЫЕ <span className="text-primary text-glow-cyan">ВОПРОСЫ</span></h2>
         </div>
         <Accordion type="single" collapsible className="space-y-3">
           {homeFaq.map((item, i) => (
-            <AccordionItem key={i} value={`item-${i}`} className="bg-card border border-border clip-corner px-6 transition-all duration-300 data-[state=open]:border-glow-green data-[state=open]:bg-card/80">
+            <AccordionItem key={i} value={`item-${i}`} className="bg-card/25 backdrop-blur-md border border-border/50 clip-corner px-6 transition-all duration-300 data-[state=open]:border-glow-green data-[state=open]:bg-card/40">
               <AccordionTrigger className="font-display uppercase tracking-wide text-left hover:text-primary hover:no-underline">
                 {item.q}
               </AccordionTrigger>
@@ -248,8 +263,8 @@ const Index = () => {
       </section>
 
       {/* CTA */}
-      <section className="container pb-12 md:pb-20">
-        <div className="relative p-8 md:p-16 text-center bg-card border border-border clip-corner overflow-hidden grid-bg">
+      <section className="relative z-10 container pb-12 md:pb-20">
+        <div className="relative p-8 md:p-16 text-center bg-card/25 backdrop-blur-md border border-border/50 clip-corner overflow-hidden grid-bg">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
           <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
           <Link to="/contacts" className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-display uppercase tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan">
@@ -257,6 +272,7 @@ const Index = () => {
           </Link>
         </div>
       </section>
+      </div>
     </Layout>
   );
 };
