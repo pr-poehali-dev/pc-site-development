@@ -77,7 +77,7 @@ const Index = () => {
                 { value: '2400+', label: 'Собранных ПК' },
                 { value: 'до 24ч', label: 'Стресс-тесты' },
                 { value: 'до 10 лет', label: 'Гарантия на комплектующие' },
-                { value: '24/7', label: 'Поддержка (почти =))' },
+                { value: '11–22', label: 'Поддержка по МСК' },
               ].map((m, i) => (
                 <div key={i} className="text-center">
                   <p className="font-display text-2xl md:text-4xl font-bold text-primary mb-1 tracking-tight whitespace-nowrap">{m.value}</p>
