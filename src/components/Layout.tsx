@@ -4,7 +4,7 @@ import { ReactNode, useState } from 'react';
 
 const navItems = [
   { to: '/', label: 'Главная' },
-  { to: '/catalog', label: 'Наши сборки' },
+  { to: '/catalog', label: 'Наши проекты' },
   { to: '/reviews', label: 'Отзывы' },
   { to: '/faq', label: 'Вопрос-ответ' },
   { to: '/contacts', label: 'Контакты и доставка' },
