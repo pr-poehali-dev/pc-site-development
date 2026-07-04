@@ -120,8 +120,8 @@ const Contacts = () => {
               <div className="w-14 h-14 flex items-center justify-center bg-primary/10 text-primary clip-corner">
                 <Icon name="CheckCircle2" size={30} />
               </div>
-              <p className="font-display text-xl uppercase tracking-wide">Заявка отправлена!</p>
-              <p className="text-muted-foreground text-sm">Мы свяжемся с вами в ближайшее время.</p>
+              <p className="font-display text-xl uppercase tracking-wide">Ваша заявка отправлена!</p>
+              <p className="text-muted-foreground text-sm">Наши менеджеры отвечают на заявки с 11 до 22 часов по Московскому времени!</p>
             </div>
           ) : (
             <>
