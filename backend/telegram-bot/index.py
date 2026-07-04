@@ -109,6 +109,8 @@ def main_menu_kb(is_admin: bool):
     rows = [[{'text': '🔍 Отследить заказ', 'callback_data': 'track'}]]
     if is_admin:
         rows.append([{'text': '🛠 Админ-панель', 'callback_data': 'admin_panel'}])
+    else:
+        rows.append([{'text': '🔑 Войти как администратор', 'callback_data': 'admin_login'}])
     return {'inline_keyboard': rows}
 
 
@@ -298,6 +300,12 @@ def handle_callback(conn, callback: dict):
         set_user_state(conn, tg_user, 'track_number', None)
         answer_callback(cb_id)
         send(chat_id, "Введите номер вашего заказа (например 1001):")
+        return
+
+    if data == 'admin_login':
+        set_user_state(conn, tg_user, 'admin_password', None)
+        answer_callback(cb_id)
+        send(chat_id, "🔒 Введите пароль администратора:")
         return
 
     if data == 'admin_panel':
