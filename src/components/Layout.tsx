@@ -47,17 +47,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </nav>
 
           <div className="flex flex-1 min-w-0 justify-end items-center gap-3 pl-2">
-            <div className="hidden xl:flex items-center gap-3">
-              <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="MessagesSquare" size={24} />
-              </a>
-              <a href="https://t.me/White_Friday_PC" target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="Send" size={24} />
-              </a>
-              <a href="https://www.youtube.com/@WhiteFriday-PC" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="Youtube" size={24} />
-              </a>
-            </div>
             <Link
               to="/contacts"
               className="hidden md:flex items-center gap-2 px-3.5 py-2 btn-primary font-display uppercase text-sm tracking-wider clip-corner btn-glow-green whitespace-nowrap"
