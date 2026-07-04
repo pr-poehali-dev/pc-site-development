@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { socials, contactInfo } from '@/data/content';
@@ -15,6 +16,7 @@ const delivery = [
 ];
 
 const Contacts = () => {
+  const [contactMethod, setContactMethod] = useState<'' | 'call' | 'text'>('');
   return (
     <Layout>
       <section className="grid-bg border-b border-border">
@@ -76,8 +78,29 @@ const Contacts = () => {
             <input type="tel" placeholder="+7 (___) ___-__-__" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors" />
           </div>
           <div>
+            <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Никнейм в Telegram (необязательно)</label>
+            <input type="text" placeholder="@username" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors" />
+          </div>
+          <div>
             <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Сообщение</label>
             <textarea rows={4} placeholder="Какая сборка интересует?" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors resize-none" />
+          </div>
+          <div>
+            <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Как удобнее связаться?</label>
+            <div className="flex flex-wrap gap-2">
+              {([['call', 'Лучше звонить'], ['text', 'Лучше писать']] as const).map(([val, txt]) => (
+                <button
+                  key={val}
+                  type="button"
+                  onClick={() => setContactMethod(val)}
+                  className={`px-5 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
+                    contactMethod === val ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                  }`}
+                >
+                  {txt}
+                </button>
+              ))}
+            </div>
           </div>
           <button type="submit" className="w-full flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green">
             Отправить заявку <Icon name="Send" size={18} />
