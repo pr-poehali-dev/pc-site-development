@@ -157,6 +157,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 <Icon name="MapPin" size={16} className="text-white shrink-0" /> {contactInfo.address}
               </li>
             </ul>
+
+            <h4 className="font-display uppercase tracking-wider text-white mt-6 mb-3">Реквизиты</h4>
+            <ul className="space-y-1 text-black/70 text-sm leading-relaxed">
+              <li>ИП Киргизова Анастасия Владимировна</li>
+              <li>ИНН: 772585008234</li>
+              <li>Расчётный счёт: 40802810420000213855</li>
+              <li>ОГРНИП: 324774600026339</li>
+            </ul>
           </div>
         </div>
         <div className="border-t border-black/20 py-3 flex items-center justify-center gap-2 text-black/70 text-sm">
