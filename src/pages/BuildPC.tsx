@@ -20,7 +20,6 @@ const buildBudgetSteps = () => {
 };
 const budgetSteps = buildBudgetSteps();
 
-const cooling = ['Воздушное', 'Жидкостное (СЖО)', 'Кастомная СЖО (КСЖО)', 'На выбор мастера'];
 const cases = ['Компактный (Mini-ITX)', 'Средний (Mid-Tower)', 'Большой (Full-Tower)', 'На выбор мастера'];
 const rgbOptions = ['Без подсветки', 'Минимальная', 'Яркая RGB', 'На выбор мастера'];
 const silenceOptions = [
@@ -47,7 +46,6 @@ const BuildPC = () => {
   const [customBudgetValue, setCustomBudgetValue] = useState('');
   const [prefMode, setPrefMode] = useState<'' | 'yes' | 'manager'>('');
   const [prefText, setPrefText] = useState('');
-  const [coolingType, setCoolingType] = useState('');
   const [caseType, setCaseType] = useState('');
   const [rgb, setRgb] = useState('');
   const [styleText, setStyleText] = useState('');
@@ -85,7 +83,6 @@ const BuildPC = () => {
     { label: 'Назначение', value: purposeLabel },
     { label: 'Бюджет', value: budgetLabel },
     { label: 'Комплектующие', value: prefLabel },
-    { label: 'Охлаждение', value: coolingType || '—' },
     { label: 'Wi-Fi / Bluetooth', value: wirelessLabel },
     { label: 'Запас на апгрейд', value: upgradeLabel },
     { label: 'Важность тишины', value: silence || '—' },
@@ -252,14 +249,6 @@ const BuildPC = () => {
 
           {step === 1 && (
             <>
-              <div>
-                <label className={labelCls}>Охлаждение</label>
-                <select className={selectCls} value={coolingType} onChange={(e) => setCoolingType(e.target.value)}>
-                  <option value="" disabled>Выберите тип</option>
-                  {cooling.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-
               <div>
                 <label className={labelCls}>Нужны беспроводные интерфейсы (Wi-Fi и Bluetooth)?</label>
                 <div className="flex flex-wrap gap-2">
