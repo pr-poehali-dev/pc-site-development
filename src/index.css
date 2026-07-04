@@ -61,6 +61,13 @@
     max-width: 100%;
   }
 
+  /* На мобильных уменьшаем базовый масштаб на 15% — больше информации на экране */
+  @media (max-width: 767px) {
+    html {
+      font-size: 85%;
+    }
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: "Rubik", sans-serif;
