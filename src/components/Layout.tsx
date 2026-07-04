@@ -30,7 +30,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             />
           </Link>
 
-          <nav className="hidden md:flex items-center justify-center gap-1 shrink-0 pl-2 -mr-1 ml-auto">
+          <nav className="hidden md:flex items-center justify-center gap-1 shrink-0 px-2 ml-auto">
             {navItems.map((item) => (
               <Link
                 key={item.to}
@@ -60,7 +60,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </div>
             <Link
               to="/contacts"
-              className="hidden md:flex items-center gap-2 px-3.5 py-2 btn-primary font-display uppercase text-sm tracking-wider clip-corner btn-glow-green whitespace-nowrap"
+              className="hidden md:flex items-center gap-2 md:ml-4 lg:ml-6 px-3.5 py-2 btn-primary font-display uppercase text-sm tracking-wider clip-corner btn-glow-green whitespace-nowrap"
             >
               <Icon name="MessageCircle" size={16} />
               Заказать
