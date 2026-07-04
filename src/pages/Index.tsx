@@ -57,7 +57,7 @@ const Index = () => {
               <span className="text-secondary text-glow-magenta">МЕЧТЫ</span>
             </h1>
             <p className="text-muted-foreground text-lg mb-8 max-w-md">
-              Игровые и рабочие станции с характером. Максимальная мощность, строгий стиль и гарантия 3 года.
+              Высокопроизводительные игровые компьютеры и рабочие станции для профессиональных задач. Подберем идеальную конфигурацию под ваши требования.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link to="/catalog" className="flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green">
