@@ -42,7 +42,10 @@ const BuildPC = () => {
   const [customBudgetValue, setCustomBudgetValue] = useState('');
   const [prefMode, setPrefMode] = useState<'' | 'yes' | 'manager'>('');
   const [prefText, setPrefText] = useState('');
+  const [coolingType, setCoolingType] = useState('');
+  const [caseType, setCaseType] = useState('');
   const [rgb, setRgb] = useState('');
+  const [styleText, setStyleText] = useState('');
 
   const canNextStep1 = purpose && prefMode && (prefMode === 'manager' || prefText.trim());
 
@@ -58,6 +61,23 @@ const BuildPC = () => {
   };
 
   const [minB, maxB] = budgetSteps[budgetIdx];
+
+  const budgetLabel = customBudget
+    ? (customBudgetValue ? fmt(Number(customBudgetValue)) : 'не указан')
+    : `${fmt(minB)} — ${fmt(maxB)}`;
+
+  const purposeLabel = purposeOptions.find((p) => p.id === purpose)?.title || '—';
+  const prefLabel = prefMode === 'manager' ? 'На выбор менеджера' : (prefText.trim() || '—');
+
+  const summary = [
+    { label: 'Назначение', value: purposeLabel },
+    { label: 'Бюджет', value: budgetLabel },
+    { label: 'Комплектующие', value: prefLabel },
+    { label: 'Охлаждение', value: coolingType || '—' },
+    { label: 'Корпус', value: caseType || '—' },
+    { label: 'Подсветка', value: rgb || '—' },
+    { label: 'Пожелания по стилю', value: styleText.trim() || '—' },
+  ];
 
   return (
     <Layout>
@@ -219,7 +239,7 @@ const BuildPC = () => {
             <>
               <div>
                 <label className={labelCls}>Охлаждение</label>
-                <select className={selectCls} defaultValue="">
+                <select className={selectCls} value={coolingType} onChange={(e) => setCoolingType(e.target.value)}>
                   <option value="" disabled>Выберите тип</option>
                   {cooling.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -248,7 +268,7 @@ const BuildPC = () => {
             <>
               <div>
                 <label className={labelCls}>Форм-фактор / корпус</label>
-                <select className={selectCls} defaultValue="">
+                <select className={selectCls} value={caseType} onChange={(e) => setCaseType(e.target.value)}>
                   <option value="" disabled>Выберите вариант</option>
                   {cases.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -277,7 +297,7 @@ const BuildPC = () => {
 
               <div>
                 <label className={labelCls}>Пожелания по стилю и подсветке</label>
-                <textarea rows={4} placeholder="Цвет корпуса, RGB, тихая сборка, кастомные детали и т.д." className={`${inputCls} resize-none`} />
+                <textarea rows={4} value={styleText} onChange={(e) => setStyleText(e.target.value)} placeholder="Цвет корпуса, RGB, тихая сборка, кастомные детали и т.д." className={`${inputCls} resize-none`} />
               </div>
 
               <div className="flex gap-3">
@@ -301,6 +321,18 @@ const BuildPC = () => {
 
           {step === 3 && (
             <>
+              <div>
+                <label className={labelCls}>Ваша конфигурация</label>
+                <div className="bg-background border border-border clip-corner divide-y divide-border">
+                  {summary.map((row) => (
+                    <div key={row.label} className="flex gap-4 px-4 py-3 text-sm">
+                      <span className="text-muted-foreground font-display uppercase tracking-wide text-xs shrink-0 w-40 pt-0.5">{row.label}</span>
+                      <span className="flex-1 text-foreground">{row.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
                   <label className={labelCls}>Имя</label>
