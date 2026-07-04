@@ -28,6 +28,13 @@ const silenceOptions = [
   'Не имеет значения, главное чтобы не работал как вертолёт',
 ];
 
+const sizeOptions = [
+  { id: 'itx-sff', title: 'Компактный ITX / SFF', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/97c174e9-f073-47d1-ae1f-b265950e0423.png' },
+  { id: 'compact-matx', title: 'Компактный mATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/c2256bf4-09d5-42b2-bd22-554fcc4f674b.jpg' },
+  { id: 'standard-matx', title: 'Стандартный mATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a3966c80-12e1-4a42-88cc-f20850e9f0c7.jpg' },
+  { id: 'standard-atx', title: 'Стандартный ATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/502e671e-9483-4d18-9d13-fd730ad55643.jpg' },
+];
+
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 
 const selectCls =
@@ -36,7 +43,7 @@ const inputCls =
   'w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors';
 const labelCls = 'block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide';
 
-const steps = ['Задачи и бюджет', 'Детали сборки', 'Внешний вид', 'Контакты'];
+const steps = ['Задачи и бюджет', 'Детали сборки', 'Размер ПК', 'Внешний вид', 'Контакты'];
 
 const BuildPC = () => {
   const [step, setStep] = useState(0);
@@ -53,6 +60,7 @@ const BuildPC = () => {
   const [upgrade, setUpgrade] = useState<'' | 'yes' | 'no' | 'other'>('');
   const [upgradeText, setUpgradeText] = useState('');
   const [silence, setSilence] = useState('');
+  const [pcSize, setPcSize] = useState('');
 
   const canNextStep1 = purpose && prefMode && (prefMode === 'manager' || prefText.trim());
 
@@ -86,6 +94,7 @@ const BuildPC = () => {
     { label: 'Wi-Fi / Bluetooth', value: wirelessLabel },
     { label: 'Запас на апгрейд', value: upgradeLabel },
     { label: 'Важность тишины', value: silence || '—' },
+    { label: 'Размер ПК', value: sizeOptions.find((s) => s.id === pcSize)?.title || '—' },
     { label: 'Корпус', value: caseType || '—' },
     { label: 'Подсветка', value: rgb || '—' },
     { label: 'Пожелания по стилю', value: styleText.trim() || '—' },
@@ -336,6 +345,59 @@ const BuildPC = () => {
           {step === 2 && (
             <>
               <div>
+                <label className={labelCls}>Выберите размер ПК</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {sizeOptions.map((s) => {
+                    const active = pcSize === s.id;
+                    return (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => setPcSize(s.id)}
+                        className={`group text-left clip-corner border overflow-hidden transition-colors ${
+                          active ? 'border-glow-cyan' : 'border-border hover:border-primary/40'
+                        }`}
+                      >
+                        <div className="relative aspect-video bg-background overflow-hidden">
+                          <img src={s.image} alt={s.title} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                          {active && (
+                            <div className="absolute top-2 right-2 w-7 h-7 rounded-full btn-primary flex items-center justify-center">
+                              <Icon name="Check" size={16} />
+                            </div>
+                          )}
+                        </div>
+                        <div className={`px-4 py-3 text-sm font-display uppercase tracking-wide ${active ? 'btn-primary' : 'bg-card text-muted-foreground'}`}>
+                          {s.title}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={back}
+                  className="flex items-center justify-center gap-2 px-6 py-3.5 bg-background border border-border font-display uppercase tracking-wider clip-corner hover:border-primary/40 transition-colors"
+                >
+                  <Icon name="ArrowLeft" size={18} /> Назад
+                </button>
+                <button
+                  type="button"
+                  onClick={next}
+                  disabled={!pcSize}
+                  className="flex-1 flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Далее <Icon name="ArrowRight" size={18} />
+                </button>
+              </div>
+            </>
+          )}
+
+          {step === 3 && (
+            <>
+              <div>
                 <label className={labelCls}>Форм-фактор / корпус</label>
                 <select className={selectCls} value={caseType} onChange={(e) => setCaseType(e.target.value)}>
                   <option value="" disabled>Выберите вариант</option>
@@ -388,7 +450,7 @@ const BuildPC = () => {
             </>
           )}
 
-          {step === 3 && (
+          {step === 4 && (
             <>
               <div>
                 <label className={labelCls}>Ваша конфигурация</label>
