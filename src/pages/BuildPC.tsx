@@ -172,6 +172,8 @@ const BuildPC = () => {
                 </div>
               </div>
 
+              <div className="h-px bg-border" />
+
               <div>
                 <label className={labelCls}>Бюджет</label>
                 <div className="bg-background border border-border clip-corner p-5">
@@ -227,6 +229,8 @@ const BuildPC = () => {
                   )}
                 </div>
               </div>
+
+              <div className="h-px bg-border" />
 
               <div>
                 <label className={labelCls}>Есть ли предпочтения по комплектующим?</label>
@@ -294,6 +298,8 @@ const BuildPC = () => {
                 </div>
               </div>
 
+              <div className="h-px bg-border" />
+
               <div>
                 <label className={labelCls}>Нужен ли запас для будущего апгрейда ПК?</label>
                 <p className="text-xs text-muted-foreground -mt-1 mb-2">Мощнее блок питания, продуваемый корпус, охлаждение процессора с запасом и т.д.</p>
@@ -321,6 +327,8 @@ const BuildPC = () => {
                   />
                 )}
               </div>
+
+              <div className="h-px bg-border" />
 
               <div>
                 <label className={labelCls}>Насколько важна тишина при использовании?</label>
@@ -446,6 +454,8 @@ const BuildPC = () => {
                 </div>
               </div>
 
+              <div className="h-px bg-border" />
+
               <div>
                 <label className={labelCls}>Какое пожелание по подсветке в компьютере?</label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -476,6 +486,8 @@ const BuildPC = () => {
                   })}
                 </div>
               </div>
+
+              <div className="h-px bg-border" />
 
               <div>
                 <label className={labelCls}>Какой цвет всего ПК хотелось бы?</label>
@@ -537,6 +549,8 @@ const BuildPC = () => {
                   ))}
                 </div>
               </div>
+
+              <div className="h-px bg-border" />
 
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
