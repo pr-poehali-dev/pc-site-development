@@ -12,19 +12,13 @@ const purposeOptions = [
   { id: 'server', title: 'Для серверных задач и LLM', icon: 'Server' },
 ];
 
-const budgetSteps = [
-  [50000, 75000],
-  [75000, 100000],
-  [100000, 125000],
-  [125000, 150000],
-  [150000, 175000],
-  [175000, 200000],
-  [200000, 225000],
-  [225000, 250000],
-  [250000, 300000],
-  [300000, 400000],
-  [400000, 500000],
-];
+const buildBudgetSteps = () => {
+  const steps: [number, number][] = [];
+  for (let v = 50000; v < 350000; v += 25000) steps.push([v, v + 25000]);
+  for (let v = 350000; v < 1000000; v += 50000) steps.push([v, v + 50000]);
+  return steps;
+};
+const budgetSteps = buildBudgetSteps();
 
 const cooling = ['Воздушное', 'Жидкостное (СЖО)', 'Кастомная СЖО (КСЖО)', 'На выбор мастера'];
 
@@ -42,6 +36,8 @@ const BuildPC = () => {
   const [step, setStep] = useState(0);
   const [purpose, setPurpose] = useState('');
   const [budgetIdx, setBudgetIdx] = useState(2);
+  const [customBudget, setCustomBudget] = useState(false);
+  const [customBudgetValue, setCustomBudgetValue] = useState('');
   const [prefMode, setPrefMode] = useState<'' | 'yes' | 'manager'>('');
   const [prefText, setPrefText] = useState('');
 
@@ -117,24 +113,56 @@ const BuildPC = () => {
               <div>
                 <label className={labelCls}>Бюджет</label>
                 <div className="bg-background border border-border clip-corner p-5">
-                  <div className="text-center mb-4">
-                    <span className="font-display text-2xl md:text-3xl font-bold text-primary text-glow-cyan">
-                      {fmt(minB)} — {fmt(maxB)}
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min={0}
-                    max={budgetSteps.length - 1}
-                    step={1}
-                    value={budgetIdx}
-                    onChange={(e) => setBudgetIdx(Number(e.target.value))}
-                    className="w-full accent-primary cursor-pointer"
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                    <span>{fmt(budgetSteps[0][0])}</span>
-                    <span>{fmt(budgetSteps[budgetSteps.length - 1][1])}</span>
-                  </div>
+                  {customBudget ? (
+                    <div>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={customBudgetValue}
+                        onChange={(e) => setCustomBudgetValue(e.target.value.replace(/[^\d]/g, ''))}
+                        placeholder="Введите желаемый бюджет, ₽"
+                        className={`${inputCls} text-center text-lg font-display`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => { setCustomBudget(false); setCustomBudgetValue(''); }}
+                        className="mt-3 mx-auto flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <Icon name="SlidersHorizontal" size={14} /> Вернуться к ползунку
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="text-center mb-4">
+                        <span className="font-display text-2xl md:text-3xl font-bold text-primary text-glow-cyan">
+                          {fmt(minB)} — {fmt(maxB)}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={budgetSteps.length - 1}
+                        step={1}
+                        value={budgetIdx}
+                        onChange={(e) => setBudgetIdx(Number(e.target.value))}
+                        className="budget-range w-full cursor-pointer"
+                        style={{
+                          background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${(budgetIdx / (budgetSteps.length - 1)) * 100}%, hsl(var(--border)) ${(budgetIdx / (budgetSteps.length - 1)) * 100}%, hsl(var(--border)) 100%)`,
+                        }}
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                        <span>{fmt(budgetSteps[0][0])}</span>
+                        <span>{fmt(budgetSteps[budgetSteps.length - 1][1])}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCustomBudget(true)}
+                        className="mt-4 mx-auto flex items-center gap-2 px-4 py-2 text-sm font-display uppercase tracking-wide clip-corner border border-border text-muted-foreground hover:border-primary/40 hover:text-primary transition-colors"
+                      >
+                        <Icon name="Pencil" size={16} /> Указать бюджет
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
 

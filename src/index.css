@@ -253,3 +253,47 @@
 .btn-glow-green:hover::after {
   opacity: 0.95;
 }
+.budget-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 999px;
+  outline: none;
+}
+.budget-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: hsl(145 80% 55%);
+  border: 3px solid hsl(0 0% 8%);
+  cursor: pointer;
+  box-shadow:
+    0 0 12px hsl(145 80% 55% / 0.7),
+    0 0 28px hsl(145 80% 55% / 0.45);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.25s ease;
+}
+.budget-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+.budget-range::-webkit-slider-thumb:active {
+  transform: scale(1.25);
+}
+.budget-range::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: hsl(145 80% 55%);
+  border: 3px solid hsl(0 0% 8%);
+  cursor: pointer;
+  box-shadow:
+    0 0 12px hsl(145 80% 55% / 0.7),
+    0 0 28px hsl(145 80% 55% / 0.45);
+  transition: transform 0.15s ease;
+}
+.budget-range::-moz-range-thumb:hover {
+  transform: scale(1.15);
+}
