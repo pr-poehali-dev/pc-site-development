@@ -1,0 +1,33 @@
+{
+  "tests": [
+    {
+      "name": "Список опубликованных статей доступен всем",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Запрос всех статей без токена запрещён",
+      "method": "GET",
+      "path": "/?all=1",
+      "expectedStatus": 401,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Создание статьи без токена запрещено",
+      "method": "POST",
+      "path": "/",
+      "body": {"title": "Тест"},
+      "expectedStatus": 401,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "OPTIONS возвращает CORS",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    }
+  ]
+}
