@@ -63,6 +63,9 @@ const Index = () => {
               <Link to="/catalog" className="flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green">
                 Смотреть сборки <Icon name="ArrowRight" size={18} />
               </Link>
+              <Link to="/build" className="flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner">
+                <Icon name="Wrench" size={18} /> Собери свой ПК
+              </Link>
               <Link to="/contacts" className="flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner">
                 <Icon name="MessageCircle" size={18} /> Консультация
               </Link>
