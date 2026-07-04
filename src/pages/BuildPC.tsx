@@ -78,6 +78,7 @@ const BuildPC = () => {
   const [lighting, setLighting] = useState('');
   const [color, setColor] = useState('');
   const [colorText, setColorText] = useState('');
+  const [contactMethod, setContactMethod] = useState<'' | 'call' | 'text'>('');
 
   const canNextStep1 = purpose && prefMode && (prefMode === 'manager' || prefText.trim());
 
@@ -545,6 +546,29 @@ const BuildPC = () => {
                 <div>
                   <label className={labelCls}>Телефон</label>
                   <input type="tel" placeholder="+7 (___) ___-__-__" className={inputCls} />
+                </div>
+              </div>
+
+              <div>
+                <label className={labelCls}>Никнейм в Telegram (необязательно)</label>
+                <input type="text" placeholder="@username" className={inputCls} />
+              </div>
+
+              <div>
+                <label className={labelCls}>Как удобнее связаться?</label>
+                <div className="flex flex-wrap gap-2">
+                  {([['call', 'Лучше звонить'], ['text', 'Лучше писать']] as const).map(([val, txt]) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => setContactMethod(val)}
+                      className={`px-5 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
+                        contactMethod === val ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                      }`}
+                    >
+                      {txt}
+                    </button>
+                  ))}
                 </div>
               </div>
 
