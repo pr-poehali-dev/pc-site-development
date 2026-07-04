@@ -67,7 +67,7 @@ const BuildPC = () => {
   const [budgetIdx, setBudgetIdx] = useState(2);
   const [customBudget, setCustomBudget] = useState(false);
   const [customBudgetValue, setCustomBudgetValue] = useState('');
-  const [prefMode, setPrefMode] = useState<'' | 'yes' | 'manager'>('');
+  const [prefMode, setPrefMode] = useState<'' | 'yes' | 'manager'>('manager');
   const [prefText, setPrefText] = useState('');
   const [wireless, setWireless] = useState<'' | 'yes' | 'no'>('');
   const [upgrade, setUpgrade] = useState<'' | 'yes' | 'no' | 'other'>('');
@@ -237,6 +237,16 @@ const BuildPC = () => {
                 <div className="grid gap-3">
                   <button
                     type="button"
+                    onClick={() => { setPrefMode('manager'); setPrefText(''); }}
+                    className={`flex items-center gap-3 text-left px-4 py-3 text-sm clip-corner border transition-colors ${
+                      prefMode === 'manager' ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                    }`}
+                  >
+                    <Icon name="Sparkles" size={20} className="shrink-0" />
+                    <span>Доверяю выбору менеджера (подберём грамотно под ваши задачи)</span>
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => setPrefMode('yes')}
                     className={`flex items-center gap-3 text-left px-4 py-3 text-sm clip-corner border transition-colors ${
                       prefMode === 'yes' ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
@@ -254,16 +264,6 @@ const BuildPC = () => {
                       className={`${inputCls} resize-none`}
                     />
                   )}
-                  <button
-                    type="button"
-                    onClick={() => { setPrefMode('manager'); setPrefText(''); }}
-                    className={`flex items-center gap-3 text-left px-4 py-3 text-sm clip-corner border transition-colors ${
-                      prefMode === 'manager' ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
-                    }`}
-                  >
-                    <Icon name="Sparkles" size={20} className="shrink-0" />
-                    <span>Доверяю выбору менеджера (подберём грамотно под ваши задачи)</span>
-                  </button>
                 </div>
               </div>
 
