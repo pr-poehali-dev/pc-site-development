@@ -328,6 +328,15 @@ def handler(event: dict, context) -> dict:
         return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type'}, 'body': ''}
 
     if method == 'GET':
+        params = event.get('queryStringParameters') or {}
+        action = params.get('action')
+        if action == 'set_webhook':
+            hook_url = params.get('url', '')
+            result = tg_call('setWebhook', {'url': hook_url, 'allowed_updates': ['message', 'callback_query']})
+            return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps(result)}
+        if action == 'webhook_info':
+            result = tg_call('getWebhookInfo', {})
+            return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps(result)}
         return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'status': 'ok', 'bot': 'running'})}
 
     try:
