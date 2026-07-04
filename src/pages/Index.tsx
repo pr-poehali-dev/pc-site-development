@@ -63,11 +63,11 @@ const Index = () => {
               <Link to="/catalog" className="flex items-center justify-center gap-2 shrink-0 whitespace-nowrap px-5 xl:px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green">
                 Смотреть сборки <Icon name="ArrowRight" size={18} />
               </Link>
-              <Link to="/build" className="flex items-center justify-center gap-2 shrink-0 whitespace-nowrap px-5 xl:px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner">
-                <Icon name="Wrench" size={18} /> Собери свой ПК
-              </Link>
               <Link to="/contacts" className="flex items-center justify-center gap-2 shrink-0 whitespace-nowrap px-5 xl:px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner">
                 <Icon name="MessageCircle" size={18} /> Консультация
+              </Link>
+              <Link to="/build" className="flex items-center justify-center gap-2 shrink-0 whitespace-nowrap px-5 xl:px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner">
+                <Icon name="Wrench" size={18} /> Собери свой ПК
               </Link>
             </div>
           </div>
