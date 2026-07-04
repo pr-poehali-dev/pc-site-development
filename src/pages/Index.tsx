@@ -276,7 +276,7 @@ const Index = () => {
         <div className="grid md:grid-cols-2 gap-4 md:gap-6">
           <div className="relative p-4 md:p-7 text-center flex flex-col">
             <h2 className="font-display text-2xl md:text-4xl font-bold mb-3">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
-            <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
+            <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 25 минут.</p>
             <div className="mt-auto">
               <Link to="/contacts" className="inline-flex items-center gap-2 px-6 py-3 text-sm btn-primary font-display uppercase tracking-wider clip-corner border-glow-cyan">
                 Получить консультацию <Icon name="MessageCircle" size={18} />
