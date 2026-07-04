@@ -254,10 +254,10 @@ const Index = () => {
         <Accordion type="single" collapsible className="space-y-2">
           {homeFaq.map((item, i) => (
             <AccordionItem key={i} value={`item-${i}`} className="bg-card/12 backdrop-blur-md border border-border/50 clip-corner px-4 transition-all duration-300 data-[state=open]:border-glow-green data-[state=open]:bg-card/25">
-              <AccordionTrigger className="font-display uppercase tracking-wide text-left text-sm md:whitespace-nowrap hover:text-primary hover:no-underline">
+              <AccordionTrigger className="font-display uppercase tracking-wide text-left text-base md:text-lg hover:text-primary hover:no-underline">
                 {item.q}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground whitespace-pre-line">{item.a}</AccordionContent>
+              <AccordionContent className="text-muted-foreground whitespace-pre-line text-base md:text-lg">{item.a}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>

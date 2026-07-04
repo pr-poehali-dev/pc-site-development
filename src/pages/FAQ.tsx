@@ -26,10 +26,10 @@ const FAQ = () => {
         <Accordion type="single" collapsible className="space-y-3">
           {faq.map((item, i) => (
             <AccordionItem key={i} value={`item-${i}`} className="bg-card border border-border clip-corner px-6 animate-fade-up transition-all duration-300 data-[state=open]:border-glow-green data-[state=open]:bg-card/80" style={{ animationDelay: `${i * 0.06}s` }}>
-              <AccordionTrigger className="font-display uppercase tracking-wide text-left hover:text-primary hover:no-underline">
+              <AccordionTrigger className="font-display uppercase tracking-wide text-left text-base md:text-lg hover:text-primary hover:no-underline">
                 {item.q}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground whitespace-pre-line">{item.a}</AccordionContent>
+              <AccordionContent className="text-muted-foreground whitespace-pre-line text-base md:text-lg">{item.a}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
