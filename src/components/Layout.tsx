@@ -153,8 +153,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
                   <Icon name="Mail" size={16} className="text-white shrink-0" /> {contactInfo.email}
                 </a>
               </li>
-              <li className="flex items-center gap-2">
-                <Icon name="MapPin" size={16} className="text-white shrink-0" /> {contactInfo.address}
+              <li>
+                <a href={contactInfo.addressHref} target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 hover:text-white transition-colors">
+                  <Icon name="MapPin" size={16} className="text-white shrink-0 mt-0.5" /> {contactInfo.address}
+                </a>
               </li>
             </ul>
 

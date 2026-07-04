@@ -80,7 +80,8 @@ export const contactInfo = {
   phoneHref: 'tel:+79099099590',
   email: 'whitefriday.pc@gmail.com',
   emailHref: 'mailto:whitefriday.pc@gmail.com',
-  address: 'Нагатинская ул., дом 28к2',
+  address: 'Главный офис находится в г. Москва Нагатинская улица, дом 28к2, вход расположен со стороны сквера',
+  addressHref: 'https://yandex.ru/maps/?text=Москва, Нагатинская улица, дом 28к2',
   hours: 'Ежедневно 10:00 — 21:00',
 };
 
