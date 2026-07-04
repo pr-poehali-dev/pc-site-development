@@ -21,6 +21,8 @@ const buildBudgetSteps = () => {
 const budgetSteps = buildBudgetSteps();
 
 const cooling = ['Воздушное', 'Жидкостное (СЖО)', 'Кастомная СЖО (КСЖО)', 'На выбор мастера'];
+const cases = ['Компактный (Mini-ITX)', 'Средний (Mid-Tower)', 'Большой (Full-Tower)', 'На выбор мастера'];
+const rgbOptions = ['Без подсветки', 'Минимальная', 'Яркая RGB', 'На выбор мастера'];
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 
@@ -30,7 +32,7 @@ const inputCls =
   'w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors';
 const labelCls = 'block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide';
 
-const steps = ['Задачи и бюджет', 'Детали сборки', 'Контакты'];
+const steps = ['Задачи и бюджет', 'Детали сборки', 'Внешний вид', 'Контакты'];
 
 const BuildPC = () => {
   const [step, setStep] = useState(0);
@@ -40,6 +42,7 @@ const BuildPC = () => {
   const [customBudgetValue, setCustomBudgetValue] = useState('');
   const [prefMode, setPrefMode] = useState<'' | 'yes' | 'manager'>('');
   const [prefText, setPrefText] = useState('');
+  const [rgb, setRgb] = useState('');
 
   const canNextStep1 = purpose && prefMode && (prefMode === 'manager' || prefText.trim());
 
@@ -222,6 +225,56 @@ const BuildPC = () => {
                 </select>
               </div>
 
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={back}
+                  className="flex items-center justify-center gap-2 px-6 py-3.5 bg-background border border-border font-display uppercase tracking-wider clip-corner hover:border-primary/40 transition-colors"
+                >
+                  <Icon name="ArrowLeft" size={18} /> Назад
+                </button>
+                <button
+                  type="button"
+                  onClick={next}
+                  className="flex-1 flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green"
+                >
+                  Далее <Icon name="ArrowRight" size={18} />
+                </button>
+              </div>
+            </>
+          )}
+
+          {step === 2 && (
+            <>
+              <div>
+                <label className={labelCls}>Форм-фактор / корпус</label>
+                <select className={selectCls} defaultValue="">
+                  <option value="" disabled>Выберите вариант</option>
+                  {cases.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label className={labelCls}>Подсветка (RGB)</label>
+                <div className="flex flex-wrap gap-2">
+                  {rgbOptions.map((r) => {
+                    const active = rgb === r;
+                    return (
+                      <button
+                        key={r}
+                        type="button"
+                        onClick={() => setRgb(r)}
+                        className={`px-4 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
+                          active ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                        }`}
+                      >
+                        {r}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div>
                 <label className={labelCls}>Пожелания по стилю и подсветке</label>
                 <textarea rows={4} placeholder="Цвет корпуса, RGB, тихая сборка, кастомные детали и т.д." className={`${inputCls} resize-none`} />
@@ -246,7 +299,7 @@ const BuildPC = () => {
             </>
           )}
 
-          {step === 2 && (
+          {step === 3 && (
             <>
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
