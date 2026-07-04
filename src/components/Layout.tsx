@@ -22,20 +22,20 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <div className="container flex items-center justify-between h-20">
 
           {/* Логотип */}
-          <Link to="/" className="flex items-center group shrink-0 w-28 sm:w-32 lg:w-40 overflow-hidden">
+          <Link to="/" className="flex flex-1 items-center group min-w-0 overflow-hidden">
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/85b4ce1f-a80b-4f4f-bbc3-300fafd4b67e.png"
               alt="White Friday PC"
-              className="h-24 sm:h-28 lg:h-32 w-auto object-contain object-left -my-6"
+              className="h-32 sm:h-36 w-auto object-contain object-left -my-8 -ml-6 sm:-ml-12"
             />
           </Link>
 
-          <nav className="hidden md:flex flex-1 items-center justify-center gap-0.5 lg:gap-1 px-3 lg:px-6 min-w-0">
+          <nav className="hidden md:flex items-center justify-center gap-1 shrink-0 px-2">
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`px-1.5 md:px-2 lg:px-3 py-2 font-display uppercase text-[11px] md:text-xs lg:text-sm tracking-tight lg:tracking-wider whitespace-nowrap transition-colors ${
+                className={`px-2 lg:px-3 py-2 font-display uppercase text-xs lg:text-sm tracking-wider whitespace-nowrap transition-colors ${
                   location.pathname === item.to
                     ? 'text-white'
                     : 'text-black/70 hover:text-white'
@@ -46,7 +46,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             ))}
           </nav>
 
-          <div className="flex shrink-0 justify-end items-center gap-2 lg:gap-3 pl-2">
+          <div className="flex flex-1 min-w-0 justify-end items-center gap-3 pl-2">
             <div className="hidden xl:flex items-center gap-3">
               <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
                 <Icon name="MessagesSquare" size={24} />
@@ -60,7 +60,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </div>
             <Link
               to="/contacts"
-              className="hidden md:flex items-center gap-2 px-2.5 lg:px-3.5 py-2 btn-primary font-display uppercase text-xs lg:text-sm tracking-wider clip-corner btn-glow-green whitespace-nowrap"
+              className="hidden md:flex items-center gap-2 px-3.5 py-2 btn-primary font-display uppercase text-sm tracking-wider clip-corner btn-glow-green whitespace-nowrap"
             >
               <Icon name="MessageCircle" size={16} />
               Заказать
