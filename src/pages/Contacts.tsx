@@ -2,6 +2,9 @@ import { useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { socials, contactInfo } from '@/data/content';
+import func2url from '../../backend/func2url.json';
+
+const ORDERS_URL = func2url['orders'];
 
 const contacts = [
   { icon: 'Phone', title: 'Телефон', value: contactInfo.phone, sub: 'Звоните в любое время', href: contactInfo.phoneHref },
@@ -17,6 +20,49 @@ const delivery = [
 
 const Contacts = () => {
   const [contactMethod, setContactMethod] = useState<'' | 'call' | 'text'>('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [telegram, setTelegram] = useState('');
+  const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !phone.trim()) {
+      setError('Укажите имя и телефон');
+      return;
+    }
+    setError('');
+    setSending(true);
+    try {
+      const res = await fetch(ORDERS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          phone,
+          telegram,
+          comment: message,
+          contact_method: contactMethod === 'text' ? 'text' : contactMethod === 'call' ? 'call' : undefined,
+          source: 'contacts',
+        }),
+      });
+      if (!res.ok) throw new Error('fail');
+      setSent(true);
+      setName('');
+      setPhone('');
+      setTelegram('');
+      setMessage('');
+      setContactMethod('');
+    } catch {
+      setError('Не удалось отправить. Попробуйте позже или позвоните нам.');
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <Layout>
       <section className="grid-bg border-b border-border">
@@ -67,44 +113,57 @@ const Contacts = () => {
           </div>
         </div>
 
-        <form className="p-6 md:p-8 bg-card border border-border clip-corner space-y-5" onSubmit={(e) => e.preventDefault()}>
+        <form className="p-6 md:p-8 bg-card border border-border clip-corner space-y-5" onSubmit={submit}>
           <h2 className="font-display text-2xl uppercase tracking-wide">Оставить заявку</h2>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Имя</label>
-            <input type="text" placeholder="Ваше имя" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors" />
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Телефон</label>
-            <input type="tel" placeholder="+7 (___) ___-__-__" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors" />
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Никнейм в Telegram (необязательно)</label>
-            <input type="text" placeholder="@username" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors" />
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Сообщение</label>
-            <textarea rows={4} placeholder="Какая сборка интересует?" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors resize-none" />
-          </div>
-          <div>
-            <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Как удобнее связаться?</label>
-            <div className="flex flex-wrap gap-2">
-              {([['call', 'Лучше звонить'], ['text', 'Лучше писать']] as const).map(([val, txt]) => (
-                <button
-                  key={val}
-                  type="button"
-                  onClick={() => setContactMethod(val)}
-                  className={`px-5 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
-                    contactMethod === val ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
-                  }`}
-                >
-                  {txt}
-                </button>
-              ))}
+          {sent ? (
+            <div className="flex flex-col items-center text-center gap-3 py-6">
+              <div className="w-14 h-14 flex items-center justify-center bg-primary/10 text-primary clip-corner">
+                <Icon name="CheckCircle2" size={30} />
+              </div>
+              <p className="font-display text-xl uppercase tracking-wide">Заявка отправлена!</p>
+              <p className="text-muted-foreground text-sm">Мы свяжемся с вами в ближайшее время.</p>
             </div>
-          </div>
-          <button type="submit" className="w-full flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green">
-            Отправить заявку <Icon name="Send" size={18} />
-          </button>
+          ) : (
+            <>
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Имя</label>
+                <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Ваше имя" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors" />
+              </div>
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Телефон</label>
+                <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" placeholder="+7 (___) ___-__-__" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors" />
+              </div>
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Никнейм в Telegram (необязательно)</label>
+                <input value={telegram} onChange={(e) => setTelegram(e.target.value)} type="text" placeholder="@username" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors" />
+              </div>
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Сообщение</label>
+                <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={4} placeholder="Какая сборка интересует?" className="w-full bg-background border border-border px-4 py-3 clip-corner focus:border-primary focus:outline-none transition-colors resize-none" />
+              </div>
+              <div>
+                <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Как удобнее связаться?</label>
+                <div className="flex flex-wrap gap-2">
+                  {([['call', 'Лучше звонить'], ['text', 'Лучше писать']] as const).map(([val, txt]) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => setContactMethod(val)}
+                      className={`px-5 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
+                        contactMethod === val ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                      }`}
+                    >
+                      {txt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              <button type="submit" disabled={sending} className="w-full flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green disabled:opacity-40">
+                {sending ? 'Отправка...' : 'Отправить заявку'} <Icon name="Send" size={18} />
+              </button>
+            </>
+          )}
         </form>
       </section>
 

@@ -1,0 +1,30 @@
+{
+  "tests": [
+    {
+      "name": "Health check GET",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {"status": "ok"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Create order from site form",
+      "method": "POST",
+      "path": "/",
+      "body": {"name": "Тест Клиент", "phone": "+7 (900) 123-45-67", "telegram": "@testuser", "contact_method": "call", "comment": "Игровой ПК", "source": "test"},
+      "expectedStatus": 200,
+      "expectedBody": {"ok": true},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Reject empty request",
+      "method": "POST",
+      "path": "/",
+      "body": {},
+      "expectedStatus": 400,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    }
+  ]
+}

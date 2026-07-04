@@ -2,6 +2,9 @@ import { useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { toast } from '@/hooks/use-toast';
+import func2url from '../../backend/func2url.json';
+
+const ORDERS_URL = func2url['orders'];
 
 const purposeOptions = [
   { id: 'aaa', title: 'Игры с высоким разрешением и максимальными настройками графики (AAA)', icon: 'Gamepad2' },
@@ -79,18 +82,47 @@ const BuildPC = () => {
   const [color, setColor] = useState('');
   const [colorText, setColorText] = useState('');
   const [contactMethod, setContactMethod] = useState<'' | 'call' | 'text'>('');
+  const [cName, setCName] = useState('');
+  const [cPhone, setCPhone] = useState('');
+  const [cTelegram, setCTelegram] = useState('');
+  const [sending, setSending] = useState(false);
 
   const canNextStep1 = purpose && prefMode && (prefMode === 'manager' || prefText.trim());
 
   const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: 'Заявка отправлена!',
-      description: 'Наш инженер свяжется с вами и уточнит детали сборки.',
-    });
+    if (!cName.trim() || !cPhone.trim()) {
+      toast({ title: 'Заполните имя и телефон', description: 'Они нужны, чтобы мы могли связаться с вами.' });
+      return;
+    }
+    setSending(true);
+    const details = Object.fromEntries(summary.map((row) => [row.label, row.value]));
+    try {
+      const res = await fetch(ORDERS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: cName,
+          phone: cPhone,
+          telegram: cTelegram,
+          contact_method: contactMethod || undefined,
+          source: 'build-pc',
+          details,
+        }),
+      });
+      if (!res.ok) throw new Error('fail');
+      toast({
+        title: 'Заявка отправлена!',
+        description: 'Наш инженер свяжется с вами и уточнит детали сборки.',
+      });
+    } catch {
+      toast({ title: 'Не удалось отправить', description: 'Попробуйте позже или позвоните нам.' });
+    } finally {
+      setSending(false);
+    }
   };
 
   const [minB, maxB] = budgetSteps[budgetIdx];
@@ -555,17 +587,17 @@ const BuildPC = () => {
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
                   <label className={labelCls}>Имя</label>
-                  <input type="text" placeholder="Ваше имя" className={inputCls} />
+                  <input value={cName} onChange={(e) => setCName(e.target.value)} type="text" placeholder="Ваше имя" className={inputCls} />
                 </div>
                 <div>
                   <label className={labelCls}>Телефон</label>
-                  <input type="tel" placeholder="+7 (___) ___-__-__" className={inputCls} />
+                  <input value={cPhone} onChange={(e) => setCPhone(e.target.value)} type="tel" placeholder="+7 (___) ___-__-__" className={inputCls} />
                 </div>
               </div>
 
               <div>
                 <label className={labelCls}>Никнейм в Telegram (необязательно)</label>
-                <input type="text" placeholder="@username" className={inputCls} />
+                <input value={cTelegram} onChange={(e) => setCTelegram(e.target.value)} type="text" placeholder="@username" className={inputCls} />
               </div>
 
               <div>
@@ -596,9 +628,10 @@ const BuildPC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green"
+                  disabled={sending}
+                  className="flex-1 flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green disabled:opacity-40"
                 >
-                  Отправить заявку <Icon name="Send" size={18} />
+                  {sending ? 'Отправка...' : 'Отправить заявку'} <Icon name="Send" size={18} />
                 </button>
               </div>
             </>

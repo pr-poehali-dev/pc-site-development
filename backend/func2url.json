@@ -1,5 +1,6 @@
 {
-  "builds": "https://functions.poehali.dev/96396bd6-ca29-46dc-93c1-fa0eebc92fc4",
+  "orders": "https://functions.poehali.dev/c2f97007-3c5d-42ef-a118-5b86a7a7d1a6",
+  "telegram-bot": "https://functions.poehali.dev/284c7195-a626-4c26-9379-f1f780b08d0b",
   "articles": "https://functions.poehali.dev/c3616f1e-bb86-4a36-95ec-d847e6ebd106",
   "auth": "https://functions.poehali.dev/ced7301f-0038-4434-a9bd-91e7f99b78b9"
 }
