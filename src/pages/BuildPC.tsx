@@ -42,6 +42,15 @@ const appearanceOptions = [
   { id: 'any', title: 'Не имеет значения, главное практичность =)', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/768678f8-19e7-4764-a1e6-25c3896159d9.jpg' },
 ];
 
+const lightingOptions = [
+  { id: 'contour', title: 'Контурная подсветка', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/1f935814-364a-43b4-8ec7-be4bc3a89a66.jpg' },
+  { id: 'infinity', title: 'Подсветка с эффектом бесконечности', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/26a12944-a79e-4f65-8e4c-ef3e30e93590.jpg' },
+  { id: 'minimal', title: 'Минимум подсветки или без неё', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/b7cce2ab-9213-4d07-9cc3-2ff85f3ef772.jpg' },
+  { id: 'engineer', title: 'На усмотрение инженера', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/976daadd-9c75-4b82-a0d4-3fcb9d3507a6.jpg' },
+];
+
+const colorOptions = ['Белый', 'Чёрный', 'Другое'];
+
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 
 const selectCls =
@@ -66,6 +75,9 @@ const BuildPC = () => {
   const [silence, setSilence] = useState('');
   const [pcSize, setPcSize] = useState('');
   const [appearance, setAppearance] = useState('');
+  const [lighting, setLighting] = useState('');
+  const [color, setColor] = useState('');
+  const [colorText, setColorText] = useState('');
 
   const canNextStep1 = purpose && prefMode && (prefMode === 'manager' || prefText.trim());
 
@@ -101,6 +113,8 @@ const BuildPC = () => {
     { label: 'Важность тишины', value: silence || '—' },
     { label: 'Размер ПК', value: sizeOptions.find((s) => s.id === pcSize)?.title || '—' },
     { label: 'Внешний вид', value: appearanceOptions.find((a) => a.id === appearance)?.title || '—' },
+    { label: 'Подсветка', value: lightingOptions.find((l) => l.id === lighting)?.title || '—' },
+    { label: 'Цвет ПК', value: color === 'Другое' ? (colorText.trim() || 'Другое') : (color || '—') },
   ];
 
   return (
@@ -431,6 +445,64 @@ const BuildPC = () => {
                 </div>
               </div>
 
+              <div>
+                <label className={labelCls}>Какое пожелание по подсветке в компьютере?</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {lightingOptions.map((l) => {
+                    const active = lighting === l.id;
+                    return (
+                      <button
+                        key={l.id}
+                        type="button"
+                        onClick={() => setLighting(l.id)}
+                        className={`group text-left clip-corner border overflow-hidden transition-colors ${
+                          active ? 'border-glow-cyan' : 'border-border hover:border-primary/40'
+                        }`}
+                      >
+                        <div className="relative aspect-[16/11] bg-background overflow-hidden">
+                          <img src={l.image} alt={l.title} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                          {active && (
+                            <div className="absolute top-2 right-2 w-7 h-7 rounded-full btn-primary flex items-center justify-center">
+                              <Icon name="Check" size={16} />
+                            </div>
+                          )}
+                        </div>
+                        <div className={`px-4 py-3 text-sm font-display uppercase tracking-wide ${active ? 'btn-primary' : 'bg-card text-muted-foreground'}`}>
+                          {l.title}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <label className={labelCls}>Какой цвет всего ПК хотелось бы?</label>
+                <div className="flex flex-wrap gap-2">
+                  {colorOptions.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => { setColor(c); if (c !== 'Другое') setColorText(''); }}
+                      className={`px-5 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
+                        color === c ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+                {color === 'Другое' && (
+                  <input
+                    type="text"
+                    value={colorText}
+                    onChange={(e) => setColorText(e.target.value)}
+                    placeholder="Укажите желаемый цвет"
+                    className={`${inputCls} mt-3`}
+                  />
+                )}
+              </div>
+
               <div className="flex gap-3">
                 <button
                   type="button"
@@ -442,7 +514,7 @@ const BuildPC = () => {
                 <button
                   type="button"
                   onClick={next}
-                  disabled={!appearance}
+                  disabled={!appearance || !lighting || !color}
                   className="flex-1 flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Далее <Icon name="ArrowRight" size={18} />
