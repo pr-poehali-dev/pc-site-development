@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
-import { fetchArticleBySlug, type ApiArticle } from '@/lib/articlesApi';
+import { fetchArticleBySlug, fetchArticles, type ApiArticle } from '@/lib/articlesApi';
 
 const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [article, setArticle] = useState<ApiArticle | null>(null);
+  const [others, setOthers] = useState<ApiArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -18,6 +19,9 @@ const ArticlePage = () => {
       .then(setArticle)
       .catch(() => setError(true))
       .finally(() => setLoading(false));
+    fetchArticles(false)
+      .then((list) => setOthers(list.filter((a) => a.slug !== slug).slice(0, 3)))
+      .catch(() => setOthers([]));
   }, [slug]);
 
   return (
@@ -67,6 +71,36 @@ const ArticlePage = () => {
             <div className="prose prose-invert max-w-none whitespace-pre-wrap leading-relaxed text-foreground/90">
               {article.content}
             </div>
+
+            {others.length > 0 && (
+              <div className="mt-16 pt-10 border-t border-border">
+                <h2 className="font-display text-2xl uppercase tracking-wide mb-6">Другие <span className="text-primary text-glow-cyan">статьи</span></h2>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {others.map((a) => (
+                    <Link
+                      to={`/articles/${a.slug}`}
+                      key={a.id}
+                      className="group flex flex-col bg-card border border-border clip-corner overflow-hidden hover:border-primary/40 transition-colors"
+                    >
+                      {a.cover_url ? (
+                        <img src={a.cover_url} alt={a.title} className="w-full h-36 object-cover" />
+                      ) : (
+                        <div className="w-full h-36 flex items-center justify-center bg-background text-muted-foreground">
+                          <Icon name="Newspaper" size={28} />
+                        </div>
+                      )}
+                      <div className="p-5 flex flex-col flex-1">
+                        <h3 className="font-display text-lg uppercase tracking-wide mb-2 group-hover:text-primary transition-colors">{a.title}</h3>
+                        {a.excerpt && <p className="text-muted-foreground text-sm flex-1 line-clamp-2">{a.excerpt}</p>}
+                        <span className="flex items-center gap-1 mt-4 text-primary text-xs font-display uppercase tracking-wide">
+                          Читать <Icon name="ArrowRight" size={13} />
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </article>
         )}
       </section>
