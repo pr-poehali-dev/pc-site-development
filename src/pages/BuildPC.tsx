@@ -54,6 +54,13 @@ const lightingOptions = [
 
 const colorOptions = ['Белый', 'Чёрный', 'Другое'];
 
+const upgradeOptions = [
+  'Учесть апгрейд видеокарты',
+  'Учесть апгрейд процессора',
+  'Учесть установку дополнительных M2 дисков',
+  'Учесть установку второй видеокарты / PCI устройства',
+];
+
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 
 const selectCls =
@@ -73,7 +80,9 @@ const BuildPC = () => {
   const [prefMode, setPrefMode] = useState<'' | 'yes' | 'manager'>('manager');
   const [prefText, setPrefText] = useState('');
   const [wireless, setWireless] = useState<'' | 'yes' | 'no'>('');
-  const [upgrade, setUpgrade] = useState<'' | 'yes' | 'no' | 'other'>('');
+  const [upgrade, setUpgrade] = useState<'' | 'yes' | 'no'>('');
+  const [upgradeItems, setUpgradeItems] = useState<string[]>([]);
+  const [upgradeOther, setUpgradeOther] = useState(false);
   const [upgradeText, setUpgradeText] = useState('');
   const [silence, setSilence] = useState('');
   const [pcSize, setPcSize] = useState('');
@@ -133,7 +142,15 @@ const BuildPC = () => {
   const prefLabel = prefMode === 'manager' ? 'На выбор менеджера' : (prefText.trim() || '—');
 
   const wirelessLabel = wireless === 'yes' ? 'Да' : wireless === 'no' ? 'Нет' : '—';
-  const upgradeLabel = upgrade === 'yes' ? 'Да' : upgrade === 'no' ? 'Нет' : upgrade === 'other' ? (upgradeText.trim() || 'Другое') : '—';
+  const upgradeParts: string[] = [];
+  if (upgrade === 'yes') {
+    upgradeParts.push('Да');
+    if (upgradeItems.length) upgradeParts.push(...upgradeItems);
+  } else if (upgrade === 'no') {
+    upgradeParts.push('Нет');
+  }
+  if (upgradeOther && upgradeText.trim()) upgradeParts.push(`Другое: ${upgradeText.trim()}`);
+  const upgradeLabel = upgradeParts.length ? upgradeParts.join('; ') : '—';
 
   const summary = [
     { label: 'Назначение', value: purposeLabel },
@@ -344,11 +361,11 @@ const BuildPC = () => {
                 <label className={labelCls}>Нужен ли запас для будущего апгрейда ПК?</label>
                 <p className="text-xs text-muted-foreground -mt-1 mb-2">Мощнее блок питания, продуваемый корпус, охлаждение процессора с запасом и т.д.</p>
                 <div className="flex flex-wrap gap-2">
-                  {([['yes', 'Да'], ['no', 'Нет'], ['other', 'Другое']] as const).map(([val, txt]) => (
+                  {([['yes', 'Да'], ['no', 'Нет']] as const).map(([val, txt]) => (
                     <button
                       key={val}
                       type="button"
-                      onClick={() => { setUpgrade(val); if (val !== 'other') setUpgradeText(''); }}
+                      onClick={() => { setUpgrade(val); if (val !== 'yes') setUpgradeItems([]); }}
                       className={`px-5 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
                         upgrade === val ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
                       }`}
@@ -356,13 +373,51 @@ const BuildPC = () => {
                       {txt}
                     </button>
                   ))}
+                  <button
+                    type="button"
+                    onClick={() => setUpgradeOther((v) => { if (v) setUpgradeText(''); return !v; })}
+                    className={`px-5 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
+                      upgradeOther ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                    }`}
+                  >
+                    Другое
+                  </button>
                 </div>
-                {upgrade === 'other' && (
+
+                {upgrade === 'yes' && (
+                  <div className="mt-3 grid gap-2 animate-fade-up">
+                    <p className="text-xs text-muted-foreground">Отметьте, что учесть (по желанию):</p>
+                    {upgradeOptions.map((opt) => {
+                      const checked = upgradeItems.includes(opt);
+                      return (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() =>
+                            setUpgradeItems((items) =>
+                              checked ? items.filter((i) => i !== opt) : [...items, opt]
+                            )
+                          }
+                          className={`flex items-center gap-3 text-left px-4 py-3 text-sm clip-corner border transition-colors ${
+                            checked ? 'border-primary/60 text-foreground bg-primary/5' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                          }`}
+                        >
+                          <span className={`w-5 h-5 flex items-center justify-center shrink-0 clip-corner border ${checked ? 'bg-primary border-primary text-primary-foreground' : 'border-border'}`}>
+                            {checked && <Icon name="Check" size={14} />}
+                          </span>
+                          <span>{opt}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {upgradeOther && (
                   <textarea
                     rows={2}
                     value={upgradeText}
                     onChange={(e) => setUpgradeText(e.target.value)}
-                    placeholder="Опишите, какой запас нужен"
+                    placeholder="Опишите, какой ещё запас нужно учесть"
                     className={`${inputCls} resize-none mt-3`}
                   />
                 )}
