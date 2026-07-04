@@ -25,9 +25,9 @@ const Catalog = () => {
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Каталог</p>
-          <h1 className="font-display text-4xl md:text-6xl font-bold">НАШИ <span className="text-primary text-glow-cyan">СБОРКИ</span></h1>
+          <h1 className="font-display text-4xl md:text-6xl font-bold">НАШИ <span className="text-primary text-glow-cyan">ПРОЕКТЫ</span></h1>
           <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
-            Готовые конфигурации под любые задачи — от киберспорта до 3D-рендеринга.
+            Тут вы можете посмотреть заказы наших клиентов, выбрать подходящий для себя или же просто понять что вам подходит больше всего.
           </p>
         </div>
       </section>
