@@ -270,12 +270,25 @@ const Index = () => {
 
       {/* CTA */}
       <section className="relative z-10 container pb-2 md:pb-4">
-        <div className="relative w-full md:w-[49%] mx-auto p-4 md:p-7 text-center">
-          <h2 className="font-display text-2xl md:text-4xl font-bold mb-3">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
-          <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
-          <Link to="/contacts" className="inline-flex items-center gap-2 px-6 py-3 text-sm btn-primary font-display uppercase tracking-wider clip-corner border-glow-cyan">
-            Получить консультацию <Icon name="MessageCircle" size={18} />
-          </Link>
+        <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+          <div className="relative p-4 md:p-7 text-center flex flex-col">
+            <h2 className="font-display text-2xl md:text-4xl font-bold mb-3">ГОТОВ К <span className="text-primary text-glow-cyan">АПГРЕЙДУ?</span></h2>
+            <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">Подберём идеальную сборку под твои задачи и бюджет за 5 минут.</p>
+            <div className="mt-auto">
+              <Link to="/contacts" className="inline-flex items-center gap-2 px-6 py-3 text-sm btn-primary font-display uppercase tracking-wider clip-corner border-glow-cyan">
+                Получить консультацию <Icon name="MessageCircle" size={18} />
+              </Link>
+            </div>
+          </div>
+          <div className="relative p-4 md:p-7 text-center flex flex-col">
+            <h2 className="font-display text-2xl md:text-4xl font-bold mb-3">УЖЕ ЗНАЕШЬ ЧТО <span className="text-primary text-glow-cyan">ПРИМЕРНО ХОЧЕШЬ?</span></h2>
+            <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">Расширенная форма заявки для тех, кто уже примерно понимает, что он хочет видеть на своём столе.</p>
+            <div className="mt-auto">
+              <button type="button" disabled className="inline-flex items-center gap-2 px-6 py-3 text-sm btn-primary font-display uppercase tracking-wider clip-corner border-glow-cyan opacity-50 cursor-not-allowed">
+                Собери свой ПК <Icon name="Wrench" size={18} />
+              </button>
+            </div>
+          </div>
         </div>
       </section>
       </div>
