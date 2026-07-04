@@ -360,7 +360,7 @@ const BuildPC = () => {
                           active ? 'border-glow-cyan' : 'border-border hover:border-primary/40'
                         }`}
                       >
-                        <div className="relative aspect-video bg-background overflow-hidden">
+                        <div className="relative aspect-[16/11] bg-background overflow-hidden">
                           <img src={s.image} alt={s.title} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                           {active && (
                             <div className="absolute top-2 right-2 w-7 h-7 rounded-full btn-primary flex items-center justify-center">
