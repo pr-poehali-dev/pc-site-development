@@ -33,6 +33,8 @@ const sizeOptions = [
   { id: 'compact-matx', title: 'Компактный mATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/c2256bf4-09d5-42b2-bd22-554fcc4f674b.jpg' },
   { id: 'standard-matx', title: 'Стандартный mATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a3966c80-12e1-4a42-88cc-f20850e9f0c7.jpg' },
   { id: 'standard-atx', title: 'Стандартный ATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/502e671e-9483-4d18-9d13-fd730ad55643.jpg' },
+  { id: 'full-atx', title: 'Полноразмерный ATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a0649788-9cbd-41a4-b868-f932ce0206c8.jpg' },
+  { id: 'any', title: 'Не важно, главное практичность', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a6ce982d-8c5d-4f8a-a2e1-911010b574af.jpg' },
 ];
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
