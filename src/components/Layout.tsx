@@ -46,7 +46,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             ))}
           </nav>
 
-          <div className="flex shrink-0 justify-end items-center gap-3">
+          <div className="flex shrink-0 justify-end items-center gap-3 md:pr-4 lg:pr-6">
             <div className="hidden md:flex items-center gap-3 shrink-0">
               <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
                 <Icon name="MessagesSquare" size={24} />
