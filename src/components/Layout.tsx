@@ -20,14 +20,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-border overflow-hidden" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
-        <div className="container flex items-center justify-between h-20 -translate-x-[38px]">
+        <div className="container flex items-center justify-between h-20 md:-translate-x-[38px]">
 
           {/* Логотип */}
-          <Link to="/" className="flex items-center group shrink-0 h-20 overflow-hidden -ml-6 sm:-ml-10">
+          <Link to="/" className="flex items-center group shrink-0 h-20 overflow-hidden -ml-3 sm:-ml-10">
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/fd8f7698-5f0c-42b3-bfde-b265a7906710.png"
               alt="White Friday PC"
-              className="h-36 sm:h-44 w-auto object-contain object-left"
+              className="h-28 sm:h-44 w-auto object-contain object-left"
             />
           </Link>
 
