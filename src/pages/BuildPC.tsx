@@ -86,6 +86,7 @@ const BuildPC = () => {
   const [cPhone, setCPhone] = useState('');
   const [cTelegram, setCTelegram] = useState('');
   const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const canNextStep1 = purpose && prefMode && (prefMode === 'manager' || prefText.trim());
 
@@ -114,10 +115,7 @@ const BuildPC = () => {
         }),
       });
       if (!res.ok) throw new Error('fail');
-      toast({
-        title: 'Заявка отправлена!',
-        description: 'Наш инженер свяжется с вами и уточнит детали сборки.',
-      });
+      setSent(true);
     } catch {
       toast({ title: 'Не удалось отправить', description: 'Попробуйте позже или позвоните нам.' });
     } finally {
@@ -163,6 +161,16 @@ const BuildPC = () => {
       </section>
 
       <section className="container py-12 md:py-16 max-w-3xl">
+        {sent ? (
+          <div className="p-8 md:p-12 bg-card border border-border clip-corner flex flex-col items-center text-center gap-4">
+            <div className="w-16 h-16 flex items-center justify-center bg-primary/10 text-primary clip-corner">
+              <Icon name="CheckCircle2" size={36} />
+            </div>
+            <h2 className="font-display text-2xl md:text-3xl uppercase tracking-wide">Ваша заявка отправлена!</h2>
+            <p className="text-muted-foreground text-sm max-w-md">Наши менеджеры отвечают на заявки с 11 до 22 часов по Московскому времени!</p>
+          </div>
+        ) : (
+        <>
         <div className="flex items-center justify-center gap-2 mb-8">
           {steps.map((s, i) => (
             <div key={s} className="flex items-center gap-2">
@@ -637,6 +645,8 @@ const BuildPC = () => {
             </>
           )}
         </form>
+        </>
+        )}
       </section>
     </Layout>
   );
