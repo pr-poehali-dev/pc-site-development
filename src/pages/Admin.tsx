@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import BuildForm from '@/components/admin/BuildForm';
+import ArticleForm from '@/components/admin/ArticleForm';
 import AdminCreate from '@/components/admin/AdminCreate';
 import {
   verifyToken,
@@ -12,6 +13,12 @@ import {
   clearToken,
   type ApiBuild,
 } from '@/lib/buildsApi';
+import {
+  fetchArticles,
+  deleteArticle,
+  toggleArticlePublished,
+  type ApiArticle,
+} from '@/lib/articlesApi';
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 
@@ -23,6 +30,10 @@ const Admin = () => {
   const [showForm, setShowForm] = useState(false);
   const [showAdminCreate, setShowAdminCreate] = useState(false);
   const [toast, setToast] = useState('');
+  const [tab, setTab] = useState<'builds' | 'articles'>('builds');
+  const [articles, setArticles] = useState<ApiArticle[]>([]);
+  const [editingArticle, setEditingArticle] = useState<ApiArticle | null>(null);
+  const [showArticleForm, setShowArticleForm] = useState(false);
 
   const load = async () => {
     try {
@@ -33,6 +44,15 @@ const Admin = () => {
     }
   };
 
+  const loadArticles = async () => {
+    try {
+      const list = await fetchArticles(true);
+      setArticles(list);
+    } catch {
+      setArticles([]);
+    }
+  };
+
   useEffect(() => {
     (async () => {
       const ok = await verifyToken();
@@ -40,10 +60,44 @@ const Admin = () => {
         navigate('/admin/login');
         return;
       }
-      await load();
+      await Promise.all([load(), loadArticles()]);
       setLoading(false);
     })();
   }, [navigate]);
+
+  const handleDeleteArticle = async (id: number) => {
+    if (!confirm('Удалить эту статью?')) return;
+    await deleteArticle(id);
+    await loadArticles();
+  };
+
+  const handleToggleArticle = async (a: ApiArticle) => {
+    const next = !a.is_published;
+    setArticles((list) => list.map((x) => (x.id === a.id ? { ...x, is_published: next } : x)));
+    try {
+      await toggleArticlePublished(a.id, next);
+    } catch {
+      await loadArticles();
+    }
+  };
+
+  const openNewArticle = () => {
+    setEditingArticle(null);
+    setShowArticleForm(true);
+  };
+
+  const openEditArticle = (a: ApiArticle) => {
+    setEditingArticle(a);
+    setShowArticleForm(true);
+  };
+
+  const onArticleSaved = async (isNew: boolean) => {
+    setShowArticleForm(false);
+    setEditingArticle(null);
+    await loadArticles();
+    setToast(isNew ? 'Статья добавлена!' : 'Изменения сохранены!');
+    setTimeout(() => setToast(''), 3500);
+  };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Удалить эту сборку?')) return;
@@ -140,6 +194,27 @@ const Admin = () => {
       </header>
 
       <main className="container py-8">
+        <div className="flex gap-2 mb-8 border-b border-border">
+          <button
+            onClick={() => setTab('builds')}
+            className={`px-5 py-3 font-display uppercase text-sm tracking-wider transition-colors border-b-2 -mb-px ${
+              tab === 'builds' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Сборки ({builds.length})
+          </button>
+          <button
+            onClick={() => setTab('articles')}
+            className={`px-5 py-3 font-display uppercase text-sm tracking-wider transition-colors border-b-2 -mb-px ${
+              tab === 'articles' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Статьи ({articles.length})
+          </button>
+        </div>
+
+        {tab === 'builds' && (
+        <>
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="font-display text-2xl md:text-3xl font-bold">Конфигурации ({builds.length})</h2>
@@ -237,10 +312,99 @@ const Admin = () => {
             ))}
           </div>
         )}
+        </>
+        )}
+
+        {tab === 'articles' && (
+        <>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="font-display text-2xl md:text-3xl font-bold">Статьи ({articles.length})</h2>
+            <p className="text-muted-foreground text-sm">Публикуйте материалы для раздела «Статьи» на сайте</p>
+          </div>
+          <button
+            onClick={openNewArticle}
+            className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan"
+          >
+            <Icon name="Plus" size={18} /> Добавить
+          </button>
+        </div>
+
+        {articles.length === 0 ? (
+          <div className="p-12 text-center bg-card border border-border clip-corner">
+            <Icon name="Newspaper" size={48} className="text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground">Пока нет ни одной статьи. Добавьте первую!</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {articles.map((a) => (
+              <div
+                key={a.id}
+                className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 bg-card border border-border clip-corner"
+              >
+                {a.cover_url ? (
+                  <img src={a.cover_url} alt={a.title} className="w-full sm:w-28 h-20 object-cover clip-corner border border-border" />
+                ) : (
+                  <div className="w-full sm:w-28 h-20 flex items-center justify-center bg-background border border-border clip-corner text-muted-foreground">
+                    <Icon name="Newspaper" size={24} />
+                  </div>
+                )}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-display text-lg font-bold">{a.title}</h3>
+                    {!a.is_published && (
+                      <span className="px-2 py-0.5 bg-muted text-muted-foreground text-xs clip-corner">Черновик</span>
+                    )}
+                  </div>
+                  {a.excerpt && <p className="text-muted-foreground text-sm line-clamp-2">{a.excerpt}</p>}
+                  <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
+                    {a.author && <span>{a.author}</span>}
+                    {a.published_at && (
+                      <span className="flex items-center gap-1">
+                        <Icon name="Calendar" size={14} /> {new Date(a.published_at).toLocaleDateString('ru-RU')}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleToggleArticle(a)}
+                    aria-label={a.is_published ? 'Скрыть с сайта' : 'Показать на сайте'}
+                    className={`flex items-center gap-1 px-4 py-2 border font-display uppercase text-xs tracking-wider clip-corner transition-colors ${
+                      a.is_published
+                        ? 'border-green-600/50 text-green-500 hover:border-green-500'
+                        : 'border-border text-muted-foreground hover:border-primary/50'
+                    }`}
+                  >
+                    <Icon name={a.is_published ? 'Eye' : 'EyeOff'} size={14} />
+                    <span className="hidden md:inline">{a.is_published ? 'Опубл.' : 'Черновик'}</span>
+                  </button>
+                  <button
+                    onClick={() => openEditArticle(a)}
+                    className="flex items-center gap-1 px-4 py-2 border border-border text-foreground font-display uppercase text-xs tracking-wider clip-corner hover:border-primary/50 transition-colors"
+                  >
+                    <Icon name="Pencil" size={14} /> Изменить
+                  </button>
+                  <button
+                    onClick={() => handleDeleteArticle(a.id)}
+                    className="flex items-center gap-1 px-4 py-2 border border-border text-destructive font-display uppercase text-xs tracking-wider clip-corner hover:border-destructive/50 transition-colors"
+                  >
+                    <Icon name="Trash2" size={14} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        </>
+        )}
       </main>
 
       {showForm && (
         <BuildForm build={editing} onClose={() => setShowForm(false)} onSaved={onSaved} />
+      )}
+      {showArticleForm && (
+        <ArticleForm article={editingArticle} onClose={() => setShowArticleForm(false)} onSaved={onArticleSaved} />
       )}
       {showAdminCreate && <AdminCreate onClose={() => setShowAdminCreate(false)} />}
     </div>
