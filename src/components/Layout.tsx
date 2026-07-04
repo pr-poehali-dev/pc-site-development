@@ -20,7 +20,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-border overflow-hidden" style={{ backgroundColor: 'hsl(0 0% 53%)' }}>
-        <div className="container flex items-center justify-between h-20">
+        <div className="container flex items-center justify-between h-20 -translate-x-[38px]">
 
           {/* Логотип */}
           <Link to="/" className="flex items-center group shrink-0 h-20 overflow-hidden -ml-6 sm:-ml-10">
