@@ -284,9 +284,9 @@ const Index = () => {
             <h2 className="font-display text-2xl md:text-4xl font-bold mb-3">УЖЕ ЗНАЕШЬ ЧТО <span className="text-primary text-glow-cyan">ПРИМЕРНО ХОЧЕШЬ?</span></h2>
             <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">Расширенная форма заявки для тех, кто уже примерно понимает, что он хочет видеть на своём столе.</p>
             <div className="mt-auto">
-              <button type="button" disabled className="inline-flex items-center gap-2 px-6 py-3 text-sm btn-primary font-display uppercase tracking-wider clip-corner border-glow-cyan opacity-50 cursor-not-allowed">
+              <Link to="/build" className="inline-flex items-center gap-2 px-6 py-3 text-sm btn-primary font-display uppercase tracking-wider clip-corner border-glow-cyan">
                 Собери свой ПК <Icon name="Wrench" size={18} />
-              </button>
+              </Link>
             </div>
           </div>
         </div>
