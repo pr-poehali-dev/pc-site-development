@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { fetchArticles, type ApiArticle } from '@/lib/articlesApi';
@@ -50,9 +51,10 @@ const Articles = () => {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((a, i) => (
-              <article
+              <Link
+                to={`/articles/${a.slug}`}
                 key={a.id}
-                className="flex flex-col bg-card border border-border clip-corner overflow-hidden hover:border-primary/40 transition-colors animate-fade-up"
+                className="group flex flex-col bg-card border border-border clip-corner overflow-hidden hover:border-primary/40 transition-colors animate-fade-up"
                 style={{ animationDelay: `${i * 0.08}s` }}
               >
                 {a.cover_url ? (
@@ -63,19 +65,24 @@ const Articles = () => {
                   </div>
                 )}
                 <div className="p-6 flex flex-col flex-1">
-                  <h3 className="font-display text-xl uppercase tracking-wide mb-2">{a.title}</h3>
+                  <h3 className="font-display text-xl uppercase tracking-wide mb-2 group-hover:text-primary transition-colors">{a.title}</h3>
                   {a.excerpt && <p className="text-muted-foreground text-sm flex-1">{a.excerpt}</p>}
-                  <div className="flex items-center gap-2 mt-4 text-xs text-muted-foreground">
-                    {a.author && <span>{a.author}</span>}
-                    {a.published_at && (
-                      <span className="flex items-center gap-1">
-                        <Icon name="Calendar" size={13} />
-                        {new Date(a.published_at).toLocaleDateString('ru-RU')}
-                      </span>
-                    )}
+                  <div className="flex items-center justify-between gap-2 mt-4 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      {a.author && <span>{a.author}</span>}
+                      {a.published_at && (
+                        <span className="flex items-center gap-1">
+                          <Icon name="Calendar" size={13} />
+                          {new Date(a.published_at).toLocaleDateString('ru-RU')}
+                        </span>
+                      )}
+                    </div>
+                    <span className="flex items-center gap-1 text-primary font-display uppercase tracking-wide">
+                      Читать <Icon name="ArrowRight" size={14} />
+                    </span>
                   </div>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         )}
