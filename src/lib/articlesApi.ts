@@ -18,7 +18,7 @@ export interface ApiArticle {
   updated_at: string;
 }
 
-export type ArticleInput = Partial<Omit<ApiArticle, 'id'>> & { id?: number };
+export type ArticleInput = Partial<Omit<ApiArticle, 'id'>> & { id?: number; cover_base64?: string };
 
 export async function fetchArticles(all = false): Promise<ApiArticle[]> {
   const url = all ? `${ARTICLES_URL}?all=1` : ARTICLES_URL;

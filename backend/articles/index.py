@@ -1,9 +1,12 @@
 import json
 import os
 import re
+import base64
+import uuid
 from datetime import datetime
 import psycopg2
 import psycopg2.extras
+import boto3
 
 
 def _resp(status, body):
@@ -47,6 +50,21 @@ def _is_admin(cur, token: str) -> bool:
 
 def _row_to_dict(row):
     return dict(row)
+
+
+def _upload_cover(cover_base64: str) -> str:
+    if ',' in cover_base64:
+        cover_base64 = cover_base64.split(',', 1)[1]
+    data = base64.b64decode(cover_base64)
+    key = f"articles/{uuid.uuid4().hex}.jpg"
+    s3 = boto3.client(
+        's3',
+        endpoint_url='https://bucket.poehali.dev',
+        aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+        aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
+    )
+    s3.put_object(Bucket='files', Key=key, Body=data, ContentType='image/jpeg')
+    return f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{key}"
 
 
 def handler(event: dict, context):
@@ -98,6 +116,9 @@ def handler(event: dict, context):
             return _resp(401, {'error': 'Требуется авторизация'})
 
         body = json.loads(event.get('body') or '{}')
+
+        if body.get('cover_base64'):
+            body['cover_url'] = _upload_cover(body['cover_base64'])
 
         if method == 'POST':
             title = (body.get('title') or '').strip()

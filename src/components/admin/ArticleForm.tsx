@@ -24,11 +24,60 @@ const buildDefault = (a: ApiArticle | null): ArticleInput => ({
 
 const ArticleForm = ({ article, onClose, onSaved }: Props) => {
   const [form, setForm] = useState<ArticleInput>(() => buildDefault(article));
+  const [coverPreview, setCoverPreview] = useState(article?.cover_url || '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   const set = (key: keyof ArticleInput, value: string | boolean) =>
     setForm((f) => ({ ...f, [key]: value }));
+
+  const compressImage = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const maxSize = 1600;
+          let { width, height } = img;
+          if (width > maxSize || height > maxSize) {
+            if (width > height) {
+              height = Math.round((height * maxSize) / width);
+              width = maxSize;
+            } else {
+              width = Math.round((width * maxSize) / height);
+              height = maxSize;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Не удалось обработать изображение'));
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.onerror = () => reject(new Error('Не удалось загрузить изображение'));
+        img.src = reader.result as string;
+      };
+      reader.onerror = () => reject(new Error('Не удалось прочитать файл'));
+      reader.readAsDataURL(file);
+    });
+
+  const handleCover = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const compressed = await compressImage(file);
+      setForm((f) => ({ ...f, cover_base64: compressed }));
+      setCoverPreview(compressed);
+      setError('');
+    } catch {
+      setError('Не удалось обработать изображение. Попробуйте другое фото.');
+    }
+  };
 
   const handleSave = async () => {
     if (!form.title?.trim()) {
@@ -89,12 +138,29 @@ const ArticleForm = ({ article, onClose, onSaved }: Props) => {
           </div>
 
           <div>
-            <label className={labelCls}>Обложка (ссылка на изображение)</label>
+            <label className={labelCls}>Обложка статьи</label>
+            <div className="flex items-center gap-4 mb-3">
+              {coverPreview ? (
+                <img src={coverPreview} alt="preview" className="w-28 h-20 object-cover clip-corner border border-border" />
+              ) : (
+                <div className="w-28 h-20 flex items-center justify-center bg-background border border-border clip-corner text-muted-foreground">
+                  <Icon name="Image" size={24} />
+                </div>
+              )}
+              <label className="px-5 py-2.5 bg-muted text-foreground font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 transition-opacity cursor-pointer">
+                Загрузить файл
+                <input type="file" accept="image/*" onChange={handleCover} className="hidden" />
+              </label>
+            </div>
             <input
               type="text"
               value={form.cover_url || ''}
-              onChange={(e) => set('cover_url', e.target.value)}
-              placeholder="https://..."
+              onChange={(e) => {
+                set('cover_url', e.target.value);
+                setForm((f) => ({ ...f, cover_base64: undefined }));
+                setCoverPreview(e.target.value);
+              }}
+              placeholder="или вставьте ссылку https://..."
               className={inputCls}
             />
           </div>
