@@ -23,6 +23,11 @@ const budgetSteps = buildBudgetSteps();
 const cooling = ['Воздушное', 'Жидкостное (СЖО)', 'Кастомная СЖО (КСЖО)', 'На выбор мастера'];
 const cases = ['Компактный (Mini-ITX)', 'Средний (Mid-Tower)', 'Большой (Full-Tower)', 'На выбор мастера'];
 const rgbOptions = ['Без подсветки', 'Минимальная', 'Яркая RGB', 'На выбор мастера'];
+const silenceOptions = [
+  'Максимально тихая конфигурация под нагрузкой',
+  'Баланс между ценой и тишиной',
+  'Не имеет значения, главное чтобы не работал как вертолёт',
+];
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 
@@ -46,6 +51,10 @@ const BuildPC = () => {
   const [caseType, setCaseType] = useState('');
   const [rgb, setRgb] = useState('');
   const [styleText, setStyleText] = useState('');
+  const [wireless, setWireless] = useState<'' | 'yes' | 'no'>('');
+  const [upgrade, setUpgrade] = useState<'' | 'yes' | 'no' | 'other'>('');
+  const [upgradeText, setUpgradeText] = useState('');
+  const [silence, setSilence] = useState('');
 
   const canNextStep1 = purpose && prefMode && (prefMode === 'manager' || prefText.trim());
 
@@ -69,11 +78,17 @@ const BuildPC = () => {
   const purposeLabel = purposeOptions.find((p) => p.id === purpose)?.title || '—';
   const prefLabel = prefMode === 'manager' ? 'На выбор менеджера' : (prefText.trim() || '—');
 
+  const wirelessLabel = wireless === 'yes' ? 'Да' : wireless === 'no' ? 'Нет' : '—';
+  const upgradeLabel = upgrade === 'yes' ? 'Да' : upgrade === 'no' ? 'Нет' : upgrade === 'other' ? (upgradeText.trim() || 'Другое') : '—';
+
   const summary = [
     { label: 'Назначение', value: purposeLabel },
     { label: 'Бюджет', value: budgetLabel },
     { label: 'Комплектующие', value: prefLabel },
     { label: 'Охлаждение', value: coolingType || '—' },
+    { label: 'Wi-Fi / Bluetooth', value: wirelessLabel },
+    { label: 'Запас на апгрейд', value: upgradeLabel },
+    { label: 'Важность тишины', value: silence || '—' },
     { label: 'Корпус', value: caseType || '—' },
     { label: 'Подсветка', value: rgb || '—' },
     { label: 'Пожелания по стилю', value: styleText.trim() || '—' },
@@ -243,6 +258,71 @@ const BuildPC = () => {
                   <option value="" disabled>Выберите тип</option>
                   {cooling.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
+              </div>
+
+              <div>
+                <label className={labelCls}>Нужны беспроводные интерфейсы (Wi-Fi и Bluetooth)?</label>
+                <div className="flex flex-wrap gap-2">
+                  {([['yes', 'Да'], ['no', 'Нет']] as const).map(([val, txt]) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => setWireless(val)}
+                      className={`px-5 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
+                        wireless === val ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                      }`}
+                    >
+                      {txt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className={labelCls}>Нужен ли запас для будущего апгрейда ПК?</label>
+                <p className="text-xs text-muted-foreground -mt-1 mb-2">Мощнее блок питания, продуваемый корпус, охлаждение процессора с запасом и т.д.</p>
+                <div className="flex flex-wrap gap-2">
+                  {([['yes', 'Да'], ['no', 'Нет'], ['other', 'Другое']] as const).map(([val, txt]) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => { setUpgrade(val); if (val !== 'other') setUpgradeText(''); }}
+                      className={`px-5 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
+                        upgrade === val ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                      }`}
+                    >
+                      {txt}
+                    </button>
+                  ))}
+                </div>
+                {upgrade === 'other' && (
+                  <textarea
+                    rows={2}
+                    value={upgradeText}
+                    onChange={(e) => setUpgradeText(e.target.value)}
+                    placeholder="Опишите, какой запас нужен"
+                    className={`${inputCls} resize-none mt-3`}
+                  />
+                )}
+              </div>
+
+              <div>
+                <label className={labelCls}>Насколько важна тишина при использовании?</label>
+                <div className="grid gap-3">
+                  {silenceOptions.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setSilence(s)}
+                      className={`flex items-center gap-3 text-left px-4 py-3 text-sm clip-corner border transition-colors ${
+                        silence === s ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                      }`}
+                    >
+                      <Icon name="Volume2" size={20} className="shrink-0" />
+                      <span>{s}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="flex gap-3">
