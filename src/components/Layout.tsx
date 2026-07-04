@@ -22,7 +22,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <div className="container flex items-center justify-between h-20">
 
           {/* Логотип */}
-          <Link to="/" className="flex flex-1 items-center group min-w-0 overflow-hidden">
+          <Link to="/" className="flex items-center group shrink-0 overflow-hidden w-32 sm:w-40">
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/85b4ce1f-a80b-4f4f-bbc3-300fafd4b67e.png"
               alt="White Friday PC"
@@ -30,7 +30,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             />
           </Link>
 
-          <nav className="hidden md:flex items-center justify-center gap-1 shrink-0 px-2">
+          <nav className="hidden md:flex items-center justify-center gap-1 shrink-0 px-2 mr-auto">
             {navItems.map((item) => (
               <Link
                 key={item.to}
@@ -46,8 +46,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
             ))}
           </nav>
 
-          <div className="flex flex-1 min-w-0 justify-end items-center gap-3 pl-4 lg:pl-8">
-            <div className="hidden md:flex items-center gap-3">
+          <div className="flex shrink-0 justify-end items-center gap-3 pl-4">
+            <div className="hidden md:flex items-center gap-3 shrink-0">
               <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
                 <Icon name="MessagesSquare" size={24} />
               </a>
