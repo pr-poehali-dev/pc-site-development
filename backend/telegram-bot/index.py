@@ -1,15 +1,16 @@
 import json
 import os
-import urllib.request
-import urllib.parse
 from datetime import datetime
 
+import requests
 import psycopg2
 import psycopg2.extras
 
 BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
 ADMIN_PASSWORD = os.environ.get('BOT_ADMIN_PASSWORD', '')
 API_URL = f'https://api.telegram.org/bot{BOT_TOKEN}'
+
+_session = requests.Session()
 
 STATUS_LABELS = {
     'new': 'Новый',
@@ -27,17 +28,15 @@ def db():
     return psycopg2.connect(os.environ['DATABASE_URL'])
 
 
-def tg_call(method: str, payload: dict) -> dict:
-    data = json.dumps(payload).encode('utf-8')
-    req = urllib.request.Request(
-        f'{API_URL}/{method}', data=data,
-        headers={'Content-Type': 'application/json'}
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            return json.loads(resp.read().decode('utf-8'))
-    except Exception as e:
-        return {'ok': False, 'error': str(e)}
+def tg_call(method: str, payload: dict, timeout: int = 4, retries: int = 3) -> dict:
+    last_err = None
+    for _ in range(retries):
+        try:
+            resp = _session.post(f'{API_URL}/{method}', json=payload, timeout=timeout)
+            return resp.json()
+        except Exception as e:
+            last_err = str(e)
+    return {'ok': False, 'error': last_err}
 
 
 def send(chat_id: int, text: str, keyboard=None, parse_mode='HTML'):

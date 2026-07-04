@@ -1,8 +1,8 @@
 import json
 import os
-import urllib.request
 from datetime import datetime
 
+import requests
 import psycopg2
 import psycopg2.extras
 
@@ -53,12 +53,11 @@ def notify_admins(conn, order: dict):
         except Exception:
             pass
     text = "\n".join(lines)
-    payload_base = {'text': text, 'parse_mode': 'HTML'}
     for (tid,) in admins:
-        data = json.dumps({**payload_base, 'chat_id': tid}).encode('utf-8')
-        req = urllib.request.Request(f'{API_URL}/sendMessage', data=data, headers={'Content-Type': 'application/json'})
         try:
-            urllib.request.urlopen(req, timeout=10)
+            requests.post(f'{API_URL}/sendMessage',
+                          json={'chat_id': tid, 'text': text, 'parse_mode': 'HTML'},
+                          timeout=5)
         except Exception:
             pass
 
