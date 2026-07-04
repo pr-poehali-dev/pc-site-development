@@ -23,11 +23,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <div className="container flex items-center justify-between h-20">
 
           {/* Логотип */}
-          <Link to="/" className="flex items-center group shrink-0">
+          <Link to="/" className="flex items-center group shrink-0 h-20 overflow-hidden -ml-6 sm:-ml-10">
             <img
               src="https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/fd8f7698-5f0c-42b3-bfde-b265a7906710.png"
               alt="White Friday PC"
-              className="h-12 sm:h-16 w-auto object-contain object-left"
+              className="h-36 sm:h-44 w-auto object-contain object-left"
             />
           </Link>
 
