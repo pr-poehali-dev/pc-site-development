@@ -35,7 +35,7 @@ const sizeOptions = [
   { id: 'standard-matx', title: 'Стандартный mATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/41063fcb-c37d-428c-86b2-f20bc9840d7b.jpg' },
   { id: 'standard-atx', title: 'Стандартный ATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/cd1e7b01-97a3-4598-ae5d-a42b884da416.jpg' },
   { id: 'full-atx', title: 'Полноразмерный ATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a0649788-9cbd-41a4-b868-f932ce0206c8.jpg' },
-  { id: 'any', title: 'Не важно, главное практичность', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a6ce982d-8c5d-4f8a-a2e1-911010b574af.jpg' },
+  { id: 'any', title: 'Главное практичность', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a6ce982d-8c5d-4f8a-a2e1-911010b574af.jpg' },
 ];
 
 const appearanceOptions = [
@@ -49,7 +49,7 @@ const lightingOptions = [
   { id: 'contour', title: 'Контурная подсветка', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/7aec69d9-9974-4f0a-a63a-021bf74a90ed.jpg' },
   { id: 'infinity', title: 'Подсветка с эффектом бесконечности', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a6223dd8-dca4-41e3-8e4b-c90c33e55304.jpg' },
   { id: 'minimal', title: 'Минимум подсветки или без неё', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a5c6d7a1-8182-45b6-b08c-f749a1a76fa7.jpg' },
-  { id: 'engineer', title: 'На усмотрение инженера', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/2e1bb7cf-a7d7-45d9-8064-331e4e6e6b4a.jpg' },
+  { id: 'engineer', title: 'По умолчанию', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/2e1bb7cf-a7d7-45d9-8064-331e4e6e6b4a.jpg' },
 ];
 
 const colorOptions = ['Белый', 'Чёрный', 'Другое'];
