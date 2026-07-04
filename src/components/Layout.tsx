@@ -31,7 +31,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             />
           </Link>
 
-          <nav className="hidden md:flex items-center justify-center gap-1 shrink-0 px-2 ml-2 lg:ml-6 mr-auto">
+          <nav className="hidden md:flex items-center justify-center gap-1 shrink-0 px-2 ml-2 lg:ml-6">
             {navItems.map((item) => (
               <Link
                 key={item.to}
@@ -47,7 +47,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             ))}
           </nav>
 
-          <div className="flex shrink-0 justify-end items-center gap-3 md:pr-4 lg:pr-6">
+          <div className="flex shrink-0 justify-end items-center gap-3 md:pr-4 lg:pr-6 ml-auto">
             <div className="hidden md:flex items-center gap-3 shrink-0">
               {socials.map((s) => (
                 <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.title} className="text-black/70 hover:text-white transition-colors">
