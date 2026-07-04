@@ -20,8 +20,6 @@ const buildBudgetSteps = () => {
 };
 const budgetSteps = buildBudgetSteps();
 
-const cases = ['Компактный (Mini-ITX)', 'Средний (Mid-Tower)', 'Большой (Full-Tower)', 'На выбор мастера'];
-const rgbOptions = ['Без подсветки', 'Минимальная', 'Яркая RGB', 'На выбор мастера'];
 const silenceOptions = [
   'Максимально тихая конфигурация под нагрузкой',
   'Баланс между ценой и тишиной',
@@ -35,6 +33,13 @@ const sizeOptions = [
   { id: 'standard-atx', title: 'Стандартный ATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/cd1e7b01-97a3-4598-ae5d-a42b884da416.jpg' },
   { id: 'full-atx', title: 'Полноразмерный ATX', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a0649788-9cbd-41a4-b868-f932ce0206c8.jpg' },
   { id: 'any', title: 'Не важно, главное практичность', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a6ce982d-8c5d-4f8a-a2e1-911010b574af.jpg' },
+];
+
+const appearanceOptions = [
+  { id: 'aquarium', title: 'Аквариумного типа', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/e36672c3-7fad-4085-9bff-c417fed1a586.jpg' },
+  { id: 'classic-glass', title: 'Стандартный корпус со стеклом слева', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/f5a50364-db93-4596-9920-dee83d2f75c1.jpg' },
+  { id: 'unusual', title: 'Что-то необычное', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/0b5b2537-2cf1-4fc8-ace6-1a36668db052.jpg' },
+  { id: 'any', title: 'Не имеет значения, главное практичность =)', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/768678f8-19e7-4764-a1e6-25c3896159d9.jpg' },
 ];
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
@@ -55,14 +60,12 @@ const BuildPC = () => {
   const [customBudgetValue, setCustomBudgetValue] = useState('');
   const [prefMode, setPrefMode] = useState<'' | 'yes' | 'manager'>('');
   const [prefText, setPrefText] = useState('');
-  const [caseType, setCaseType] = useState('');
-  const [rgb, setRgb] = useState('');
-  const [styleText, setStyleText] = useState('');
   const [wireless, setWireless] = useState<'' | 'yes' | 'no'>('');
   const [upgrade, setUpgrade] = useState<'' | 'yes' | 'no' | 'other'>('');
   const [upgradeText, setUpgradeText] = useState('');
   const [silence, setSilence] = useState('');
   const [pcSize, setPcSize] = useState('');
+  const [appearance, setAppearance] = useState('');
 
   const canNextStep1 = purpose && prefMode && (prefMode === 'manager' || prefText.trim());
 
@@ -97,9 +100,7 @@ const BuildPC = () => {
     { label: 'Запас на апгрейд', value: upgradeLabel },
     { label: 'Важность тишины', value: silence || '—' },
     { label: 'Размер ПК', value: sizeOptions.find((s) => s.id === pcSize)?.title || '—' },
-    { label: 'Корпус', value: caseType || '—' },
-    { label: 'Подсветка', value: rgb || '—' },
-    { label: 'Пожелания по стилю', value: styleText.trim() || '—' },
+    { label: 'Внешний вид', value: appearanceOptions.find((a) => a.id === appearance)?.title || '—' },
   ];
 
   return (
@@ -400,37 +401,34 @@ const BuildPC = () => {
           {step === 3 && (
             <>
               <div>
-                <label className={labelCls}>Форм-фактор / корпус</label>
-                <select className={selectCls} value={caseType} onChange={(e) => setCaseType(e.target.value)}>
-                  <option value="" disabled>Выберите вариант</option>
-                  {cases.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label className={labelCls}>Подсветка (RGB)</label>
-                <div className="flex flex-wrap gap-2">
-                  {rgbOptions.map((r) => {
-                    const active = rgb === r;
+                <label className={labelCls}>Какой внешний вид компьютера тебе больше нравится?</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {appearanceOptions.map((a) => {
+                    const active = appearance === a.id;
                     return (
                       <button
-                        key={r}
+                        key={a.id}
                         type="button"
-                        onClick={() => setRgb(r)}
-                        className={`px-4 py-2 text-sm font-display uppercase tracking-wide clip-corner border transition-colors ${
-                          active ? 'btn-primary border-glow-cyan' : 'bg-background border-border text-muted-foreground hover:border-primary/40'
+                        onClick={() => setAppearance(a.id)}
+                        className={`group text-left clip-corner border overflow-hidden transition-colors ${
+                          active ? 'border-glow-cyan' : 'border-border hover:border-primary/40'
                         }`}
                       >
-                        {r}
+                        <div className="relative aspect-[16/11] bg-background overflow-hidden">
+                          <img src={a.image} alt={a.title} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                          {active && (
+                            <div className="absolute top-2 right-2 w-7 h-7 rounded-full btn-primary flex items-center justify-center">
+                              <Icon name="Check" size={16} />
+                            </div>
+                          )}
+                        </div>
+                        <div className={`px-4 py-3 text-sm font-display uppercase tracking-wide ${active ? 'btn-primary' : 'bg-card text-muted-foreground'}`}>
+                          {a.title}
+                        </div>
                       </button>
                     );
                   })}
                 </div>
-              </div>
-
-              <div>
-                <label className={labelCls}>Пожелания по стилю и подсветке</label>
-                <textarea rows={4} value={styleText} onChange={(e) => setStyleText(e.target.value)} placeholder="Цвет корпуса, RGB, тихая сборка, кастомные детали и т.д." className={`${inputCls} resize-none`} />
               </div>
 
               <div className="flex gap-3">
@@ -444,7 +442,8 @@ const BuildPC = () => {
                 <button
                   type="button"
                   onClick={next}
-                  className="flex-1 flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green"
+                  disabled={!appearance}
+                  className="flex-1 flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Далее <Icon name="ArrowRight" size={18} />
                 </button>
