@@ -73,7 +73,7 @@ const steps = ['Задачи и бюджет', 'Детали сборки', 'Р�
 
 const BuildPC = () => {
   const [step, setStep] = useState(0);
-  const [purpose, setPurpose] = useState('');
+  const [purposes, setPurposes] = useState<string[]>([]);
   const [budgetIdx, setBudgetIdx] = useState(2);
   const [customBudget, setCustomBudget] = useState(false);
   const [customBudgetValue, setCustomBudgetValue] = useState('');
@@ -97,7 +97,7 @@ const BuildPC = () => {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const canNextStep1 = purpose && prefMode && (prefMode === 'manager' || prefText.trim());
+  const canNextStep1 = purposes.length > 0 && prefMode && (prefMode === 'manager' || prefText.trim());
 
   const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
@@ -138,7 +138,9 @@ const BuildPC = () => {
     ? (customBudgetValue ? fmt(Number(customBudgetValue)) : 'не указан')
     : `${fmt(minB)} — ${fmt(maxB)}`;
 
-  const purposeLabel = purposeOptions.find((p) => p.id === purpose)?.title || '—';
+  const purposeLabel = purposes.length
+    ? purposeOptions.filter((p) => purposes.includes(p.id)).map((p) => p.title).join('; ')
+    : '—';
   const prefLabel = prefMode === 'manager' ? 'На выбор менеджера' : (prefText.trim() || '—');
 
   const wirelessLabel = wireless === 'yes' ? 'Да' : wireless === 'no' ? 'Нет' : '—';
@@ -207,20 +209,28 @@ const BuildPC = () => {
             <>
               <div>
                 <label className={labelCls}>Для чего необходим ПК?</label>
+                <p className="text-xs text-muted-foreground -mt-1 mb-2">Можно выбрать несколько вариантов.</p>
                 <div className="grid gap-3">
                   {purposeOptions.map((p) => {
-                    const active = purpose === p.id;
+                    const active = purposes.includes(p.id);
                     return (
                       <button
                         key={p.id}
                         type="button"
-                        onClick={() => setPurpose(p.id)}
+                        onClick={() =>
+                          setPurposes((list) =>
+                            active ? list.filter((id) => id !== p.id) : [...list, p.id]
+                          )
+                        }
                         className={`flex items-center gap-3 text-left px-4 py-3 text-sm clip-corner border transition-colors ${
                           active
-                            ? 'btn-primary border-glow-cyan'
+                            ? 'border-primary/60 text-foreground bg-primary/5'
                             : 'bg-background border-border text-muted-foreground hover:border-primary/40'
                         }`}
                       >
+                        <span className={`w-5 h-5 flex items-center justify-center shrink-0 clip-corner border ${active ? 'bg-primary border-primary text-primary-foreground' : 'border-border'}`}>
+                          {active && <Icon name="Check" size={14} />}
+                        </span>
                         <Icon name={p.icon} size={20} className="shrink-0" />
                         <span>{p.title}</span>
                       </button>
