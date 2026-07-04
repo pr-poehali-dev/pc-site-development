@@ -2,14 +2,35 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
+import { useToast } from '@/hooks/use-toast';
 import { fetchArticleBySlug, fetchArticles, type ApiArticle } from '@/lib/articlesApi';
 
 const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { toast } = useToast();
   const [article, setArticle] = useState<ApiArticle | null>(null);
   const [others, setOthers] = useState<ApiArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    const title = article?.title || 'Статья White Friday PC';
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text: article?.excerpt || title, url });
+        return;
+      } catch {
+        return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      toast({ title: 'Ссылка скопирована', description: 'Теперь её можно отправить кому угодно.' });
+    } catch {
+      toast({ title: 'Не удалось скопировать', description: url });
+    }
+  };
 
   useEffect(() => {
     if (!slug) return;
@@ -58,6 +79,12 @@ const ArticlePage = () => {
                   {new Date(article.published_at).toLocaleDateString('ru-RU')}
                 </span>
               )}
+              <button
+                onClick={handleShare}
+                className="ml-auto inline-flex items-center gap-2 px-4 py-2 border border-border clip-corner hover:border-primary/50 hover:text-primary transition-colors font-display uppercase text-xs tracking-wide"
+              >
+                <Icon name="Share2" size={15} /> Поделиться
+              </button>
             </div>
 
             {article.cover_url && (
