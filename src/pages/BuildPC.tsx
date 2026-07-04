@@ -43,10 +43,10 @@ const appearanceOptions = [
 ];
 
 const lightingOptions = [
-  { id: 'contour', title: 'Контурная подсветка', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/1f935814-364a-43b4-8ec7-be4bc3a89a66.jpg' },
-  { id: 'infinity', title: 'Подсветка с эффектом бесконечности', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/26a12944-a79e-4f65-8e4c-ef3e30e93590.jpg' },
-  { id: 'minimal', title: 'Минимум подсветки или без неё', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/b7cce2ab-9213-4d07-9cc3-2ff85f3ef772.jpg' },
-  { id: 'engineer', title: 'На усмотрение инженера', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/976daadd-9c75-4b82-a0d4-3fcb9d3507a6.jpg' },
+  { id: 'contour', title: 'Контурная подсветка', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a6223dd8-dca4-41e3-8e4b-c90c33e55304.jpg' },
+  { id: 'infinity', title: 'Подсветка с эффектом бесконечности', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/7aec69d9-9974-4f0a-a63a-021bf74a90ed.jpg' },
+  { id: 'minimal', title: 'Минимум подсветки или без неё', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/a5c6d7a1-8182-45b6-b08c-f749a1a76fa7.jpg' },
+  { id: 'engineer', title: 'На усмотрение инженера', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/2e1bb7cf-a7d7-45d9-8064-331e4e6e6b4a.jpg' },
 ];
 
 const colorOptions = ['Белый', 'Чёрный', 'Другое'];
