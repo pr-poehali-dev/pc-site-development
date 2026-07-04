@@ -42,7 +42,7 @@ const appearanceOptions = [
   { id: 'aquarium', title: 'Аквариумного типа', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/e36672c3-7fad-4085-9bff-c417fed1a586.jpg' },
   { id: 'classic-glass', title: 'Стандартный корпус со стеклом слева', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/f5a50364-db93-4596-9920-dee83d2f75c1.jpg' },
   { id: 'unusual', title: 'Что-то необычное', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/0b5b2537-2cf1-4fc8-ace6-1a36668db052.jpg' },
-  { id: 'any', title: 'Не имеет значения, главное практичность =)', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/768678f8-19e7-4764-a1e6-25c3896159d9.jpg' },
+  { id: 'any', title: 'Главное практичность', image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/768678f8-19e7-4764-a1e6-25c3896159d9.jpg' },
 ];
 
 const lightingOptions = [
