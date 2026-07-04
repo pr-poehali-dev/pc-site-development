@@ -69,6 +69,21 @@ export function truncateReview(text: string, hasPhoto: boolean): { text: string;
   return { text: (lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd() + '…', truncated: true };
 }
 
+export const socials = [
+  { icon: 'MessagesSquare', title: 'Наш ВК', href: 'https://vk.com/whitefriday_pc' },
+  { icon: 'Send', title: 'Наш Телеграмм канал', href: 'https://t.me/White_Friday_PC' },
+  { icon: 'Youtube', title: 'Наш YouTube канал', href: 'https://www.youtube.com/@WhiteFriday-PC' },
+];
+
+export const contactInfo = {
+  phone: '8 909 909-95-90',
+  phoneHref: 'tel:+79099099590',
+  email: 'whitefriday.pc@gmail.com',
+  emailHref: 'mailto:whitefriday.pc@gmail.com',
+  address: 'Нагатинская ул., дом 28к2',
+  hours: 'Ежедневно 10:00 — 21:00',
+};
+
 export const faq = [
   { q: 'Можно ли изменить комплектацию сборки?', a: 'Мы не продаем готовые компьютеры, мы работаем с каждым клиентом индивидуально, и собираем ПК с нуля, исходя из задач и пожеланий клиента. Поэтому да, можно заменить все что угодно и как угодно! =)' },
   { q: 'Сколько занимает сборка и доставка?', a: 'Сборка и тестирование от 2-х до 7-и дней, в зависимости от бюджета и сложности проекта (за исключением проектов с КСЖО, обсуждается индивидуально).\n\nДоставка по Москве — на следующий день после готовности ПК.\n\nДоставка по РФ и СНГ от 1 до 7 дней ТК СДЭК.' },

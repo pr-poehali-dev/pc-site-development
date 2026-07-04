@@ -1,16 +1,11 @@
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
+import { socials, contactInfo } from '@/data/content';
 
 const contacts = [
-  { icon: 'Phone', title: 'Телефон', value: '8 909 909-95-90', sub: 'Звоните в любое время', href: 'tel:+79099099590' },
-  { icon: 'Mail', title: 'Почта', value: 'whitefriday.pc@gmail.com', sub: 'Ответим в течение часа', href: 'mailto:whitefriday.pc@gmail.com' },
-  { icon: 'MapPin', title: 'Адрес', value: 'Нагатинская ул., дом 28к2', sub: 'Ежедневно 10:00 — 21:00' },
-];
-
-const socials = [
-  { icon: 'MessagesSquare', title: 'Наш ВК', href: 'https://vk.com/whitefriday_pc' },
-  { icon: 'Send', title: 'Наш Телеграмм канал', href: 'https://t.me/White_Friday_PC' },
-  { icon: 'Youtube', title: 'Наш YouTube канал', href: 'https://www.youtube.com/@WhiteFriday-PC' },
+  { icon: 'Phone', title: 'Телефон', value: contactInfo.phone, sub: 'Звоните в любое время', href: contactInfo.phoneHref },
+  { icon: 'Mail', title: 'Почта', value: contactInfo.email, sub: 'Ответим в течение часа', href: contactInfo.emailHref },
+  { icon: 'MapPin', title: 'Адрес', value: contactInfo.address, sub: contactInfo.hours },
 ];
 
 const delivery = [

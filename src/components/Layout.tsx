@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { ReactNode, useState } from 'react';
+import { socials, contactInfo } from '@/data/content';
 
 const navItems = [
   { to: '/', label: 'Главная' },
@@ -48,15 +49,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
           <div className="flex shrink-0 justify-end items-center gap-3 md:pr-4 lg:pr-6">
             <div className="hidden md:flex items-center gap-3 shrink-0">
-              <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="MessagesSquare" size={24} />
-              </a>
-              <a href="https://t.me/White_Friday_PC" target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="Send" size={24} />
-              </a>
-              <a href="https://www.youtube.com/@WhiteFriday-PC" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="Youtube" size={24} />
-              </a>
+              {socials.map((s) => (
+                <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.title} className="text-black/70 hover:text-white transition-colors">
+                  <Icon name={s.icon} size={24} />
+                </a>
+              ))}
             </div>
             <Link
               to="/contacts"
@@ -66,15 +63,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
               Заказать
             </Link>
             <div className="flex md:hidden items-center gap-3 shrink-0">
-              <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="MessagesSquare" size={20} />
-              </a>
-              <a href="https://t.me/White_Friday_PC" target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="Send" size={20} />
-              </a>
-              <a href="https://www.youtube.com/@WhiteFriday-PC" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-black/70 hover:text-white transition-colors">
-                <Icon name="Youtube" size={20} />
-              </a>
+              {socials.map((s) => (
+                <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.title} className="text-black/70 hover:text-white transition-colors">
+                  <Icon name={s.icon} size={20} />
+                </a>
+              ))}
               <button className="text-white" onClick={() => setOpen(!open)}>
                 <Icon name={open ? 'X' : 'Menu'} size={26} />
               </button>
@@ -126,21 +119,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
               Собираем игровые и рабочие ПК с душой. Каждая сборка — произведение инженерного искусства.
             </p>
             <ul className="space-y-2 mt-4 text-black/80">
-              <li>
-                <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
-                  <Icon name="MessagesSquare" size={16} className="text-white shrink-0" /> Наш ВК
-                </a>
-              </li>
-              <li>
-                <a href="https://t.me/White_Friday_PC" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
-                  <Icon name="Send" size={16} className="text-white shrink-0" /> Наш Телеграмм канал
-                </a>
-              </li>
-              <li>
-                <a href="https://www.youtube.com/@WhiteFriday-PC" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
-                  <Icon name="Youtube" size={16} className="text-white shrink-0" /> Наш YouTube канал
-                </a>
-              </li>
+              {socials.map((s) => (
+                <li key={s.href}>
+                  <a href={s.href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
+                    <Icon name={s.icon} size={16} className="text-white shrink-0" /> {s.title}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
@@ -159,17 +144,17 @@ const Layout = ({ children }: { children: ReactNode }) => {
             <h4 className="font-display uppercase tracking-wider text-white mb-4">Контакты</h4>
             <ul className="space-y-2 text-black/80">
               <li>
-                <a href="tel:+79099099590" className="flex items-center gap-2 hover:text-white transition-colors">
-                  <Icon name="Phone" size={16} className="text-white shrink-0" /> 8 909 909-95-90
+                <a href={contactInfo.phoneHref} className="flex items-center gap-2 hover:text-white transition-colors">
+                  <Icon name="Phone" size={16} className="text-white shrink-0" /> {contactInfo.phone}
                 </a>
               </li>
               <li>
-                <a href="mailto:whitefriday.pc@gmail.com" className="flex items-center gap-2 hover:text-white transition-colors">
-                  <Icon name="Mail" size={16} className="text-white shrink-0" /> whitefriday.pc@gmail.com
+                <a href={contactInfo.emailHref} className="flex items-center gap-2 hover:text-white transition-colors">
+                  <Icon name="Mail" size={16} className="text-white shrink-0" /> {contactInfo.email}
                 </a>
               </li>
               <li className="flex items-center gap-2">
-                <Icon name="MapPin" size={16} className="text-white shrink-0" /> Нагатинская ул., дом 28к2
+                <Icon name="MapPin" size={16} className="text-white shrink-0" /> {contactInfo.address}
               </li>
             </ul>
           </div>
