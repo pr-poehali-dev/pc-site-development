@@ -11,6 +11,7 @@ import Reviews from "./pages/Reviews";
 import FAQ from "./pages/FAQ";
 import Contacts from "./pages/Contacts";
 import BuildPC from "./pages/BuildPC";
+import Articles from "./pages/Articles";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 import NotFound from "./pages/NotFound";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/build" element={<BuildPC />} />
+          <Route path="/articles" element={<Articles />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
