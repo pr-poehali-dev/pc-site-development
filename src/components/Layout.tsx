@@ -30,12 +30,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
             />
           </Link>
 
-          <nav className="hidden md:flex flex-1 items-center justify-center gap-1 px-4">
+          <nav className="hidden md:flex flex-1 items-center justify-center gap-0.5 lg:gap-1 px-2 lg:px-4 min-w-0">
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`px-2 lg:px-3 py-2 font-display uppercase text-xs lg:text-sm tracking-wider whitespace-nowrap transition-colors ${
+                className={`px-1.5 md:px-2 lg:px-3 py-2 font-display uppercase text-[11px] md:text-xs lg:text-sm tracking-tight lg:tracking-wider whitespace-nowrap transition-colors ${
                   location.pathname === item.to
                     ? 'text-white'
                     : 'text-black/70 hover:text-white'
@@ -46,8 +46,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
             ))}
           </nav>
 
-          <div className="flex shrink-0 justify-end items-center gap-3 -mr-2 sm:-mr-4">
-            <div className="hidden md:flex items-center gap-3">
+          <div className="flex shrink-0 justify-end items-center gap-2 lg:gap-3 -mr-2 sm:-mr-4">
+            <div className="hidden lg:flex items-center gap-3">
               <a href="https://vk.com/whitefriday_pc" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте" className="text-black/70 hover:text-white transition-colors">
                 <Icon name="MessagesSquare" size={24} />
               </a>
@@ -60,7 +60,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </div>
             <Link
               to="/contacts"
-              className="hidden md:flex items-center gap-2 px-3.5 py-2 btn-primary font-display uppercase text-sm tracking-wider clip-corner btn-glow-green"
+              className="hidden md:flex items-center gap-2 px-2.5 lg:px-3.5 py-2 btn-primary font-display uppercase text-xs lg:text-sm tracking-wider clip-corner btn-glow-green whitespace-nowrap"
             >
               <Icon name="MessageCircle" size={16} />
               Заказать
