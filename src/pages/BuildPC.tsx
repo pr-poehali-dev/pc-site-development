@@ -86,7 +86,7 @@ const BuildPC = () => {
   const [upgradeOther, setUpgradeOther] = useState(false);
   const [upgradeText, setUpgradeText] = useState('');
   const [silence, setSilence] = useState('Баланс между ценой и тишиной');
-  const [pcSize, setPcSize] = useState('');
+  const [pcSize, setPcSize] = useState('any');
   const [appearance, setAppearance] = useState('any');
   const [lighting, setLighting] = useState('engineer');
   const [color, setColor] = useState('Чёрный');
