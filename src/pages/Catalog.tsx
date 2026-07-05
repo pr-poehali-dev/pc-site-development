@@ -69,7 +69,7 @@ const Catalog = () => {
         )}
 
         <div className="mt-12 text-center">
-          <Link to="/contacts" className="inline-flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner">
+          <Link to="/build" className="inline-flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner">
             <Icon name="Wrench" size={18} /> Собрать индивидуальную конфигурацию
           </Link>
         </div>
