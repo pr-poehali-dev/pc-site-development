@@ -7,9 +7,10 @@ import func2url from '../../backend/func2url.json';
 const ORDERS_URL = func2url['orders'];
 
 const contacts = [
-  { icon: 'Phone', title: 'Телефон', value: contactInfo.phone, sub: 'Звоните в любое время', href: contactInfo.phoneHref },
-  { icon: 'Mail', title: 'Почта', value: contactInfo.email, sub: 'Ответим в течение часа', href: contactInfo.emailHref },
+  { icon: 'Phone', title: 'Телефон', value: contactInfo.phone, sub: 'Звоните с 11 до 21 по МСК времени!', href: contactInfo.phoneHref },
+  { icon: 'Mail', title: 'Почта', value: contactInfo.email, sub: '', href: contactInfo.emailHref },
   { icon: 'MapPin', title: 'Адрес', value: contactInfo.address, sub: contactInfo.hours, href: contactInfo.addressHref, external: true },
+  { icon: 'Store', title: 'Пункт выдачи · СПб', value: contactInfo.addressSpb, sub: '', href: contactInfo.addressHref, external: true },
 ];
 
 const delivery = [
@@ -86,7 +87,7 @@ const Contacts = () => {
                 <div>
                   <p className="text-muted-foreground text-sm uppercase tracking-wide font-display">{c.title}</p>
                   <p className="font-display text-xl break-words">{c.value}</p>
-                  <p className="text-muted-foreground text-sm">{c.sub}</p>
+                  {c.sub && <p className="text-muted-foreground text-sm">{c.sub}</p>}
                 </div>
               </>
             );
