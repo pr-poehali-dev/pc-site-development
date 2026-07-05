@@ -87,12 +87,15 @@ const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: 
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-3">
-                    <Link to="/contacts" className="px-5 py-2.5 btn-primary font-display uppercase text-xs tracking-wider clip-corner btn-glow-green">
+                  <div className="flex flex-wrap md:flex-nowrap gap-3">
+                    <Link to="/contacts" className="px-5 py-2.5 btn-primary font-display uppercase text-xs tracking-wider clip-corner btn-glow-green whitespace-nowrap">
                       Нужен этот вариант
                     </Link>
-                    <Link to="/contacts" className="px-5 py-2.5 btn-primary font-display uppercase text-xs tracking-wider clip-corner">
+                    <Link to="/catalog" className="px-5 py-2.5 btn-primary font-display uppercase text-xs tracking-wider clip-corner whitespace-nowrap">
                       Другой вариант
+                    </Link>
+                    <Link to="/build" className="px-5 py-2.5 btn-primary font-display uppercase text-xs tracking-wider clip-corner whitespace-nowrap">
+                      Собери свой ПК
                     </Link>
                   </div>
                 </div>
