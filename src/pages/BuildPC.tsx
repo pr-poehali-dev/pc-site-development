@@ -85,11 +85,11 @@ const BuildPC = () => {
   const [upgradeItems, setUpgradeItems] = useState<string[]>([]);
   const [upgradeOther, setUpgradeOther] = useState(false);
   const [upgradeText, setUpgradeText] = useState('');
-  const [silence, setSilence] = useState('');
+  const [silence, setSilence] = useState('Баланс между ценой и тишиной');
   const [pcSize, setPcSize] = useState('');
-  const [appearance, setAppearance] = useState('');
-  const [lighting, setLighting] = useState('');
-  const [color, setColor] = useState('');
+  const [appearance, setAppearance] = useState('any');
+  const [lighting, setLighting] = useState('engineer');
+  const [color, setColor] = useState('Чёрный');
   const [colorText, setColorText] = useState('');
   const [contactMethod, setContactMethod] = useState<'' | 'call' | 'text'>('');
   const [cName, setCName] = useState('');
