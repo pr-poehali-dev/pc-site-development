@@ -10,7 +10,7 @@ const contacts = [
   { icon: 'Phone', title: 'Телефон', value: contactInfo.phone, sub: 'Звоните с 11 до 21 по МСК времени!', href: contactInfo.phoneHref },
   { icon: 'Mail', title: 'Почта', value: contactInfo.email, sub: '', href: contactInfo.emailHref },
   { icon: 'MapPin', title: 'Адрес', value: contactInfo.address, sub: contactInfo.hours, href: contactInfo.addressHref, external: true },
-  { icon: 'Store', title: 'Пункт выдачи · СПб', value: contactInfo.addressSpb, sub: '', href: contactInfo.addressHref, external: true },
+  { icon: 'Store', title: 'Пункт выдачи · СПб', value: contactInfo.addressSpb, sub: '', href: contactInfo.addressSpbHref, external: true },
 ];
 
 const delivery = [
