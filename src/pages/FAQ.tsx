@@ -15,7 +15,7 @@ const FAQ = () => {
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">FAQ</p>
-          <h1 className="font-display text-4xl md:text-6xl font-bold">ВОПРОС — <span className="text-primary text-glow-cyan">ОТВЕТ</span></h1>
+          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold">ВОПРОС — <span className="text-primary text-glow-cyan">ОТВЕТ</span></h1>
           <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
             Собрали ответы на самые частые вопросы о сборках, доставке и гарантии.
           </p>
