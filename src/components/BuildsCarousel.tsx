@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
+import GpuIcon from '@/components/ui/GpuIcon';
 import type { Build } from '@/data/builds';
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
@@ -64,26 +65,18 @@ const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: 
                   <h3 className="font-display text-2xl md:text-3xl font-bold text-secondary mb-1">{b.name}</h3>
                   <p className="text-muted-foreground text-sm mb-4 font-sans">{b.tagline}</p>
 
-                  <ul className="space-y-2 mb-5 font-sans">
-                    <li className="flex items-center gap-2 text-sm">
-                      <Icon name="Cpu" size={16} className="text-primary shrink-0" />
-                      <span className="text-muted-foreground">Процессор:</span>
+                  <ul className="space-y-2.5 mb-5 font-sans">
+                    <li className="flex items-center gap-2.5 text-sm">
+                      <Icon name="Cpu" size={22} className="text-primary shrink-0" />
                       <span>{b.specs.cpu}</span>
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <Icon name="MonitorPlay" size={16} className="text-primary shrink-0" />
-                      <span className="text-muted-foreground">Видеокарта:</span>
+                    <li className="flex items-center gap-2.5 text-sm">
+                      <GpuIcon size={22} className="text-primary" />
                       <span>{b.specs.gpu}</span>
                     </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <Icon name="MemoryStick" size={16} className="text-primary shrink-0" />
-                      <span className="text-muted-foreground">ОЗУ:</span>
+                    <li className="flex items-center gap-2.5 text-sm">
+                      <Icon name="MemoryStick" size={22} className="text-primary shrink-0" />
                       <span>{b.specs.ram}</span>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <Icon name="HardDrive" size={16} className="text-primary shrink-0" />
-                      <span className="text-muted-foreground">Накопитель:</span>
-                      <span>{b.specs.storage}</span>
                     </li>
                   </ul>
 

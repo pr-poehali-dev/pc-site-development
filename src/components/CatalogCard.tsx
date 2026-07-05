@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
+import GpuIcon from '@/components/ui/GpuIcon';
 import type { Build } from '@/data/builds';
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
@@ -8,20 +9,24 @@ const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
   const [open, setOpen] = useState(false);
 
-  const fullSpecs: { icon: string; label: string; value?: string }[] = [
-    { icon: 'Cpu', label: 'Процессор', value: b.specs.cpu },
-    { icon: 'MonitorPlay', label: 'Видеокарта', value: b.specs.gpu },
-    { icon: 'CircuitBoard', label: 'Материнская плата', value: b.specs.motherboard },
-    { icon: 'MemoryStick', label: 'Оперативная память', value: b.specs.ram },
-    { icon: 'HardDrive', label: 'Накопитель', value: b.specs.storage },
-    { icon: 'Plug', label: 'Блок питания', value: b.specs.psu },
-    { icon: 'Fan', label: 'Охлаждение CPU', value: b.specs.cooling },
-    { icon: 'Wind', label: 'Вентиляторы', value: b.specs.fans },
-    { icon: 'Monitor', label: 'Экраны и прочее', value: b.specs.extras },
-    { icon: 'Box', label: 'Корпус', value: b.specs.caseModel },
+  const shortSpecs: { type: 'gpu' | 'icon'; icon?: string; value?: string }[] = [
+    { type: 'icon', icon: 'Cpu', value: b.specs.cpu },
+    { type: 'gpu', value: b.specs.gpu },
+    { type: 'icon', icon: 'MemoryStick', value: b.specs.ram },
   ];
 
-  const visible = fullSpecs.filter((s) => s.value && s.value !== '—' && s.value !== '');
+  const restSpecs: { type: 'gpu' | 'icon'; icon?: string; label: string; value?: string }[] = [
+    { type: 'icon', icon: 'CircuitBoard', label: 'Материнская плата', value: b.specs.motherboard },
+    { type: 'icon', icon: 'HardDrive', label: 'Накопитель', value: b.specs.storage },
+    { type: 'icon', icon: 'Plug', label: 'Блок питания', value: b.specs.psu },
+    { type: 'icon', icon: 'Fan', label: 'Охлаждение CPU', value: b.specs.cooling },
+    { type: 'icon', icon: 'Wind', label: 'Вентиляторы', value: b.specs.fans },
+    { type: 'icon', icon: 'Monitor', label: 'Экраны и прочее', value: b.specs.extras },
+    { type: 'icon', icon: 'Box', label: 'Корпус', value: b.specs.caseModel },
+  ];
+
+  const visibleShort = shortSpecs.filter((s) => s.value && s.value !== '—' && s.value !== '');
+  const visibleRest = restSpecs.filter((s) => s.value && s.value !== '—' && s.value !== '');
 
   return (
     <div className="group min-w-0 bg-card border border-border clip-corner overflow-hidden hover-glow-green animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
@@ -39,29 +44,27 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
         <p className="text-muted-foreground text-sm mb-4 font-sans">{b.tagline}</p>
 
         {/* Краткий список */}
-        <ul className="space-y-2 mb-4 text-sm font-sans">
-          <li className="flex items-center gap-2"><Icon name="Cpu" size={14} className="text-primary shrink-0" /> <span className="min-w-0 break-words">{b.specs.cpu}</span></li>
-          <li className="flex items-center gap-2"><Icon name="MonitorPlay" size={14} className="text-primary shrink-0" /> <span className="min-w-0 break-words">{b.specs.gpu}</span></li>
-          <li className="flex items-center gap-2"><Icon name="MemoryStick" size={14} className="text-primary shrink-0" /> <span className="min-w-0 break-words">{b.specs.ram}</span></li>
-          <li className="flex items-center gap-2"><Icon name="HardDrive" size={14} className="text-primary shrink-0" /> <span className="min-w-0 break-words">{b.specs.storage}</span></li>
+        <ul className="space-y-2.5 mb-4 text-sm font-sans">
+          {visibleShort.map((s, i) => (
+            <li key={i} className="flex items-center gap-2.5">
+              {s.type === 'gpu'
+                ? <GpuIcon size={20} className="text-primary" />
+                : <Icon name={s.icon!} size={20} className="text-primary shrink-0" />}
+              <span className="min-w-0 break-words">{s.value}</span>
+            </li>
+          ))}
         </ul>
 
-        {/* Раскрываемый полный список */}
+        {/* Раскрываемый полный список — дополняет краткий */}
         <div className={`overflow-hidden transition-all duration-300 ${open ? 'max-h-[600px] opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
-          <div className="pt-2 border-t border-border">
-            <p className="font-display uppercase text-xs tracking-wider text-muted-foreground mb-3">Полная конфигурация</p>
-            <ul className="space-y-3 text-sm font-sans">
-              {visible.map((s, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <Icon name={s.icon} size={14} className="text-primary shrink-0 mt-0.5" />
-                  <div>
-                    <span className="text-muted-foreground text-xs block">{s.label}</span>
-                    <span>{s.value}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ul className="space-y-2.5 text-sm font-sans">
+            {visibleRest.map((s, i) => (
+              <li key={i} className="flex items-center gap-2.5">
+                <Icon name={s.icon!} size={20} className="text-primary shrink-0" />
+                <span className="min-w-0 break-words">{s.value}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <button
