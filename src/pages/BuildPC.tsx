@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { toast } from '@/hooks/use-toast';
@@ -100,8 +100,21 @@ const BuildPC = () => {
 
   const canNextStep1 = purposes.length > 0 && prefMode && (prefMode === 'manager' || prefText.trim());
 
-  const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
-  const back = () => setStep((s) => Math.max(s - 1, 0));
+  const formTopRef = useRef<HTMLDivElement>(null);
+  const scrollToTop = () => {
+    requestAnimationFrame(() => {
+      formTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  const next = () => {
+    setStep((s) => Math.min(s + 1, steps.length - 1));
+    scrollToTop();
+  };
+  const back = () => {
+    setStep((s) => Math.max(s - 1, 0));
+    scrollToTop();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -191,6 +204,7 @@ const BuildPC = () => {
           </div>
         ) : (
         <>
+        <div ref={formTopRef} className="scroll-mt-24" />
         <div className="flex items-center justify-center gap-2 mb-8">
           {steps.map((s, i) => (
             <div key={s} className="flex items-center gap-2">
