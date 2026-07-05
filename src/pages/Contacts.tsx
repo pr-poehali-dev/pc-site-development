@@ -78,14 +78,14 @@ const Contacts = () => {
       </section>
 
       <section className="container py-12 md:py-16 grid lg:grid-cols-2 gap-8 md:gap-12">
-        <div className="space-y-4">
+        <div className="space-y-4 order-2 lg:order-1 min-w-0">
           {contacts.map((c, i) => {
             const inner = (
               <>
                 <div className="w-12 h-12 flex items-center justify-center bg-primary/10 text-primary clip-corner shrink-0">
                   <Icon name={c.icon} size={24} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-muted-foreground text-sm uppercase tracking-wide font-display">{c.title}</p>
                   <p className="font-display text-xl break-words">{c.value}</p>
                   {c.sub && <p className="text-muted-foreground text-sm">{c.sub}</p>}
@@ -121,7 +121,7 @@ const Contacts = () => {
           </div>
         </div>
 
-        <form className="p-6 md:p-8 bg-card border border-border clip-corner space-y-5" onSubmit={submit}>
+        <form className="p-6 md:p-8 bg-card border border-border clip-corner space-y-5 order-1 lg:order-2 min-w-0" onSubmit={submit}>
           <h2 className="font-display text-2xl uppercase tracking-wide">Оставить заявку</h2>
           {sent ? (
             <div className="flex flex-col items-center text-center gap-3 py-6">
