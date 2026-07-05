@@ -29,7 +29,7 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
   const visibleRest = restSpecs.filter((s) => s.value && s.value !== '—' && s.value !== '');
 
   return (
-    <div className="group min-w-0 bg-card border border-border clip-corner overflow-hidden hover-glow-green animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
+    <div className="group min-w-0 h-full flex flex-col bg-card border border-border clip-corner overflow-hidden hover-glow-green animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
       <div className="relative overflow-hidden">
         <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500" />
         {b.buildDate && (
@@ -39,12 +39,12 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
           </div>
         )}
       </div>
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-1">
         <h3 className={`font-display text-2xl font-bold mb-1 ${b.accent === 'cyan' ? 'text-primary' : 'text-secondary'}`}>{b.name}</h3>
         <p className="text-muted-foreground text-sm mb-4 font-sans">{b.tagline}</p>
 
-        {/* Краткий список */}
-        <ul className="space-y-2.5 mb-4 text-sm font-sans">
+        {/* Список комплектующих: краткий + раскрываемый полный */}
+        <ul className="space-y-2.5 text-sm font-sans">
           {visibleShort.map((s, i) => (
             <li key={i} className="flex items-center gap-2.5">
               {s.type === 'gpu'
@@ -55,27 +55,32 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
           ))}
         </ul>
 
-        {/* Раскрываемый полный список — дополняет краткий */}
-        <div className={`overflow-hidden transition-all duration-300 ${open ? 'max-h-[600px] opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
-          <ul className="space-y-2.5 text-sm font-sans">
-            {visibleRest.map((s, i) => (
-              <li key={i} className="flex items-center gap-2.5">
-                <Icon name={s.icon!} size={20} className="text-primary shrink-0" />
-                <span className="min-w-0 break-words">{s.value}</span>
-              </li>
-            ))}
-          </ul>
+        {/* Раскрываемый полный список — дополняет краткий без разрыва */}
+        <div
+          className="grid transition-[grid-template-rows] duration-500 ease-in-out"
+          style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
+        >
+          <div className="overflow-hidden">
+            <ul className="space-y-2.5 text-sm font-sans pt-2.5">
+              {visibleRest.map((s, i) => (
+                <li key={i} className="flex items-center gap-2.5">
+                  <Icon name={s.icon!} size={20} className="text-primary shrink-0" />
+                  <span className="min-w-0 break-words">{s.value}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <button
           onClick={() => setOpen((v) => !v)}
-          className="w-full flex items-center justify-center gap-2 mb-4 px-4 py-2 btn-primary font-display uppercase text-xs tracking-wider clip-corner"
+          className="w-full flex items-center justify-center gap-2 mt-4 mb-4 px-4 py-2 btn-primary font-display uppercase text-xs tracking-wider clip-corner"
         >
           {open ? 'Свернуть' : 'Полный список комплектующих'}
           <Icon name={open ? 'ChevronUp' : 'ChevronDown'} size={16} />
         </button>
 
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3 mt-auto">
           <div>
             <span className="font-display text-2xl font-bold block">{fmt(b.price)}</span>
             <span className="text-muted-foreground text-[11px] font-sans leading-tight block max-w-[160px]">

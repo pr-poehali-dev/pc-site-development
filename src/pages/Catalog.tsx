@@ -61,7 +61,7 @@ const Catalog = () => {
             <p className="font-display text-lg uppercase tracking-wide">Сборок пока нет</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {builds.map((b, i) => (
               <CatalogCard key={b.id} build={b} index={i} />
             ))}
