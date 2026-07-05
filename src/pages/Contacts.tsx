@@ -9,7 +9,7 @@ const ORDERS_URL = func2url['orders'];
 const contacts = [
   { icon: 'Phone', title: 'Телефон', value: contactInfo.phone, sub: 'Звоните с 11 до 21 по МСК времени!', href: contactInfo.phoneHref },
   { icon: 'Mail', title: 'Почта', value: contactInfo.email, sub: '', href: contactInfo.emailHref },
-  { icon: 'MapPin', title: 'Адрес', value: contactInfo.address, sub: contactInfo.hours, href: contactInfo.addressHref, external: true },
+  { icon: 'MapPin', title: 'Основной офис', value: contactInfo.address, sub: contactInfo.hours, href: contactInfo.addressHref, external: true },
   { icon: 'Store', title: 'Пункт выдачи · СПб', value: contactInfo.addressSpb, sub: '', href: contactInfo.addressSpbHref, external: true },
   { icon: 'Store', title: 'Пункт выдачи · Краснодар', value: contactInfo.addressKrd, sub: '', href: contactInfo.addressKrdHref, external: true },
 ];

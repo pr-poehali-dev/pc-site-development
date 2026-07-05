@@ -80,7 +80,7 @@ export const contactInfo = {
   phoneHref: 'tel:+79099099590',
   email: 'whitefriday.pc@gmail.com',
   emailHref: 'mailto:whitefriday.pc@gmail.com',
-  address: 'Главный офис находится в г. Москва Нагатинская улица, дом 28к2, вход расположен со стороны сквера',
+  address: 'г. Москва Нагатинская улица, дом 28к2, вход расположен со стороны сквера',
   addressHref: 'https://yandex.ru/maps/org/white_friday_pc/86872558553/?indoorLevel=1&ll=37.657341%2C55.676606&z=17',
   hours: 'Ежедневно 12:00 — 21:00',
   addressSpb: 'Пункт выдачи заказов и сервисного обслуживания в г. Санкт-Петербург находится по адресу — деревня Новое Девяткино, улица Главная, д. 8',
