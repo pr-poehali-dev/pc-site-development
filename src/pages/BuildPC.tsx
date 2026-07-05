@@ -13,6 +13,7 @@ const purposeOptions = [
   { id: 'render', title: 'Рабочая станция для рендера и моделирования', icon: 'Box' },
   { id: 'office', title: 'Для офиса и простых рабочих задач (Word, 1C, Excel и т.д.)', icon: 'Briefcase' },
   { id: 'server', title: 'Для серверных задач и LLM', icon: 'Server' },
+  { id: 'streaming', title: 'Игровая машина для стриминга игр', icon: 'Radio' },
 ];
 
 const buildBudgetSteps = () => {
