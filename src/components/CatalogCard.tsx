@@ -87,7 +87,7 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
               Стоимость указана на момент сборки данной конфигурации
             </span>
           </div>
-          <Link to="/contacts" className="px-4 py-2 btn-primary font-display uppercase text-sm tracking-wider clip-corner btn-glow-green shrink-0 self-start">
+          <Link to={`/contacts?build=${encodeURIComponent(b.name)}`} className="px-4 py-2 btn-primary font-display uppercase text-sm tracking-wider clip-corner btn-glow-green shrink-0 self-start">
             Заказать
           </Link>
         </div>

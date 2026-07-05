@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { socials, contactInfo } from '@/data/content';
@@ -26,9 +27,15 @@ const Contacts = () => {
   const [phone, setPhone] = useState('');
   const [telegram, setTelegram] = useState('');
   const [message, setMessage] = useState('');
+  const [searchParams] = useSearchParams();
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const build = searchParams.get('build');
+    if (build) setMessage(`Здравствуйте! Хочу заказать сборку «${build}»`);
+  }, [searchParams]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
