@@ -31,6 +31,18 @@ const Reviews = () => {
   const [expanded, setExpanded] = useState<number | null>(null);
   const autoplay = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
   const [aboutExpanded, setAboutExpanded] = useState(false);
+  const [lightbox, setLightbox] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setLightbox(null);
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [lightbox]);
 
   useEffect(() => {
     const match = location.hash.match(/#review-(\d+)/);
@@ -156,7 +168,10 @@ const Reviews = () => {
               <CarouselContent>
                 {aboutPhotos.map((src, i) => (
                   <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
-                    <div className="overflow-hidden clip-corner border border-border">
+                    <div
+                      className="overflow-hidden clip-corner border border-border md:cursor-zoom-in"
+                      onClick={() => window.innerWidth >= 768 && setLightbox(src)}
+                    >
                       <img
                         src={src}
                         alt={`White Friday — фото ${i + 1}`}
@@ -298,6 +313,27 @@ const Reviews = () => {
           </a>
         </div>
       </section>
+
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-[100] hidden md:flex items-center justify-center bg-black/90 backdrop-blur-sm p-8 animate-fade-in"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            onClick={() => setLightbox(null)}
+            className="absolute top-6 right-6 w-11 h-11 flex items-center justify-center bg-card/80 border border-border text-foreground hover:text-primary clip-corner transition-colors"
+            aria-label="Закрыть"
+          >
+            <Icon name="X" size={22} />
+          </button>
+          <img
+            src={lightbox}
+            alt="White Friday — фото"
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-[90vw] max-h-[90vh] object-contain clip-corner"
+          />
+        </div>
+      )}
     </Layout>
   );
 };
