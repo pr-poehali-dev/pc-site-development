@@ -36,6 +36,7 @@ const Index = () => {
   const [error, setError] = useState(false);
   const [activeBuild, setActiveBuild] = useState(0);
   const [reviewsApi, setReviewsApi] = useState<CarouselApi>();
+  const [warrantyApi, setWarrantyApi] = useState<CarouselApi>();
   const handleBuildSelect = useCallback((i: number) => setActiveBuild(i), []);
 
   const load = useCallback(() => {
@@ -265,17 +266,36 @@ const Index = () => {
             <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">Гарантия</p>
             <h2 className="font-display text-3xl md:text-5xl font-bold">СПОКОЙСТВИЕ <span className="text-primary text-glow-cyan">В КОМПЛЕКТЕ</span></h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {warranties.map((w, i) => (
-              <div key={i} className="p-6 md:p-8 text-center bg-card/60 backdrop-blur border border-border clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+          {(() => {
+            const warrantyCard = (w: typeof warranties[number]) => (
+              <div className="h-full p-6 md:p-8 text-center bg-card/60 backdrop-blur border border-border clip-corner">
                 <div className="w-14 h-14 mx-auto flex items-center justify-center bg-primary text-primary-foreground clip-corner mb-4 border-glow-cyan">
                   <Icon name={w.icon} size={28} />
                 </div>
                 <h3 className="font-display text-xl uppercase tracking-wide whitespace-pre-line leading-snug">{w.title}</h3>
                 {w.text && <p className="text-muted-foreground mt-2 whitespace-pre-line">{w.text}</p>}
               </div>
-            ))}
-          </div>
+            );
+            return (
+              <>
+                <div className="hidden md:grid md:grid-cols-3 gap-6">
+                  {warranties.map((w, i) => (
+                    <div key={i} className="animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+                      {warrantyCard(w)}
+                    </div>
+                  ))}
+                </div>
+                <Carousel setApi={setWarrantyApi} opts={{ loop: true, align: 'start' }} className="md:hidden">
+                  <CarouselContent>
+                    {warranties.map((w, i) => (
+                      <CarouselItem key={i}>{warrantyCard(w)}</CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselDots api={warrantyApi} className="mt-6" />
+                </Carousel>
+              </>
+            );
+          })()}
         </div>
       </section>
 
