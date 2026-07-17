@@ -21,7 +21,7 @@ const warranties = [
 ];
 
 const homeReviews = reviews.slice(0, 3);
-const homeFaq = faq.slice(0, 4);
+const homeFaq = [...faq.slice(0, 3), faq[faq.length - 1]];
 
 const Index = () => {
   const [builds, setBuilds] = useState<Build[]>([]);
