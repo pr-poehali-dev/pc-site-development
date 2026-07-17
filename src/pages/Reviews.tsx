@@ -44,7 +44,42 @@ const Reviews = () => {
         </div>
       </section>
 
-      <section className="container py-12">
+      <section className="container py-12 md:py-16">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div className="animate-fade-up">
+            <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">О нас</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-5">
+              WHITE <span className="text-primary text-glow-cyan">FRIDAY</span>
+            </h2>
+            <div className="space-y-4 text-muted-foreground leading-relaxed">
+              <p>
+                Мы — команда энтузиастов, для которых сборка компьютера это не конвейер, а настоящее ремесло. Каждый ПК собирается вручную, с вниманием к каждой детали: от аккуратной укладки кабелей до тонкой настройки системы охлаждения.
+              </p>
+              <p>
+                Мы не продаём готовые «коробки». Мы подбираем железо под ваши задачи и бюджет, честно рассказываем, на чём можно сэкономить, а на чём — не стоит. И остаёмся на связи даже после покупки.
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+            {[
+              { icon: 'Cpu', title: '2400+', text: 'собранных ПК' },
+              { icon: 'ShieldCheck', title: 'до 3 лет', text: 'гарантии' },
+              { icon: 'HeartHandshake', title: 'Сервис', text: 'человеческое общение' },
+              { icon: 'Wrench', title: 'Ручная', text: 'сборка и настройка' },
+            ].map((f, i) => (
+              <div key={i} className="p-5 md:p-6 bg-card border border-border clip-corner">
+                <div className="w-11 h-11 flex items-center justify-center bg-primary/10 text-primary clip-corner mb-3">
+                  <Icon name={f.icon} size={22} />
+                </div>
+                <p className="font-display text-xl md:text-2xl tracking-wide">{f.title}</p>
+                <p className="text-muted-foreground text-sm mt-1">{f.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="container pb-12">
         <div className="grid md:grid-cols-3 gap-6">
           {reviews.map((r, i) => (
             <div
