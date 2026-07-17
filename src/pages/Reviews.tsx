@@ -30,6 +30,7 @@ const Reviews = () => {
   const [fading, setFading] = useState<number | null>(null);
   const [expanded, setExpanded] = useState<number | null>(null);
   const autoplay = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
+  const [aboutExpanded, setAboutExpanded] = useState(false);
 
   useEffect(() => {
     const match = location.hash.match(/#review-(\d+)/);
@@ -68,6 +69,22 @@ const Reviews = () => {
             <p>
               Для понимания дальнейшего рассказа — маленькое пояснение: весь этот проект был основан двумя людьми, супружеской парой, Анастасией и Алексеем.
             </p>
+
+            {!aboutExpanded && (
+              <button
+                onClick={() => setAboutExpanded(true)}
+                className="inline-flex items-center gap-1 text-primary font-display uppercase text-sm tracking-wider hover:underline"
+              >
+                Читать далее <Icon name="ChevronDown" size={14} />
+              </button>
+            )}
+
+            <div
+              className="grid transition-[grid-template-rows] duration-500 ease-in-out"
+              style={{ gridTemplateRows: aboutExpanded ? '1fr' : '0fr' }}
+            >
+              <div className="overflow-hidden">
+                <div className="space-y-5">
 
             <div>
               <p className="font-display text-foreground tracking-wide mb-1">Март 2020 года</p>
@@ -115,7 +132,17 @@ const Reviews = () => {
               <p>Самый тяжёлый год для нас и нашего проекта. Мы остались на плаву только благодаря нашему окружению — нашим клиентам, которые когда-то делали у нас заказ и рекомендовали нас своим друзьям и коллегам. Именно тогда мы действительно поняли, что самая лучшая реклама — сарафанное радио. Открываем точки самовывоза в Санкт-Петербурге и Краснодаре. И наконец-то создаём этот самый сайт, на котором вы сейчас всё это читаете.</p>
             </div>
 
-            <p>На этом краткое повествование о нас, думаю, можно закончить! =)</p>
+                  <p>На этом краткое повествование о нас, думаю, можно закончить! =)</p>
+
+                  <button
+                    onClick={() => setAboutExpanded(false)}
+                    className="inline-flex items-center gap-1 text-primary font-display uppercase text-sm tracking-wider hover:underline"
+                  >
+                    Свернуть <Icon name="ChevronUp" size={14} />
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="mt-10 md:mt-14">
