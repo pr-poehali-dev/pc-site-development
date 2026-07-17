@@ -6,11 +6,19 @@ import { type Build } from '@/data/builds';
 import { fetchBuilds } from '@/lib/buildsApi';
 import { apiToBuilds } from '@/lib/buildsMap';
 import CatalogCard from '@/components/CatalogCard';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from '@/components/ui/carousel';
+import CarouselDots from '@/components/CarouselDots';
 
 const Catalog = () => {
   const [builds, setBuilds] = useState<Build[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [buildsApi, setBuildsApi] = useState<CarouselApi>();
 
   const load = () => {
     setLoading(true);
@@ -61,11 +69,23 @@ const Catalog = () => {
             <p className="font-display text-lg uppercase tracking-wide">Сборок пока нет</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-            {builds.map((b, i) => (
-              <CatalogCard key={b.id} build={b} index={i} />
-            ))}
-          </div>
+          <>
+            <div className="hidden md:grid md:grid-cols-3 gap-6 items-stretch">
+              {builds.map((b, i) => (
+                <CatalogCard key={b.id} build={b} index={i} />
+              ))}
+            </div>
+            <Carousel setApi={setBuildsApi} opts={{ align: 'start' }} className="md:hidden">
+              <CarouselContent>
+                {builds.map((b, i) => (
+                  <CarouselItem key={b.id}>
+                    <CatalogCard build={b} index={i} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselDots api={buildsApi} className="mt-6" />
+            </Carousel>
+          </>
         )}
 
         <div className="mt-12 text-center">
