@@ -3,10 +3,18 @@ import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { fetchArticles, type ApiArticle } from '@/lib/articlesApi';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from '@/components/ui/carousel';
+import CarouselDots from '@/components/CarouselDots';
 
 const Articles = () => {
   const [articles, setArticles] = useState<ApiArticle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [articlesApi, setArticlesApi] = useState<CarouselApi>();
 
   useEffect(() => {
     (async () => {
@@ -49,13 +57,11 @@ const Articles = () => {
             </p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.map((a, i) => (
+          (() => {
+            const articleCard = (a: ApiArticle) => (
               <Link
                 to={`/articles/${a.slug}`}
-                key={a.id}
-                className="group flex flex-col bg-card border border-border clip-corner overflow-hidden hover:border-primary/40 transition-colors animate-fade-up"
-                style={{ animationDelay: `${i * 0.08}s` }}
+                className="group flex flex-col h-full bg-card border border-border clip-corner overflow-hidden hover:border-primary/40 transition-colors"
               >
                 {a.cover_url ? (
                   <img src={a.cover_url} alt={a.title} className="w-full h-44 object-cover" />
@@ -83,8 +89,27 @@ const Articles = () => {
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
+            );
+            return (
+              <>
+                <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {articles.map((a, i) => (
+                    <div key={a.id} className="animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
+                      {articleCard(a)}
+                    </div>
+                  ))}
+                </div>
+                <Carousel setApi={setArticlesApi} opts={{ align: 'start' }} className="md:hidden">
+                  <CarouselContent>
+                    {articles.map((a) => (
+                      <CarouselItem key={a.id}>{articleCard(a)}</CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselDots api={articlesApi} className="mt-6" />
+                </Carousel>
+              </>
+            );
+          })()
         )}
       </section>
     </Layout>
