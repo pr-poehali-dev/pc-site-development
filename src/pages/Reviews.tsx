@@ -218,19 +218,17 @@ const Reviews = () => {
       </section>
 
       <section className="container py-12">
-        <div className="grid md:grid-cols-3 gap-6">
-          {reviews.map((r, i) => (
+        {(() => {
+          const reviewCard = (r: typeof reviews[number], i: number) => (
             <div
-              key={i}
               id={`review-${i}`}
-              className={`flex flex-col p-6 md:p-8 bg-card border clip-corner animate-fade-up scroll-mt-28 ${
+              className={`flex flex-col h-full p-6 md:p-8 bg-card border clip-corner scroll-mt-28 ${
                 highlighted === i
                   ? 'review-neon-glow'
                   : fading === i
                     ? 'review-neon-fade'
                     : 'border-border'
               }`}
-              style={{ animationDelay: `${i * 0.08}s` }}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex gap-1">
@@ -288,8 +286,28 @@ const Reviews = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          );
+          return (
+            <>
+              <div className="hidden md:grid md:grid-cols-3 gap-6">
+                {reviews.map((r, i) => (
+                  <div key={i} className="animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
+                    {reviewCard(r, i)}
+                  </div>
+                ))}
+              </div>
+              <Carousel opts={{ align: 'start' }} className="md:hidden">
+                <CarouselContent>
+                  {reviews.map((r, i) => (
+                    <CarouselItem key={i}>{reviewCard(r, i)}</CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+            </>
+          );
+        })()}
 
         <div className="mt-12 md:mt-16 p-6 md:p-10 bg-card border border-border clip-corner flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-up">
           <div className="flex items-center gap-4 text-center md:text-left">

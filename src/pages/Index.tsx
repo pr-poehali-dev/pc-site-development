@@ -13,6 +13,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
 
 const warranties = [
   { icon: 'ShieldCheck', title: 'Гарантия до 10 лет', text: 'Гарантия на наши ПК от нас до 3-х лет.\nГарантия на железо до 10-и лет от производителя.' },
@@ -175,9 +180,9 @@ const Index = () => {
           <p className="text-primary font-display uppercase tracking-widest text-sm mb-2">Отзывы</p>
           <h2 className="font-display text-3xl md:text-5xl font-bold">НАМ <span className="text-secondary text-glow-magenta">ДОВЕРЯЮТ</span></h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {homeReviews.map((r, i) => (
-            <div key={i} className="flex flex-col min-w-0 p-8 bg-card/25 backdrop-blur-md border border-border/50 clip-corner animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+        {(() => {
+          const card = (r: typeof homeReviews[number], i: number) => (
+            <div className="flex flex-col h-full min-w-0 p-8 bg-card/25 backdrop-blur-md border border-border/50 clip-corner">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex gap-1">
                   {Array.from({ length: 5 }).map((_, j) => (
@@ -221,8 +226,26 @@ const Index = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          );
+          return (
+            <>
+              <div className="hidden md:grid grid-cols-3 gap-6">
+                {homeReviews.map((r, i) => (
+                  <div key={i} className="animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+                    {card(r, i)}
+                  </div>
+                ))}
+              </div>
+              <Carousel opts={{ loop: true, align: 'start' }} className="md:hidden">
+                <CarouselContent>
+                  {homeReviews.map((r, i) => (
+                    <CarouselItem key={i}>{card(r, i)}</CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </>
+          );
+        })()}
         <div className="text-center mt-8">
           <Link to="/reviews" className="inline-flex items-center gap-2 text-primary font-display uppercase tracking-wider hover:gap-3 transition-all">
             Все отзывы <Icon name="ArrowRight" size={16} />
