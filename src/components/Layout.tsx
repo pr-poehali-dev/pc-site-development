@@ -8,7 +8,7 @@ const navItems = [
   { to: '/catalog', label: 'Наши проекты' },
   { to: '/build', label: 'Собери свой ПК' },
   { to: '/articles', label: 'Статьи' },
-  { to: '/reviews', label: 'Отзывы' },
+  { to: '/reviews', label: 'О нас/Отзывы' },
   { to: '/faq', label: 'Вопрос-ответ' },
   { to: '/contacts', label: 'Контакты и доставка' },
 ];
