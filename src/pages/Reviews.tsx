@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Autoplay from 'embla-carousel-autoplay';
 import { useLocation } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
@@ -28,6 +29,7 @@ const Reviews = () => {
   const [highlighted, setHighlighted] = useState<number | null>(null);
   const [fading, setFading] = useState<number | null>(null);
   const [expanded, setExpanded] = useState<number | null>(null);
+  const autoplay = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
 
   useEffect(() => {
     const match = location.hash.match(/#review-(\d+)/);
@@ -117,7 +119,13 @@ const Reviews = () => {
           </div>
 
           <div className="mt-10 md:mt-14">
-            <Carousel opts={{ loop: true }} className="w-full">
+            <Carousel
+              opts={{ loop: true }}
+              plugins={[autoplay.current]}
+              onMouseEnter={() => autoplay.current.stop()}
+              onMouseLeave={() => autoplay.current.play()}
+              className="w-full"
+            >
               <CarouselContent>
                 {aboutPhotos.map((src, i) => (
                   <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
