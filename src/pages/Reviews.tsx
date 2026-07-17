@@ -36,6 +36,7 @@ const Reviews = () => {
   const [lightbox, setLightbox] = useState<number | null>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const [reviewsApi, setReviewsApi] = useState<CarouselApi>();
+  const [photosApi, setPhotosApi] = useState<CarouselApi>();
 
   const collapseAbout = () => {
     setAboutExpanded(false);
@@ -180,6 +181,7 @@ const Reviews = () => {
 
           <div className="mt-10 md:mt-14">
             <Carousel
+              setApi={setPhotosApi}
               opts={{ loop: true }}
               plugins={[autoplay.current]}
               onMouseEnter={() => autoplay.current.stop()}
@@ -205,6 +207,7 @@ const Reviews = () => {
               </CarouselContent>
               <CarouselPrevious className="hidden md:flex" />
               <CarouselNext className="hidden md:flex" />
+              <CarouselDots api={photosApi} className="mt-6" />
             </Carousel>
           </div>
         </div>
