@@ -31,11 +31,20 @@ const Reviews = () => {
   const [expanded, setExpanded] = useState<number | null>(null);
   const autoplay = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
   const [aboutExpanded, setAboutExpanded] = useState(false);
-  const [lightbox, setLightbox] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+
+  const showPrev = () =>
+    setLightbox((i) => (i === null ? i : (i - 1 + aboutPhotos.length) % aboutPhotos.length));
+  const showNext = () =>
+    setLightbox((i) => (i === null ? i : (i + 1) % aboutPhotos.length));
 
   useEffect(() => {
-    if (!lightbox) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setLightbox(null);
+    if (lightbox === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightbox(null);
+      if (e.key === 'ArrowLeft') showPrev();
+      if (e.key === 'ArrowRight') showNext();
+    };
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
     return () => {
@@ -170,7 +179,7 @@ const Reviews = () => {
                   <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
                     <div
                       className="overflow-hidden clip-corner border border-border md:cursor-zoom-in"
-                      onClick={() => window.innerWidth >= 768 && setLightbox(src)}
+                      onClick={() => window.innerWidth >= 768 && setLightbox(i)}
                     >
                       <img
                         src={src}
@@ -314,7 +323,7 @@ const Reviews = () => {
         </div>
       </section>
 
-      {lightbox && (
+      {lightbox !== null && (
         <div
           className="fixed inset-0 z-[100] hidden md:flex items-center justify-center bg-black/90 backdrop-blur-sm p-8 animate-fade-in"
           onClick={() => setLightbox(null)}
@@ -326,12 +335,33 @@ const Reviews = () => {
           >
             <Icon name="X" size={22} />
           </button>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); showPrev(); }}
+            className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-card/80 border border-border text-foreground hover:text-primary clip-corner transition-colors"
+            aria-label="Предыдущее фото"
+          >
+            <Icon name="ChevronLeft" size={26} />
+          </button>
+
           <img
-            src={lightbox}
+            src={aboutPhotos[lightbox]}
             alt="White Friday — фото"
             onClick={(e) => e.stopPropagation()}
             className="max-w-[90vw] max-h-[90vh] object-contain clip-corner"
           />
+
+          <button
+            onClick={(e) => { e.stopPropagation(); showNext(); }}
+            className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-card/80 border border-border text-foreground hover:text-primary clip-corner transition-colors"
+            aria-label="Следующее фото"
+          >
+            <Icon name="ChevronRight" size={26} />
+          </button>
+
+          <span className="absolute bottom-6 left-1/2 -translate-x-1/2 text-muted-foreground text-sm font-display tracking-widest">
+            {lightbox + 1} / {aboutPhotos.length}
+          </span>
         </div>
       )}
     </Layout>
