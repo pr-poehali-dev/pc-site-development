@@ -101,11 +101,14 @@ const Reviews = () => {
             )}
 
             <div
-              className="grid transition-[grid-template-rows] duration-500 ease-in-out"
+              className="grid transition-[grid-template-rows] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
               style={{ gridTemplateRows: aboutExpanded ? '1fr' : '0fr' }}
             >
               <div className="overflow-hidden">
-                <div className="space-y-5">
+                <div
+                  className="space-y-5 transition-opacity duration-500"
+                  style={{ opacity: aboutExpanded ? 1 : 0 }}
+                >
 
             <div>
               <p className="font-display text-foreground tracking-wide mb-1">Март 2020 года</p>
@@ -345,10 +348,11 @@ const Reviews = () => {
           </button>
 
           <img
+            key={lightbox}
             src={aboutPhotos[lightbox]}
             alt="White Friday — фото"
             onClick={(e) => e.stopPropagation()}
-            className="max-w-[90vw] max-h-[90vh] object-contain clip-corner"
+            className="max-w-[90vw] max-h-[90vh] object-contain clip-corner animate-fade-in"
           />
 
           <button
