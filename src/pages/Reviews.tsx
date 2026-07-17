@@ -34,16 +34,6 @@ const Reviews = () => {
 
   return (
     <Layout>
-      <section className="grid-bg border-b border-border">
-        <div className="container py-12 md:py-16 text-center">
-          <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Отзывы</p>
-          <h1 className="font-display text-4xl md:text-6xl font-bold">НАМ <span className="text-primary text-glow-cyan">ДОВЕРЯЮТ</span></h1>
-          <p className="text-muted-foreground mt-4 max-w-3xl mx-auto leading-relaxed">
-            Нам доверяют и верят потому что мы не оставляем своих клиентов в затруднительной ситуации и всегда пытаемся прийти на помощь. Весь наш проект изначально строился на том, чтобы предоставить по-настоящему человеческий сервис, где будет тёплое и дружелюбное общение, грамотный подбор железа, а также, конечно же, педантичная и дотошная сборка и настройка всего компьютера в целом.
-          </p>
-        </div>
-      </section>
-
       <section className="container py-12 md:py-16">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="animate-fade-up">
@@ -79,7 +69,17 @@ const Reviews = () => {
         </div>
       </section>
 
-      <section className="container pb-12">
+      <section className="grid-bg border-y border-border">
+        <div className="container py-12 md:py-16 text-center">
+          <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Отзывы</p>
+          <h1 className="font-display text-4xl md:text-6xl font-bold">НАМ <span className="text-primary text-glow-cyan">ДОВЕРЯЮТ</span></h1>
+          <p className="text-muted-foreground mt-4 max-w-3xl mx-auto leading-relaxed">
+            Нам доверяют и верят потому что мы не оставляем своих клиентов в затруднительной ситуации и всегда пытаемся прийти на помощь. Весь наш проект изначально строился на том, чтобы предоставить по-настоящему человеческий сервис, где будет тёплое и дружелюбное общение, грамотный подбор железа, а также, конечно же, педантичная и дотошная сборка и настройка всего компьютера в целом.
+          </p>
+        </div>
+      </section>
+
+      <section className="container py-12">
         <div className="grid md:grid-cols-3 gap-6">
           {reviews.map((r, i) => (
             <div
