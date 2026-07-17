@@ -10,7 +10,9 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from '@/components/ui/carousel';
+import CarouselDots from '@/components/CarouselDots';
 
 const aboutPhotos = [
   'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/7be32455-2ecb-4133-adaa-36c1f44dd867.jpg',
@@ -33,6 +35,7 @@ const Reviews = () => {
   const [aboutExpanded, setAboutExpanded] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
+  const [reviewsApi, setReviewsApi] = useState<CarouselApi>();
 
   const collapseAbout = () => {
     setAboutExpanded(false);
@@ -296,7 +299,7 @@ const Reviews = () => {
                   </div>
                 ))}
               </div>
-              <Carousel opts={{ align: 'start' }} className="md:hidden">
+              <Carousel setApi={setReviewsApi} opts={{ align: 'start' }} className="md:hidden">
                 <CarouselContent>
                   {reviews.map((r, i) => (
                     <CarouselItem key={i}>{reviewCard(r, i)}</CarouselItem>
@@ -304,6 +307,7 @@ const Reviews = () => {
                 </CarouselContent>
                 <CarouselPrevious />
                 <CarouselNext />
+                <CarouselDots api={reviewsApi} className="mt-6" />
               </Carousel>
             </>
           );

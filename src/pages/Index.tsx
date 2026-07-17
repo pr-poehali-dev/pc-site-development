@@ -17,7 +17,9 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  type CarouselApi,
 } from '@/components/ui/carousel';
+import CarouselDots from '@/components/CarouselDots';
 
 const warranties = [
   { icon: 'ShieldCheck', title: 'Гарантия до 10 лет', text: 'Гарантия на наши ПК от нас до 3-х лет.\nГарантия на железо до 10-и лет от производителя.' },
@@ -33,6 +35,7 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [activeBuild, setActiveBuild] = useState(0);
+  const [reviewsApi, setReviewsApi] = useState<CarouselApi>();
   const handleBuildSelect = useCallback((i: number) => setActiveBuild(i), []);
 
   const load = useCallback(() => {
@@ -236,12 +239,13 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <Carousel opts={{ loop: true, align: 'start' }} className="md:hidden">
+              <Carousel setApi={setReviewsApi} opts={{ loop: true, align: 'start' }} className="md:hidden">
                 <CarouselContent>
                   {homeReviews.map((r, i) => (
                     <CarouselItem key={i}>{card(r, i)}</CarouselItem>
                   ))}
                 </CarouselContent>
+                <CarouselDots api={reviewsApi} className="mt-6" />
               </Carousel>
             </>
           );
