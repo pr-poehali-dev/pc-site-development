@@ -32,6 +32,12 @@ const Reviews = () => {
   const autoplay = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
   const [aboutExpanded, setAboutExpanded] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
+  const aboutRef = useRef<HTMLDivElement>(null);
+
+  const collapseAbout = () => {
+    setAboutExpanded(false);
+    aboutRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const showPrev = () =>
     setLightbox((i) => (i === null ? i : (i - 1 + aboutPhotos.length) % aboutPhotos.length));
@@ -78,7 +84,7 @@ const Reviews = () => {
   return (
     <Layout>
       <section className="container py-12 md:py-16">
-        <div className="max-w-3xl mx-auto animate-fade-up">
+        <div ref={aboutRef} className="max-w-3xl mx-auto animate-fade-up scroll-mt-28">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">О нас</p>
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-8">
             WHITE <span className="text-primary text-glow-cyan">FRIDAY</span>
@@ -159,7 +165,7 @@ const Reviews = () => {
                   <p>На этом краткое повествование о нас, думаю, можно закончить! =)</p>
 
                   <button
-                    onClick={() => setAboutExpanded(false)}
+                    onClick={collapseAbout}
                     className="inline-flex items-center gap-1 text-primary font-display uppercase text-sm tracking-wider hover:underline"
                   >
                     Свернуть <Icon name="ChevronUp" size={14} />
