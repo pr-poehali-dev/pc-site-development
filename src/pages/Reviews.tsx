@@ -3,6 +3,20 @@ import { useLocation } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { reviews, truncateReview } from '@/data/content';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+
+const aboutPhotos = [
+  'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/7be32455-2ecb-4133-adaa-36c1f44dd867.jpg',
+  'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/2df2174c-cdfa-4f8b-8674-a83b726dea57.jpg',
+  'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/7a87440a-d15b-4a3a-a6c3-c07b0a2a22b6.jpg',
+  'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/2d9774ba-7de2-44e0-9368-8c1b9b7a6258.jpg',
+];
 
 const Reviews = () => {
   const location = useLocation();
@@ -95,6 +109,27 @@ const Reviews = () => {
             </div>
 
             <p>На этом краткое повествование о нас, думаю, можно закончить! =)</p>
+          </div>
+
+          <div className="mt-10 md:mt-14">
+            <Carousel opts={{ loop: true }} className="w-full">
+              <CarouselContent>
+                {aboutPhotos.map((src, i) => (
+                  <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
+                    <div className="overflow-hidden clip-corner border border-border">
+                      <img
+                        src={src}
+                        alt={`White Friday — фото ${i + 1}`}
+                        loading="lazy"
+                        className="w-full aspect-[4/3] object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden md:flex" />
+              <CarouselNext className="hidden md:flex" />
+            </Carousel>
           </div>
         </div>
       </section>
