@@ -3,6 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import GpuIcon from '@/components/ui/GpuIcon';
+import ImageLightbox from '@/components/ImageLightbox';
 import type { Build } from '@/data/builds';
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
@@ -10,6 +11,7 @@ const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: number) => void }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
   const [selected, setSelected] = useState(0);
+  const [zoom, setZoom] = useState<Build | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const stopAutoplay = useCallback(() => {
@@ -50,8 +52,18 @@ const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: 
             <div key={b.id} className="flex-[0_0_100%] min-w-0 px-1">
               <div className="grid md:grid-cols-2 gap-6 items-center bg-card/15 backdrop-blur-md border border-border/50 clip-corner p-5 md:p-6">
                 {/* Фото слева */}
-                <div className="relative overflow-hidden clip-corner border border-border">
-                  <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover" />
+                <div className="group/photo relative overflow-hidden clip-corner border border-border">
+                  <button
+                    type="button"
+                    onClick={() => setZoom(b)}
+                    className="block w-full cursor-zoom-in"
+                    aria-label="Открыть фото на весь экран"
+                  >
+                    <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover" />
+                    <span className="absolute bottom-3 left-3 w-9 h-9 flex items-center justify-center bg-background/70 backdrop-blur text-primary clip-corner opacity-0 group-hover/photo:opacity-100 transition-opacity">
+                      <Icon name="Expand" size={16} />
+                    </span>
+                  </button>
                   {b.buildDate && (
                     <div className="absolute top-3 right-3 px-3 py-1 bg-background/80 backdrop-blur border border-primary/40 text-primary text-xs font-display tracking-wide flex items-center gap-1">
                       <Icon name="Calendar" size={12} />
@@ -134,6 +146,8 @@ const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: 
           />
         ))}
       </div>
+
+      {zoom && <ImageLightbox src={zoom.image} alt={zoom.name} onClose={() => setZoom(null)} />}
     </div>
   );
 };

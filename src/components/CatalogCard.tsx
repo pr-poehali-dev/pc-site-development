@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import GpuIcon from '@/components/ui/GpuIcon';
+import ImageLightbox from '@/components/ImageLightbox';
 import type { Build } from '@/data/builds';
 
 const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 
 const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
   const [open, setOpen] = useState(false);
+  const [zoom, setZoom] = useState(false);
 
   const shortSpecs: { type: 'gpu' | 'icon'; icon?: string; value?: string }[] = [
     { type: 'icon', icon: 'Cpu', value: b.specs.cpu },
@@ -31,7 +33,17 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
   return (
     <div className="group min-w-0 h-full flex flex-col bg-card border border-border clip-corner overflow-hidden hover-glow-green animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
       <div className="relative overflow-hidden">
-        <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500" />
+        <button
+          type="button"
+          onClick={() => setZoom(true)}
+          className="block w-full cursor-zoom-in"
+          aria-label="Открыть фото на весь экран"
+        >
+          <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500" />
+          <span className="absolute bottom-3 left-3 w-9 h-9 flex items-center justify-center bg-background/70 backdrop-blur text-primary clip-corner opacity-0 group-hover:opacity-100 transition-opacity">
+            <Icon name="Expand" size={16} />
+          </span>
+        </button>
         {b.buildDate && (
           <div className="absolute top-4 right-4 px-3 py-1 bg-background/80 backdrop-blur border border-primary/40 text-primary text-sm font-display flex items-center gap-1">
             <Icon name="Calendar" size={13} />
@@ -92,6 +104,7 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
           </Link>
         </div>
       </div>
+      {zoom && <ImageLightbox src={b.image} alt={b.name} onClose={() => setZoom(false)} />}
     </div>
   );
 };
