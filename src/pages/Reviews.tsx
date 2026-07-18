@@ -13,6 +13,7 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel';
 import CarouselDots from '@/components/CarouselDots';
+import ImageLightbox from '@/components/ImageLightbox';
 
 const aboutPhotos = [
   'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/7be32455-2ecb-4133-adaa-36c1f44dd867.jpg',
@@ -34,6 +35,7 @@ const Reviews = () => {
   const autoplay = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
   const [aboutExpanded, setAboutExpanded] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
+  const [reviewPhoto, setReviewPhoto] = useState<string | null>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const [reviewsApi, setReviewsApi] = useState<CarouselApi>();
   const [photosApi, setPhotosApi] = useState<CarouselApi>();
@@ -47,21 +49,6 @@ const Reviews = () => {
     setLightbox((i) => (i === null ? i : (i - 1 + aboutPhotos.length) % aboutPhotos.length));
   const showNext = () =>
     setLightbox((i) => (i === null ? i : (i + 1) % aboutPhotos.length));
-
-  useEffect(() => {
-    if (lightbox === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightbox(null);
-      if (e.key === 'ArrowLeft') showPrev();
-      if (e.key === 'ArrowRight') showNext();
-    };
-    document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
-    };
-  }, [lightbox]);
 
   useEffect(() => {
     const match = location.hash.match(/#review-(\d+)/);
@@ -192,8 +179,8 @@ const Reviews = () => {
                 {aboutPhotos.map((src, i) => (
                   <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
                     <div
-                      className="overflow-hidden clip-corner border border-border md:cursor-zoom-in"
-                      onClick={() => window.innerWidth >= 768 && setLightbox(i)}
+                      className="overflow-hidden clip-corner border border-border cursor-zoom-in"
+                      onClick={() => setLightbox(i)}
                     >
                       <img
                         src={src}
@@ -250,9 +237,17 @@ const Reviews = () => {
               </div>
 
               {r.photo && (
-                <div className="overflow-hidden clip-corner border border-border mb-5">
+                <button
+                  type="button"
+                  onClick={() => setReviewPhoto(r.photo!)}
+                  className="group/rp block w-full relative overflow-hidden clip-corner border border-border mb-5 cursor-zoom-in"
+                  aria-label="Открыть фото на весь экран"
+                >
                   <img src={r.photo} alt={`Фото от ${r.name}`} className="w-full aspect-[4/3] object-cover" />
-                </div>
+                  <span className="absolute bottom-3 left-3 w-9 h-9 flex items-center justify-center bg-background/70 backdrop-blur text-primary clip-corner opacity-0 group-hover/rp:opacity-100 transition-opacity">
+                    <Icon name="Expand" size={16} />
+                  </span>
+                </button>
               )}
 
               {(() => {
@@ -358,46 +353,18 @@ const Reviews = () => {
       </section>
 
       {lightbox !== null && (
-        <div
-          className="fixed inset-0 z-[100] hidden md:flex items-center justify-center bg-black/90 backdrop-blur-sm p-8 animate-fade-in"
-          onClick={() => setLightbox(null)}
-        >
-          <button
-            onClick={() => setLightbox(null)}
-            className="absolute top-6 right-6 w-11 h-11 flex items-center justify-center bg-card/80 border border-border text-foreground hover:text-primary clip-corner transition-colors"
-            aria-label="Закрыть"
-          >
-            <Icon name="X" size={22} />
-          </button>
+        <ImageLightbox
+          src={aboutPhotos[lightbox]}
+          alt="White Friday — фото"
+          onPrev={showPrev}
+          onNext={showNext}
+          counter={`${lightbox + 1} / ${aboutPhotos.length}`}
+          onClose={() => setLightbox(null)}
+        />
+      )}
 
-          <button
-            onClick={(e) => { e.stopPropagation(); showPrev(); }}
-            className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-card/80 border border-border text-foreground hover:text-primary clip-corner transition-colors"
-            aria-label="Предыдущее фото"
-          >
-            <Icon name="ChevronLeft" size={26} />
-          </button>
-
-          <img
-            key={lightbox}
-            src={aboutPhotos[lightbox]}
-            alt="White Friday — фото"
-            onClick={(e) => e.stopPropagation()}
-            className="max-w-[90vw] max-h-[90vh] object-contain clip-corner animate-fade-in"
-          />
-
-          <button
-            onClick={(e) => { e.stopPropagation(); showNext(); }}
-            className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-card/80 border border-border text-foreground hover:text-primary clip-corner transition-colors"
-            aria-label="Следующее фото"
-          >
-            <Icon name="ChevronRight" size={26} />
-          </button>
-
-          <span className="absolute bottom-6 left-1/2 -translate-x-1/2 text-muted-foreground text-sm font-display tracking-widest">
-            {lightbox + 1} / {aboutPhotos.length}
-          </span>
-        </div>
+      {reviewPhoto && (
+        <ImageLightbox src={reviewPhoto} alt="Фото отзыва" onClose={() => setReviewPhoto(null)} />
       )}
     </Layout>
   );

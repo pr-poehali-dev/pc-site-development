@@ -6,12 +6,15 @@ interface ImageLightboxProps {
   src: string;
   alt?: string;
   onClose: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
+  counter?: string;
 }
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 4;
 
-const ImageLightbox = ({ src, alt, onClose }: ImageLightboxProps) => {
+const ImageLightbox = ({ src, alt, onClose, onPrev, onNext, counter }: ImageLightboxProps) => {
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const drag = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null);
@@ -25,17 +28,23 @@ const ImageLightbox = ({ src, alt, onClose }: ImageLightboxProps) => {
   }, []);
 
   useEffect(() => {
+    reset();
+  }, [src, reset]);
+
+  useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') onPrev?.();
+      if (e.key === 'ArrowRight') onNext?.();
     };
     window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener('keydown', onKey);
     };
-  }, [onClose]);
+  }, [onClose, onPrev, onNext]);
 
   const zoomBy = (delta: number, cx?: number, cy?: number) => {
     setScale((prev) => {
@@ -105,6 +114,30 @@ const ImageLightbox = ({ src, alt, onClose }: ImageLightboxProps) => {
       >
         <Icon name="X" size={22} />
       </button>
+
+      {onPrev && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onPrev(); }}
+          className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-10 w-11 h-11 flex items-center justify-center bg-white/10 hover:bg-white/20 text-white clip-corner transition-colors"
+          aria-label="Предыдущее фото"
+        >
+          <Icon name="ChevronLeft" size={24} />
+        </button>
+      )}
+      {onNext && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onNext(); }}
+          className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-10 w-11 h-11 flex items-center justify-center bg-white/10 hover:bg-white/20 text-white clip-corner transition-colors"
+          aria-label="Следующее фото"
+        >
+          <Icon name="ChevronRight" size={24} />
+        </button>
+      )}
+      {counter && (
+        <span className="absolute top-5 left-1/2 -translate-x-1/2 z-10 text-white/80 text-sm font-display tracking-widest">
+          {counter}
+        </span>
+      )}
 
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
         <button
