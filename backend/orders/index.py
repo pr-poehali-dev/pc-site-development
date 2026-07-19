@@ -9,6 +9,10 @@ import psycopg2.extras
 BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
 API_URL = f'https://api.telegram.org/bot{BOT_TOKEN}'
 
+# Рабочий чат и тема "Новый заказ с сайта"
+ORDERS_CHAT_ID = os.environ.get('TG_ORDERS_CHAT_ID', '-1002296462284')
+ORDERS_TOPIC_ID = os.environ.get('TG_ORDERS_TOPIC_ID', '42172')
+
 CORS = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
@@ -47,12 +51,6 @@ def get_admin(conn, token: str):
 def notify_new_order(conn, order: dict):
     if not BOT_TOKEN:
         return
-    cur = conn.cursor()
-    cur.execute("SELECT telegram_id FROM bot_admins WHERE status = 'approved'")
-    admins = cur.fetchall()
-    cur.close()
-    if not admins:
-        return
     lines = ["🆕 <b>Новая заявка</b> с сайта"]
     if order.get('order_number'):
         lines.append(f"Заказ: #{order['order_number']}")
@@ -75,17 +73,11 @@ def notify_new_order(conn, order: dict):
                     lines.append(f"• {k}: {v}")
         except Exception:
             pass
-    _broadcast("\n".join(lines), admins)
+    _send_to_topic("\n".join(lines))
 
 
 def notify_status(conn, order: dict, status: str, admin_name: str):
     if not BOT_TOKEN:
-        return
-    cur = conn.cursor()
-    cur.execute("SELECT telegram_id FROM bot_admins WHERE status = 'approved'")
-    admins = cur.fetchall()
-    cur.close()
-    if not admins:
         return
     label = STATUS_LABELS.get(status, status)
     lines = [
@@ -95,17 +87,20 @@ def notify_status(conn, order: dict, status: str, admin_name: str):
         lines.append(f"Клиент: {order['customer_name']}")
     if admin_name:
         lines.append(f"Изменил: {admin_name}")
-    _broadcast("\n".join(lines), admins)
+    _send_to_topic("\n".join(lines))
 
 
-def _broadcast(text: str, admins):
-    for (tid,) in admins:
-        try:
-            requests.post(f'{API_URL}/sendMessage',
-                          json={'chat_id': tid, 'text': text, 'parse_mode': 'HTML'},
-                          timeout=5)
-        except Exception:
-            pass
+def _send_to_topic(text: str):
+    '''Отправляет сообщение в тему "Новый заказ с сайта" рабочего чата.'''
+    if not BOT_TOKEN or not ORDERS_CHAT_ID:
+        return
+    payload = {'chat_id': ORDERS_CHAT_ID, 'text': text, 'parse_mode': 'HTML'}
+    if ORDERS_TOPIC_ID:
+        payload['message_thread_id'] = int(ORDERS_TOPIC_ID)
+    try:
+        requests.post(f'{API_URL}/sendMessage', json=payload, timeout=5)
+    except Exception:
+        pass
 
 
 def gen_order_number(conn) -> str:
