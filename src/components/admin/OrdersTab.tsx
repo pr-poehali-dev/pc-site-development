@@ -43,6 +43,7 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<number | null>(null);
   const [busy, setBusy] = useState<number | null>(null);
+  const [filter, setFilter] = useState<OrderStatus>('new');
 
   const load = async () => {
     try {
@@ -87,7 +88,14 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
     }
   };
 
-  const newCount = orders.filter((o) => o.status === 'new').length;
+  const countBy = (st: OrderStatus) => orders.filter((o) => o.status === st).length;
+  const visible = orders.filter((o) => o.status === filter);
+  const SUB_TABS: { key: OrderStatus; label: string }[] = [
+    { key: 'new', label: 'Новый заказ' },
+    { key: 'test', label: 'Тест' },
+    { key: 'in_work', label: 'В работе' },
+    { key: 'done', label: 'Готов' },
+  ];
 
   if (loading) {
     return (
@@ -99,11 +107,11 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-5">
         <div>
           <h2 className="font-display text-2xl md:text-3xl font-bold">Заказы ({orders.length})</h2>
           <p className="text-muted-foreground text-sm">
-            Заявки с сайта. Новых: <span className="text-primary">{newCount}</span>
+            Заявки с сайта. Новых: <span className="text-primary">{countBy('new')}</span>
           </p>
         </div>
         <button
@@ -114,14 +122,40 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
         </button>
       </div>
 
+      <div className="flex flex-wrap gap-2 mb-6">
+        {SUB_TABS.map((t) => {
+          const active = filter === t.key;
+          const cnt = countBy(t.key);
+          return (
+            <button
+              key={t.key}
+              onClick={() => { setFilter(t.key); setExpanded(null); }}
+              className={`flex items-center gap-2 px-4 py-2 border clip-corner font-display uppercase text-xs tracking-wider transition-colors ${
+                active ? STATUS_STYLE[t.key] : 'border-border text-muted-foreground hover:text-foreground hover:border-primary/40'
+              }`}
+            >
+              {t.label}
+              <span className={`min-w-5 px-1.5 py-0.5 rounded text-[11px] leading-none ${active ? 'bg-background/40' : 'bg-muted text-muted-foreground'}`}>
+                {cnt}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
       {orders.length === 0 ? (
         <div className="p-12 text-center bg-card border border-border clip-corner">
           <Icon name="Inbox" size={48} className="text-muted-foreground mx-auto mb-4" />
           <p className="text-muted-foreground">Заявок пока нет. Как только клиент оставит заявку — она появится здесь.</p>
         </div>
+      ) : visible.length === 0 ? (
+        <div className="p-12 text-center bg-card border border-border clip-corner">
+          <Icon name="Inbox" size={48} className="text-muted-foreground mx-auto mb-4" />
+          <p className="text-muted-foreground">В этой категории заявок нет.</p>
+        </div>
       ) : (
         <div className="space-y-3">
-          {orders.map((o) => {
+          {visible.map((o) => {
             const isOpen = expanded === o.id;
             return (
               <div
