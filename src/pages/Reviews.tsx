@@ -294,22 +294,36 @@ const Reviews = () => {
             <>
               <div className="hidden md:block">
                 <div className="grid md:grid-cols-3 gap-6">
-                  {reviews.map((r, i) => (
-                    (showAll || i < 6) && (
-                      <div key={i} className="animate-fade-up" style={{ animationDelay: `${Math.min(i, 6) * 0.08}s` }}>
-                        {reviewCard(r, i)}
-                      </div>
-                    )
+                  {reviews.slice(0, 6).map((r, i) => (
+                    <div key={i} className="animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
+                      {reviewCard(r, i)}
+                    </div>
                   ))}
                 </div>
-                {!showAll && reviews.length > 6 && (
+
+                {reviews.length > 6 && (
+                  <div
+                    className="grid transition-[grid-template-rows] duration-700 ease-in-out"
+                    style={{ gridTemplateRows: showAll ? '1fr' : '0fr' }}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="grid md:grid-cols-3 gap-6 pt-6">
+                        {reviews.slice(6).map((r, i) => (
+                          <div key={i + 6}>{reviewCard(r, i + 6)}</div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {reviews.length > 6 && (
                   <div className="flex justify-center mt-8">
                     <button
-                      onClick={() => setShowAll(true)}
+                      onClick={() => setShowAll((v) => !v)}
                       className="flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green"
                     >
-                      Смотреть все отзывы ({reviews.length})
-                      <Icon name="ChevronDown" size={18} />
+                      {showAll ? 'Свернуть' : `Смотреть все отзывы (${reviews.length})`}
+                      <Icon name={showAll ? 'ChevronUp' : 'ChevronDown'} size={18} />
                     </button>
                   </div>
                 )}
