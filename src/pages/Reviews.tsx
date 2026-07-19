@@ -36,6 +36,7 @@ const Reviews = () => {
   const [aboutExpanded, setAboutExpanded] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [reviewPhoto, setReviewPhoto] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
   const aboutRef = useRef<HTMLDivElement>(null);
   const [reviewsApi, setReviewsApi] = useState<CarouselApi>();
   const [photosApi, setPhotosApi] = useState<CarouselApi>();
@@ -54,6 +55,7 @@ const Reviews = () => {
     const match = location.hash.match(/#review-(\d+)/);
     if (!match) return;
     const idx = Number(match[1]);
+    if (idx >= 6) setShowAll(true);
     const el = document.getElementById(`review-${idx}`);
     if (!el) return;
     setHighlighted(idx);
@@ -290,12 +292,27 @@ const Reviews = () => {
           );
           return (
             <>
-              <div className="hidden md:grid md:grid-cols-3 gap-6">
-                {reviews.map((r, i) => (
-                  <div key={i} className="animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
-                    {reviewCard(r, i)}
+              <div className="hidden md:block">
+                <div className="grid md:grid-cols-3 gap-6">
+                  {reviews.map((r, i) => (
+                    (showAll || i < 6) && (
+                      <div key={i} className="animate-fade-up" style={{ animationDelay: `${Math.min(i, 6) * 0.08}s` }}>
+                        {reviewCard(r, i)}
+                      </div>
+                    )
+                  ))}
+                </div>
+                {!showAll && reviews.length > 6 && (
+                  <div className="flex justify-center mt-8">
+                    <button
+                      onClick={() => setShowAll(true)}
+                      className="flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green"
+                    >
+                      Смотреть все отзывы ({reviews.length})
+                      <Icon name="ChevronDown" size={18} />
+                    </button>
                   </div>
-                ))}
+                )}
               </div>
               <Carousel setApi={setReviewsApi} opts={{ align: 'start' }} className="md:hidden">
                 <CarouselContent>
