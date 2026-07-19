@@ -51,7 +51,7 @@ const Catalog = () => {
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Каталог</p>
           <h1 className="font-display text-4xl md:text-6xl font-bold">НАШИ <span className="text-primary text-glow-cyan">ПРОЕКТЫ</span></h1>
           <p className="text-muted-foreground mt-4 max-w-xl mx-auto">
-            Тут вы можете посмотреть заказы наших клиентов, выбрать подходящий для себя или же просто понять что вам подходит больше всего.
+            На данной странице вы можете ознакомиться с нашими работами. Тут представлены заказы наших клиентов с точным перечнем характеристик, итоговым внешним видом и ценой на момент заказа. Возможно, что-то из этих проектов приглянется и вам, или же даст понимание, что именно вы хотите!
           </p>
         </div>
       </section>
