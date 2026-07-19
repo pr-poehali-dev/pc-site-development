@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
@@ -19,6 +19,15 @@ const Catalog = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [buildsApi, setBuildsApi] = useState<CarouselApi>();
+  const [showAll, setShowAll] = useState(false);
+  const gridTopRef = useRef<HTMLDivElement>(null);
+
+  const toggleShowAll = () => {
+    setShowAll((v) => {
+      if (v) gridTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return !v;
+    });
+  };
 
   const load = () => {
     setLoading(true);
@@ -70,10 +79,39 @@ const Catalog = () => {
           </div>
         ) : (
           <>
-            <div className="hidden md:grid md:grid-cols-3 gap-6 items-stretch">
-              {builds.map((b, i) => (
-                <CatalogCard key={b.id} build={b} index={i} />
-              ))}
+            <div className="hidden md:block">
+              <div ref={gridTopRef} className="scroll-mt-28 grid md:grid-cols-3 gap-6 items-stretch">
+                {builds.slice(0, 6).map((b, i) => (
+                  <CatalogCard key={b.id} build={b} index={i} />
+                ))}
+              </div>
+
+              {builds.length > 6 && (
+                <div
+                  className="grid transition-[grid-template-rows] duration-700 ease-in-out"
+                  style={{ gridTemplateRows: showAll ? '1fr' : '0fr' }}
+                >
+                  <div className="overflow-hidden">
+                    <div className="grid md:grid-cols-3 gap-6 items-stretch pt-6">
+                      {builds.slice(6).map((b, i) => (
+                        <CatalogCard key={b.id} build={b} index={i + 6} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {builds.length > 6 && (
+                <div className="flex justify-center mt-8">
+                  <button
+                    onClick={toggleShowAll}
+                    className="flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green"
+                  >
+                    {showAll ? 'Свернуть' : `Показать все компьютеры (${builds.length})`}
+                    <Icon name={showAll ? 'ChevronUp' : 'ChevronDown'} size={18} />
+                  </button>
+                </div>
+              )}
             </div>
             <Carousel setApi={setBuildsApi} opts={{ align: 'start' }} className="md:hidden">
               <CarouselContent>
