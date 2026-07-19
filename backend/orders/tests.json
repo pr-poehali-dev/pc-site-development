@@ -1,11 +1,11 @@
 {
   "tests": [
     {
-      "name": "Health check GET",
+      "name": "GET without auth returns 401",
       "method": "GET",
       "path": "/",
-      "expectedStatus": 200,
-      "expectedBody": {"status": "ok"},
+      "expectedStatus": 401,
+      "expectedBody": {"error": "string"},
       "bodyMatcher": "partial"
     },
     {
@@ -23,6 +23,15 @@
       "path": "/",
       "body": {},
       "expectedStatus": 400,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "PUT without auth returns 401",
+      "method": "PUT",
+      "path": "/",
+      "body": {"id": 1, "action": "view"},
+      "expectedStatus": 401,
       "expectedBody": {"error": "string"},
       "bodyMatcher": "partial"
     }

@@ -4,6 +4,7 @@ import Icon from '@/components/ui/icon';
 import BuildForm from '@/components/admin/BuildForm';
 import ArticleForm from '@/components/admin/ArticleForm';
 import AdminCreate from '@/components/admin/AdminCreate';
+import OrdersTab from '@/components/admin/OrdersTab';
 import {
   verifyToken,
   fetchBuilds,
@@ -30,7 +31,7 @@ const Admin = () => {
   const [showForm, setShowForm] = useState(false);
   const [showAdminCreate, setShowAdminCreate] = useState(false);
   const [toast, setToast] = useState('');
-  const [tab, setTab] = useState<'builds' | 'articles'>('builds');
+  const [tab, setTab] = useState<'orders' | 'builds' | 'articles'>('orders');
   const [articles, setArticles] = useState<ApiArticle[]>([]);
   const [editingArticle, setEditingArticle] = useState<ApiArticle | null>(null);
   const [showArticleForm, setShowArticleForm] = useState(false);
@@ -194,7 +195,15 @@ const Admin = () => {
       </header>
 
       <main className="container py-8">
-        <div className="flex gap-2 mb-8 border-b border-border">
+        <div className="flex gap-2 mb-8 border-b border-border overflow-x-auto">
+          <button
+            onClick={() => setTab('orders')}
+            className={`px-5 py-3 font-display uppercase text-sm tracking-wider transition-colors border-b-2 -mb-px whitespace-nowrap ${
+              tab === 'orders' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Заказы
+          </button>
           <button
             onClick={() => setTab('builds')}
             className={`px-5 py-3 font-display uppercase text-sm tracking-wider transition-colors border-b-2 -mb-px ${
@@ -212,6 +221,10 @@ const Admin = () => {
             Статьи ({articles.length})
           </button>
         </div>
+
+        {tab === 'orders' && (
+          <OrdersTab onToast={(msg) => { setToast(msg); setTimeout(() => setToast(''), 3500); }} />
+        )}
 
         {tab === 'builds' && (
         <>

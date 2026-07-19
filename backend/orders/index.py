@@ -11,9 +11,16 @@ API_URL = f'https://api.telegram.org/bot{BOT_TOKEN}'
 
 CORS = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Auth-Token',
     'Content-Type': 'application/json',
+}
+
+STATUS_LABELS = {
+    'new': 'Новый',
+    'in_work': 'Взят в работу',
+    'test': 'На тестировании',
+    'done': 'Готово',
 }
 
 
@@ -21,7 +28,23 @@ def db():
     return psycopg2.connect(os.environ['DATABASE_URL'])
 
 
-def notify_admins(conn, order: dict):
+def get_admin(conn, token: str):
+    '''Возвращает (id, username, full_name) авторизованного админа по токену либо None'''
+    if not token:
+        return None
+    cur = conn.cursor()
+    cur.execute(
+        """SELECT a.id, a.username, a.full_name
+           FROM admin_sessions s JOIN admins a ON a.id = s.admin_id
+           WHERE s.token = %s AND s.expires_at > NOW()""",
+        (token,)
+    )
+    row = cur.fetchone()
+    cur.close()
+    return row
+
+
+def notify_new_order(conn, order: dict):
     if not BOT_TOKEN:
         return
     cur = conn.cursor()
@@ -30,7 +53,7 @@ def notify_admins(conn, order: dict):
     cur.close()
     if not admins:
         return
-    lines = [f"🆕 <b>Новая заявка</b> с сайта"]
+    lines = ["🆕 <b>Новая заявка</b> с сайта"]
     if order.get('order_number'):
         lines.append(f"Заказ: #{order['order_number']}")
     if order.get('customer_name'):
@@ -52,7 +75,30 @@ def notify_admins(conn, order: dict):
                     lines.append(f"• {k}: {v}")
         except Exception:
             pass
-    text = "\n".join(lines)
+    _broadcast("\n".join(lines), admins)
+
+
+def notify_status(conn, order: dict, status: str, admin_name: str):
+    if not BOT_TOKEN:
+        return
+    cur = conn.cursor()
+    cur.execute("SELECT telegram_id FROM bot_admins WHERE status = 'approved'")
+    admins = cur.fetchall()
+    cur.close()
+    if not admins:
+        return
+    label = STATUS_LABELS.get(status, status)
+    lines = [
+        f"🔄 <b>Статус заявки</b> #{order.get('order_number')}: {label}",
+    ]
+    if order.get('customer_name'):
+        lines.append(f"Клиент: {order['customer_name']}")
+    if admin_name:
+        lines.append(f"Изменил: {admin_name}")
+    _broadcast("\n".join(lines), admins)
+
+
+def _broadcast(text: str, admins):
     for (tid,) in admins:
         try:
             requests.post(f'{API_URL}/sendMessage',
@@ -92,27 +138,125 @@ def create_order(conn, body: dict) -> dict:
     return order
 
 
+def serialize(o: dict) -> dict:
+    out = dict(o)
+    for k, v in out.items():
+        if isinstance(v, datetime):
+            out[k] = v.isoformat()
+    return out
+
+
+def list_orders(conn) -> list:
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT * FROM orders ORDER BY created_at DESC LIMIT 500")
+    rows = cur.fetchall()
+    cur.close()
+    return [serialize(dict(r)) for r in rows]
+
+
+def mark_viewed(conn, order_id: int, admin_name: str) -> dict:
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(
+        "UPDATE orders SET viewed_by = %s, viewed_at = NOW() "
+        "WHERE id = %s AND viewed_by IS NULL RETURNING *",
+        (admin_name, order_id)
+    )
+    row = cur.fetchone()
+    if row is None:
+        cur.execute("SELECT * FROM orders WHERE id = %s", (order_id,))
+        row = cur.fetchone()
+    conn.commit()
+    cur.close()
+    return serialize(dict(row)) if row else None
+
+
+def update_status(conn, order_id: int, status: str, admin_name: str) -> dict:
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    if status == 'in_work':
+        cur.execute(
+            "UPDATE orders SET status = %s, taken_by = COALESCE(taken_by, %s), "
+            "taken_at = COALESCE(taken_at, NOW()), updated_at = NOW() WHERE id = %s RETURNING *",
+            (status, admin_name, order_id)
+        )
+    else:
+        cur.execute(
+            "UPDATE orders SET status = %s, updated_at = NOW() WHERE id = %s RETURNING *",
+            (status, order_id)
+        )
+    order = cur.fetchone()
+    if order:
+        cur.execute(
+            "INSERT INTO order_status_history (order_id, status, changed_by) VALUES (%s, %s, %s)",
+            (order_id, status, admin_name)
+        )
+    conn.commit()
+    cur.close()
+    return serialize(dict(order)) if order else None
+
+
 def handler(event: dict, context) -> dict:
-    '''Приём заявок с форм сайта: создаёт заказ в БД и уведомляет админов бота в Telegram'''
+    '''Заявки: приём с сайта (POST), список и управление статусами для админов (GET/PUT).'''
     method = event.get('httpMethod', 'POST')
     if method == 'OPTIONS':
         return {'statusCode': 200, 'headers': CORS, 'body': ''}
 
+    headers = event.get('headers') or {}
+    token = headers.get('X-Auth-Token') or headers.get('x-auth-token') or ''
+
+    # GET — список заказов для админки (нужна авторизация)
     if method == 'GET':
-        return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'status': 'ok'})}
+        conn = db()
+        try:
+            admin = get_admin(conn, token)
+            if not admin:
+                return {'statusCode': 401, 'headers': CORS, 'body': json.dumps({'error': 'Требуется авторизация'})}
+            return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'orders': list_orders(conn)})}
+        finally:
+            conn.close()
 
     try:
         body = json.loads(event.get('body') or '{}')
     except Exception:
         return {'statusCode': 400, 'headers': CORS, 'body': json.dumps({'error': 'invalid json'})}
 
+    # PUT — действия админа (просмотр / смена статуса)
+    if method == 'PUT':
+        conn = db()
+        try:
+            admin = get_admin(conn, token)
+            if not admin:
+                return {'statusCode': 401, 'headers': CORS, 'body': json.dumps({'error': 'Требуется авторизация'})}
+            admin_name = admin[2] or admin[1]
+            order_id = body.get('id')
+            action = body.get('action')
+            if not order_id:
+                return {'statusCode': 400, 'headers': CORS, 'body': json.dumps({'error': 'id required'})}
+
+            if action == 'view':
+                order = mark_viewed(conn, int(order_id), admin_name)
+                return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'order': order})}
+
+            if action == 'status':
+                status = body.get('status')
+                if status not in STATUS_LABELS:
+                    return {'statusCode': 400, 'headers': CORS, 'body': json.dumps({'error': 'bad status'})}
+                order = update_status(conn, int(order_id), status, admin_name)
+                if order:
+                    notify_status(conn, order, status, admin_name)
+                return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'order': order})}
+
+            return {'statusCode': 400, 'headers': CORS, 'body': json.dumps({'error': 'unknown action'})}
+        finally:
+            conn.close()
+
+    # POST — приём новой заявки с сайта
     if not body.get('phone') and not body.get('name'):
         return {'statusCode': 400, 'headers': CORS, 'body': json.dumps({'error': 'name or phone required'})}
 
     conn = db()
     try:
         order = create_order(conn, body)
-        notify_admins(conn, dict(order))
+        notify_new_order(conn, dict(order))
     finally:
         conn.close()
 
