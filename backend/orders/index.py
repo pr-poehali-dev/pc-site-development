@@ -27,6 +27,37 @@ STATUS_LABELS = {
     'done': 'Готово',
 }
 
+STATUS_EMOJI = {
+    'new': '🆕',
+    'in_work': '🛠',
+    'test': '🧪',
+    'done': '✅',
+}
+
+SOURCE_LABELS = {
+    'contacts': 'Форма контактов',
+    'build-pc': 'Конструктор ПК',
+    'site': 'Сайт',
+}
+
+
+def _esc(v) -> str:
+    '''Экранирует HTML-спецсимволы для Telegram parse_mode=HTML.'''
+    s = str(v)
+    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
+
+def _phone_link(phone: str) -> str:
+    digits = ''.join(ch for ch in phone if ch.isdigit() or ch == '+')
+    return f'<a href="tel:{digits}">{_esc(phone)}</a>' if digits else _esc(phone)
+
+
+def _tg_link(tg: str) -> str:
+    handle = tg.strip().lstrip('@')
+    if handle and all(ch.isalnum() or ch == '_' for ch in handle):
+        return f'<a href="https://t.me/{handle}">@{_esc(handle)}</a>'
+    return _esc(tg)
+
 
 def db():
     return psycopg2.connect(os.environ['DATABASE_URL'])
@@ -51,42 +82,53 @@ def get_admin(conn, token: str):
 def notify_new_order(conn, order: dict):
     if not BOT_TOKEN:
         return
-    lines = ["🆕 <b>Новая заявка</b> с сайта"]
-    if order.get('order_number'):
-        lines.append(f"Заказ: #{order['order_number']}")
+    num = order.get('order_number') or '—'
+    src = SOURCE_LABELS.get(order.get('source'), order.get('source') or 'Сайт')
+
+    lines = [f"🆕 <b>Новая заявка #{_esc(num)}</b>", ""]
     if order.get('customer_name'):
-        lines.append(f"Имя: {order['customer_name']}")
+        lines.append(f"👤 <b>{_esc(order['customer_name'])}</b>")
     if order.get('customer_phone'):
-        lines.append(f"Телефон: {order['customer_phone']}")
+        lines.append(f"📞 {_phone_link(order['customer_phone'])}")
     if order.get('customer_telegram'):
-        lines.append(f"Telegram: {order['customer_telegram']}")
+        lines.append(f"✈️ {_tg_link(order['customer_telegram'])}")
     if order.get('contact_method'):
-        cm = 'Звонок' if order['contact_method'] == 'call' else 'Сообщение'
-        lines.append(f"Способ связи: {cm}")
+        if order['contact_method'] == 'call':
+            lines.append("💬 Способ связи: 📱 Звонок")
+        else:
+            lines.append("💬 Способ связи: ✉️ Сообщение")
     if order.get('comment'):
-        lines.append(f"Комментарий: {order['comment']}")
-    if order.get('details'):
+        lines.append(f"📝 {_esc(order['comment'])}")
+
+    details = order.get('details')
+    if details:
         try:
-            d = order['details'] if isinstance(order['details'], dict) else json.loads(order['details'])
-            for k, v in d.items():
-                if v:
-                    lines.append(f"• {k}: {v}")
+            d = details if isinstance(details, dict) else json.loads(details)
+            rows = [f"   • {_esc(k)}: {_esc(v)}" for k, v in d.items() if v]
+            if rows:
+                lines.append("")
+                lines.append("⚙️ <b>Детали сборки:</b>")
+                lines.extend(rows)
         except Exception:
             pass
+
+    lines.append("")
+    lines.append(f"📍 Источник: {_esc(src)}")
     _send_to_topic("\n".join(lines))
 
 
 def notify_status(conn, order: dict, status: str, admin_name: str):
     if not BOT_TOKEN:
         return
+    emoji = STATUS_EMOJI.get(status, '🔄')
     label = STATUS_LABELS.get(status, status)
-    lines = [
-        f"🔄 <b>Статус заявки</b> #{order.get('order_number')}: {label}",
-    ]
+    num = order.get('order_number') or '—'
+
+    lines = [f"{emoji} <b>Заявка #{_esc(num)}</b> — {_esc(label)}"]
     if order.get('customer_name'):
-        lines.append(f"Клиент: {order['customer_name']}")
+        lines.append(f"👤 {_esc(order['customer_name'])}")
     if admin_name:
-        lines.append(f"Изменил: {admin_name}")
+        lines.append(f"👨‍🔧 Изменил: {_esc(admin_name)}")
     _send_to_topic("\n".join(lines))
 
 
@@ -94,7 +136,8 @@ def _send_to_topic(text: str):
     '''Отправляет сообщение в тему "Новый заказ с сайта" рабочего чата.'''
     if not BOT_TOKEN or not ORDERS_CHAT_ID:
         return
-    payload = {'chat_id': ORDERS_CHAT_ID, 'text': text, 'parse_mode': 'HTML'}
+    payload = {'chat_id': ORDERS_CHAT_ID, 'text': text, 'parse_mode': 'HTML',
+               'disable_web_page_preview': True}
     if ORDERS_TOPIC_ID:
         payload['message_thread_id'] = int(ORDERS_TOPIC_ID)
     try:
