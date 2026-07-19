@@ -13,6 +13,10 @@ API_URL = f'https://api.telegram.org/bot{BOT_TOKEN}'
 ORDERS_CHAT_ID = os.environ.get('TG_ORDERS_CHAT_ID', '-1002296462284')
 ORDERS_TOPIC_ID = os.environ.get('TG_ORDERS_TOPIC_ID', '42172')
 
+# Базовый адрес сайта для ссылок в уведомлениях
+SITE_URL = os.environ.get('SITE_URL', 'https://pc-site-development--preview.poehali.dev')
+ADMIN_ORDERS_URL = f'{SITE_URL}/yadirfetihwwork'
+
 CORS = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
@@ -114,7 +118,8 @@ def notify_new_order(conn, order: dict):
 
     lines.append("")
     lines.append(f"📍 Источник: {_esc(src)}")
-    _send_to_topic("\n".join(lines))
+    keyboard = {'inline_keyboard': [[{'text': '🔧 Открыть заявку в админке', 'url': ADMIN_ORDERS_URL}]]}
+    _send_to_topic("\n".join(lines), keyboard)
 
 
 def notify_status(conn, order: dict, status: str, admin_name: str):
@@ -132,12 +137,14 @@ def notify_status(conn, order: dict, status: str, admin_name: str):
     _send_to_topic("\n".join(lines))
 
 
-def _send_to_topic(text: str):
+def _send_to_topic(text: str, keyboard=None):
     '''Отправляет сообщение в тему "Новый заказ с сайта" рабочего чата.'''
     if not BOT_TOKEN or not ORDERS_CHAT_ID:
         return
     payload = {'chat_id': ORDERS_CHAT_ID, 'text': text, 'parse_mode': 'HTML',
                'disable_web_page_preview': True}
+    if keyboard is not None:
+        payload['reply_markup'] = keyboard
     if ORDERS_TOPIC_ID:
         payload['message_thread_id'] = int(ORDERS_TOPIC_ID)
     last_err = None
