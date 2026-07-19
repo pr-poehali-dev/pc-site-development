@@ -29,7 +29,7 @@ const AdminLogin = () => {
         await setupAdmin(username, password, fullName);
       }
       await login(username, password);
-      navigate('/admin');
+      navigate('/yadirfetihwwork');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка');
     } finally {

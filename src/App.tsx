@@ -35,8 +35,8 @@ const App = () => (
           <Route path="/build" element={<BuildPC />} />
           <Route path="/articles" element={<Articles />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/yadirfetihwwork/login" element={<AdminLogin />} />
+          <Route path="/yadirfetihwwork" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

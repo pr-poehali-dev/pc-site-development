@@ -171,9 +171,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
         </div>
         <div className="border-t border-black/20 py-3 flex items-center justify-center gap-2 text-black/70 text-sm">
           <span>© 2026 White Friday PC. Все права защищены.</span>
-          <Link to="/admin" aria-label="Вход для администратора" className="text-black/30 hover:text-white transition-colors">
-            <Icon name="Lock" size={13} />
-          </Link>
         </div>
       </footer>
     </div>

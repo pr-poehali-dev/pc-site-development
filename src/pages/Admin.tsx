@@ -58,7 +58,7 @@ const Admin = () => {
     (async () => {
       const ok = await verifyToken();
       if (!ok) {
-        navigate('/admin/login');
+        navigate('/yadirfetihwwork/login');
         return;
       }
       await Promise.all([load(), loadArticles()]);
@@ -137,7 +137,7 @@ const Admin = () => {
 
   const handleLogout = () => {
     clearToken();
-    navigate('/admin/login');
+    navigate('/yadirfetihwwork/login');
   };
 
   const openNew = () => {
