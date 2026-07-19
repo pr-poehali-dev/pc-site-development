@@ -38,6 +38,14 @@ const Reviews = () => {
   const [reviewPhoto, setReviewPhoto] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
   const aboutRef = useRef<HTMLDivElement>(null);
+  const reviewsTopRef = useRef<HTMLDivElement>(null);
+
+  const toggleShowAll = () => {
+    setShowAll((v) => {
+      if (v) reviewsTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return !v;
+    });
+  };
   const [reviewsApi, setReviewsApi] = useState<CarouselApi>();
   const [photosApi, setPhotosApi] = useState<CarouselApi>();
 
@@ -293,7 +301,7 @@ const Reviews = () => {
           return (
             <>
               <div className="hidden md:block">
-                <div className="grid md:grid-cols-3 gap-6">
+                <div ref={reviewsTopRef} className="scroll-mt-28 grid md:grid-cols-3 gap-6">
                   {reviews.slice(0, 6).map((r, i) => (
                     <div key={i} className="animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
                       {reviewCard(r, i)}
@@ -319,7 +327,7 @@ const Reviews = () => {
                 {reviews.length > 6 && (
                   <div className="flex justify-center mt-8">
                     <button
-                      onClick={() => setShowAll((v) => !v)}
+                      onClick={toggleShowAll}
                       className="flex items-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green"
                     >
                       {showAll ? 'Свернуть' : `Смотреть все отзывы (${reviews.length})`}
