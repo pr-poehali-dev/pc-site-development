@@ -140,10 +140,16 @@ def _send_to_topic(text: str):
                'disable_web_page_preview': True}
     if ORDERS_TOPIC_ID:
         payload['message_thread_id'] = int(ORDERS_TOPIC_ID)
-    try:
-        requests.post(f'{API_URL}/sendMessage', json=payload, timeout=5)
-    except Exception:
-        pass
+    last_err = None
+    for attempt in range(4):
+        try:
+            r = requests.post(f'{API_URL}/sendMessage', json=payload, timeout=8)
+            if r.ok:
+                return
+            last_err = f'{r.status_code}: {r.text}'
+        except Exception as e:
+            last_err = str(e)
+    print(f'[TG] sendMessage failed after retries: {last_err}')
 
 
 def gen_order_number(conn) -> str:
