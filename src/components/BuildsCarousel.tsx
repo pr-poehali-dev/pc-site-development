@@ -3,6 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import GpuIcon from '@/components/ui/GpuIcon';
+import SmartImage from '@/components/ui/SmartImage';
 import ImageLightbox from '@/components/ImageLightbox';
 import type { Build } from '@/data/builds';
 
@@ -48,7 +49,7 @@ const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: 
     <div className="relative" onMouseEnter={stopAutoplay} onMouseLeave={resetAutoplay}>
       <div className="relative z-10 overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {builds.map((b) => (
+          {builds.map((b, idx) => (
             <div key={b.id} className="flex-[0_0_100%] min-w-0 px-1">
               <div className="grid md:grid-cols-2 gap-6 items-center bg-card/15 backdrop-blur-md border border-border/50 clip-corner p-5 md:p-6">
                 {/* Фото слева */}
@@ -59,7 +60,13 @@ const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: 
                     className="block w-full cursor-zoom-in"
                     aria-label="Открыть фото на весь экран"
                   >
-                    <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover" />
+                    <SmartImage
+                      src={b.image}
+                      alt={b.name}
+                      eager={idx === 0}
+                      wrapperClassName="aspect-[4/3]"
+                      className="w-full h-full object-cover"
+                    />
                     <span className="absolute bottom-3 left-3 w-9 h-9 flex items-center justify-center bg-background/70 backdrop-blur text-primary clip-corner opacity-0 group-hover/photo:opacity-100 transition-opacity">
                       <Icon name="Expand" size={16} />
                     </span>

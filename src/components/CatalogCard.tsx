@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import GpuIcon from '@/components/ui/GpuIcon';
+import SmartImage from '@/components/ui/SmartImage';
 import ImageLightbox from '@/components/ImageLightbox';
 import type { Build } from '@/data/builds';
 
@@ -39,7 +40,13 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
           className="block w-full cursor-zoom-in"
           aria-label="Открыть фото на весь экран"
         >
-          <img src={b.image} alt={b.name} className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500" />
+          <SmartImage
+            src={b.image}
+            alt={b.name}
+            eager={index < 3}
+            wrapperClassName="aspect-[4/3]"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
           <span className="absolute bottom-3 left-3 w-9 h-9 flex items-center justify-center bg-background/70 backdrop-blur text-primary clip-corner opacity-0 group-hover:opacity-100 transition-opacity">
             <Icon name="Expand" size={16} />
           </span>

@@ -5,6 +5,7 @@ import Icon from '@/components/ui/icon';
 import { type ApiArticle } from '@/lib/articlesApi';
 import { useArticles } from '@/hooks/usePublicData';
 import { ArticlesGridSkeleton } from '@/components/skeletons/CardSkeletons';
+import SmartImage from '@/components/ui/SmartImage';
 import {
   Carousel,
   CarouselContent,
@@ -50,7 +51,7 @@ const Articles = () => {
                 className="group flex flex-col h-full bg-card border border-border clip-corner overflow-hidden hover:border-primary/40 transition-colors"
               >
                 {a.cover_url ? (
-                  <img src={a.cover_url} alt={a.title} className="w-full h-44 object-cover" />
+                  <SmartImage src={a.cover_url} alt={a.title} wrapperClassName="w-full h-44" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-44 flex items-center justify-center bg-background text-muted-foreground">
                     <Icon name="Newspaper" size={32} />

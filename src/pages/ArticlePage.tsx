@@ -4,6 +4,7 @@ import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 import { useArticle, useArticles } from '@/hooks/usePublicData';
 import { ArticleDetailSkeleton } from '@/components/skeletons/CardSkeletons';
+import SmartImage from '@/components/ui/SmartImage';
 
 const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -72,7 +73,13 @@ const ArticlePage = () => {
             </div>
 
             {article.cover_url && (
-              <img src={article.cover_url} alt={article.title} className="w-full max-h-[420px] object-cover clip-corner border border-border mb-8" />
+              <SmartImage
+                src={article.cover_url}
+                alt={article.title}
+                eager
+                wrapperClassName="w-full max-h-[420px] clip-corner border border-border mb-8"
+                className="w-full max-h-[420px] object-cover"
+              />
             )}
 
             {article.excerpt && (
@@ -94,7 +101,7 @@ const ArticlePage = () => {
                       className="group flex flex-col bg-card border border-border clip-corner overflow-hidden hover:border-primary/40 transition-colors"
                     >
                       {a.cover_url ? (
-                        <img src={a.cover_url} alt={a.title} className="w-full h-36 object-cover" />
+                        <SmartImage src={a.cover_url} alt={a.title} wrapperClassName="w-full h-36" className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-36 flex items-center justify-center bg-background text-muted-foreground">
                           <Icon name="Newspaper" size={28} />
