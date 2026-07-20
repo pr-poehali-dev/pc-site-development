@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Icon from '@/components/ui/icon';
-import { saveBuild, uploadMedia, type ApiBuild, type BuildInput } from '@/lib/buildsApi';
+import { saveBuild, uploadVideoChunked, type ApiBuild, type BuildInput } from '@/lib/buildsApi';
 import { isEmbedSupported } from '@/lib/videoEmbed';
 
 interface Props {
@@ -17,7 +17,7 @@ interface MediaItem {
 }
 
 const MAX_PHOTOS = 3;
-const MAX_VIDEO_MB = 25;
+const MAX_VIDEO_MB = 100;
 
 const DRAFT_KEY = 'wf_build_draft';
 
@@ -177,7 +177,7 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
     }
   };
 
-  const handleAddVideo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddVideo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
@@ -188,24 +188,15 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
     setError('');
     setUploadingVideo(true);
     setVideoProgress(0);
-    const reader = new FileReader();
-    reader.onload = async () => {
-      try {
-        const dataUrl = reader.result as string;
-        const url = await uploadMedia(dataUrl, 'video', setVideoProgress);
-        setMedia((m) => [...m.filter((x) => x.type !== 'video'), { type: 'video', url, preview: url }]);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Не удалось загрузить видео.');
-      } finally {
-        setUploadingVideo(false);
-        setVideoProgress(0);
-      }
-    };
-    reader.onerror = () => {
-      setError('Не удалось прочитать видео.');
+    try {
+      const url = await uploadVideoChunked(file, setVideoProgress);
+      setMedia((m) => [...m.filter((x) => x.type !== 'video'), { type: 'video', url, preview: url }]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Не удалось загрузить видео.');
+    } finally {
       setUploadingVideo(false);
-    };
-    reader.readAsDataURL(file);
+      setVideoProgress(0);
+    }
   };
 
   const removeMedia = (target: MediaItem) => {

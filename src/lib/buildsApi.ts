@@ -176,6 +176,69 @@ export function uploadMedia(
   });
 }
 
+async function chunkAction(payload: Record<string, unknown>) {
+  const res = await fetch(BUILDS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Auth-Token': getToken() || '' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Ошибка загрузки видео');
+  return data;
+}
+
+function fileToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error('Не удалось прочитать часть видео'));
+    reader.readAsDataURL(blob);
+  });
+}
+
+// Загружает видео частями через бэкенд (обходит лимит размера тела функции), с прогрессом.
+export async function uploadVideoChunked(
+  file: File,
+  onProgress?: (percent: number) => void,
+): Promise<string> {
+  const CHUNK = 3 * 1024 * 1024; // 3 МБ бинарных на запрос — с запасом под лимит
+  const total = Math.ceil(file.size / CHUNK);
+
+  const init = await chunkAction({
+    action: 'chunk_init',
+    filename: file.name || 'video.mp4',
+    content_type: file.type || 'video/mp4',
+  });
+  const session = init.session as string;
+
+  try {
+    for (let i = 0; i < total; i++) {
+      const slice = file.slice(i * CHUNK, (i + 1) * CHUNK);
+      const b64 = await fileToBase64(slice);
+      await chunkAction({
+        action: 'chunk_part',
+        session,
+        part_number: i + 1,
+        base64: b64,
+      });
+      onProgress?.(Math.round(((i + 1) / total) * 95));
+    }
+
+    const fin = await chunkAction({
+      action: 'chunk_finish',
+      session,
+      ext: init.ext,
+      content_type: init.content_type,
+      total,
+    });
+    onProgress?.(100);
+    return fin.url as string;
+  } catch (err) {
+    chunkAction({ action: 'chunk_abort', session, total }).catch(() => {});
+    throw err;
+  }
+}
+
 export async function updateSortOrder(id: number, sort_order: number) {
   const res = await fetch(BUILDS_URL, {
     method: 'PUT',
