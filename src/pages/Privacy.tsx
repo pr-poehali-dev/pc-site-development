@@ -1,9 +1,10 @@
 import Layout from '@/components/Layout';
+import { contactInfo } from '@/data/content';
 
 const operator = 'ИП Киргизова Анастасия Владимировна';
 const inn = '772585008234';
 const ogrnip = '324774600026339';
-const email = 'info@whitefridaypc.ru';
+const email = contactInfo.email;
 
 const Privacy = () => {
   return (
