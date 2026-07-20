@@ -28,6 +28,49 @@ def db():
     return psycopg2.connect(os.environ['DATABASE_URL'])
 
 
+_bot_username = None
+
+
+def get_bot_username() -> str:
+    '''Возвращает username бота (без @), кэширует между вызовами.'''
+    global _bot_username
+    if _bot_username is None:
+        res = tg_call('getMe', {})
+        _bot_username = (res.get('result') or {}).get('username', '') if res.get('ok') else ''
+    return _bot_username or ''
+
+
+def is_addressed_to_bot(msg: dict) -> bool:
+    '''True, если сообщение в группе адресовано боту: reply на его сообщение,
+    @упоминание или команда с @botusername.'''
+    text = msg.get('text', '') or ''
+    username = get_bot_username()
+
+    reply = msg.get('reply_to_message')
+    if reply and (reply.get('from') or {}).get('is_bot') and \
+            (reply.get('from') or {}).get('username', '').lower() == username.lower():
+        return True
+
+    if username:
+        uname = '@' + username.lower()
+        for ent in msg.get('entities', []) or []:
+            if ent.get('type') in ('mention', 'bot_command'):
+                frag = text[ent['offset']:ent['offset'] + ent['length']].lower()
+                if uname in frag:
+                    return True
+        if uname in text.lower():
+            return True
+    return False
+
+
+def strip_bot_mention(text: str) -> str:
+    '''Убирает @botusername из текста команды/сообщения.'''
+    username = get_bot_username()
+    if username:
+        text = text.replace('@' + username, '').replace('@' + username.lower(), '')
+    return text.strip()
+
+
 def tg_call(method: str, payload: dict, timeout: int = 4, retries: int = 3) -> dict:
     last_err = None
     for _ in range(retries):
@@ -358,6 +401,15 @@ def handler(event: dict, context) -> dict:
             chat_id = msg['chat']['id']
             tg_user = msg['from']
             text = msg['text']
+            chat_type = msg.get('chat', {}).get('type', 'private')
+            is_group = chat_type in ('group', 'supergroup')
+
+            if is_group and not is_addressed_to_bot(msg):
+                return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, 'body': json.dumps({'ok': True})}
+
+            if is_group:
+                text = strip_bot_mention(text)
+
             if text.startswith('/start'):
                 handle_start(conn, chat_id, tg_user)
             elif text.startswith('/admin'):
