@@ -138,15 +138,42 @@ export async function saveBuild(build: BuildInput) {
 }
 
 // Загружает один файл (фото/видео) отдельным запросом, возвращает его URL.
-export async function uploadMedia(base64: string, kind: 'photo' | 'video'): Promise<string> {
-  const res = await fetch(BUILDS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Auth-Token': getToken() || '' },
-    body: JSON.stringify({ action: 'upload', kind, base64 }),
+// onProgress получает процент отправки (0–100).
+export function uploadMedia(
+  base64: string,
+  kind: 'photo' | 'video',
+  onProgress?: (percent: number) => void,
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', BUILDS_URL);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-Auth-Token', getToken() || '');
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable && onProgress) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    };
+
+    xhr.onload = () => {
+      let data: { url?: string; error?: string } = {};
+      try {
+        data = JSON.parse(xhr.responseText);
+      } catch {
+        /* ignore */
+      }
+      if (xhr.status >= 200 && xhr.status < 300 && data.url) {
+        onProgress?.(100);
+        resolve(data.url);
+      } else {
+        reject(new Error(data.error || 'Не удалось загрузить файл'));
+      }
+    };
+
+    xhr.onerror = () => reject(new Error('Не удалось загрузить файл'));
+    xhr.send(JSON.stringify({ action: 'upload', kind, base64 }));
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Не удалось загрузить файл');
-  return data.url as string;
 }
 
 export async function updateSortOrder(id: number, sort_order: number) {

@@ -87,6 +87,7 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
   });
   const [videoLink, setVideoLink] = useState('');
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [videoProgress, setVideoProgress] = useState(0);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -186,16 +187,18 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
     }
     setError('');
     setUploadingVideo(true);
+    setVideoProgress(0);
     const reader = new FileReader();
     reader.onload = async () => {
       try {
         const dataUrl = reader.result as string;
-        const url = await uploadMedia(dataUrl, 'video');
+        const url = await uploadMedia(dataUrl, 'video', setVideoProgress);
         setMedia((m) => [...m.filter((x) => x.type !== 'video'), { type: 'video', url, preview: url }]);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Не удалось загрузить видео.');
       } finally {
         setUploadingVideo(false);
+        setVideoProgress(0);
       }
     };
     reader.onerror = () => {
@@ -315,11 +318,25 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
               <label className={`px-5 py-2.5 bg-muted text-foreground font-display uppercase text-xs tracking-wider clip-corner transition-opacity ${uploadingVideo ? 'opacity-40 pointer-events-none' : 'hover:opacity-90 cursor-pointer'}`}>
                 <span className="inline-flex items-center gap-2">
                   <Icon name={uploadingVideo ? 'LoaderCircle' : 'Video'} size={14} className={uploadingVideo ? 'animate-spin' : ''} />
-                  {uploadingVideo ? 'Загрузка...' : videos.length ? 'Заменить видео' : 'Добавить видео'}
+                  {uploadingVideo ? `Загрузка ${videoProgress}%` : videos.length ? 'Заменить видео' : 'Добавить видео'}
                 </span>
                 <input type="file" accept="video/*" onChange={handleAddVideo} className="hidden" disabled={uploadingVideo} />
               </label>
             </div>
+
+            {uploadingVideo && (
+              <div className="mt-3">
+                <div className="h-2 w-full bg-background border border-border clip-corner overflow-hidden">
+                  <div
+                    className="h-full bg-primary transition-[width] duration-200"
+                    style={{ width: `${videoProgress}%` }}
+                  />
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  Загрузка видео на сервер — {videoProgress}%. Не закрывайте окно.
+                </p>
+              </div>
+            )}
 
             {/* Видео по ссылке */}
             <div className="flex gap-2 mt-3">
