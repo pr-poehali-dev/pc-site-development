@@ -14,7 +14,7 @@ ORDERS_CHAT_ID = os.environ.get('TG_ORDERS_CHAT_ID', '-1002296462284')
 ORDERS_TOPIC_ID = os.environ.get('TG_ORDERS_TOPIC_ID', '42172')
 
 # Базовый адрес сайта для ссылок в уведомлениях
-SITE_URL = os.environ.get('SITE_URL', 'https://pc-site-development--preview.poehali.dev')
+SITE_URL = os.environ.get('SITE_URL', 'https://wf-pc.ru')
 ADMIN_ORDERS_URL = f'{SITE_URL}/yadirfetihwwork'
 
 CORS = {
