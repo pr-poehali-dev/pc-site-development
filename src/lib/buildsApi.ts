@@ -137,6 +137,18 @@ export async function saveBuild(build: BuildInput) {
   return data;
 }
 
+// Загружает один файл (фото/видео) отдельным запросом, возвращает его URL.
+export async function uploadMedia(base64: string, kind: 'photo' | 'video'): Promise<string> {
+  const res = await fetch(BUILDS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Auth-Token': getToken() || '' },
+    body: JSON.stringify({ action: 'upload', kind, base64 }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Не удалось загрузить файл');
+  return data.url as string;
+}
+
 export async function updateSortOrder(id: number, sort_order: number) {
   const res = await fetch(BUILDS_URL, {
     method: 'PUT',

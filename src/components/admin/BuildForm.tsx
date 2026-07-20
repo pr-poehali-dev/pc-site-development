@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Icon from '@/components/ui/icon';
-import { saveBuild, type ApiBuild, type BuildInput } from '@/lib/buildsApi';
+import { saveBuild, uploadMedia, type ApiBuild, type BuildInput } from '@/lib/buildsApi';
 import { isEmbedSupported } from '@/lib/videoEmbed';
 
 interface Props {
@@ -17,7 +17,7 @@ interface MediaItem {
 }
 
 const MAX_PHOTOS = 3;
-const MAX_VIDEO_MB = 40;
+const MAX_VIDEO_MB = 25;
 
 const DRAFT_KEY = 'wf_build_draft';
 
@@ -86,6 +86,7 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
     return [];
   });
   const [videoLink, setVideoLink] = useState('');
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -180,16 +181,27 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
     e.target.value = '';
     if (!file) return;
     if (file.size > MAX_VIDEO_MB * 1024 * 1024) {
-      setError(`Видео слишком большое (макс. ${MAX_VIDEO_MB} МБ). Сожмите файл или загрузите короче.`);
+      setError(`Видео слишком большое (макс. ${MAX_VIDEO_MB} МБ). Загрузите короче или добавьте видео по ссылке (YouTube, VK, RuTube).`);
       return;
     }
+    setError('');
+    setUploadingVideo(true);
     const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      setMedia((m) => [...m.filter((x) => x.type !== 'video'), { type: 'video', base64: dataUrl, preview: dataUrl }]);
-      setError('');
+    reader.onload = async () => {
+      try {
+        const dataUrl = reader.result as string;
+        const url = await uploadMedia(dataUrl, 'video');
+        setMedia((m) => [...m.filter((x) => x.type !== 'video'), { type: 'video', url, preview: url }]);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Не удалось загрузить видео.');
+      } finally {
+        setUploadingVideo(false);
+      }
     };
-    reader.onerror = () => setError('Не удалось прочитать видео.');
+    reader.onerror = () => {
+      setError('Не удалось прочитать видео.');
+      setUploadingVideo(false);
+    };
     reader.readAsDataURL(file);
   };
 
@@ -300,9 +312,12 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
                 <span className="inline-flex items-center gap-2"><Icon name="ImagePlus" size={14} /> Добавить фото</span>
                 <input type="file" accept="image/*" multiple onChange={handleAddPhotos} className="hidden" />
               </label>
-              <label className="px-5 py-2.5 bg-muted text-foreground font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 transition-opacity cursor-pointer">
-                <span className="inline-flex items-center gap-2"><Icon name="Video" size={14} /> {videos.length ? 'Заменить видео' : 'Добавить видео'}</span>
-                <input type="file" accept="video/*" onChange={handleAddVideo} className="hidden" />
+              <label className={`px-5 py-2.5 bg-muted text-foreground font-display uppercase text-xs tracking-wider clip-corner transition-opacity ${uploadingVideo ? 'opacity-40 pointer-events-none' : 'hover:opacity-90 cursor-pointer'}`}>
+                <span className="inline-flex items-center gap-2">
+                  <Icon name={uploadingVideo ? 'LoaderCircle' : 'Video'} size={14} className={uploadingVideo ? 'animate-spin' : ''} />
+                  {uploadingVideo ? 'Загрузка...' : videos.length ? 'Заменить видео' : 'Добавить видео'}
+                </span>
+                <input type="file" accept="video/*" onChange={handleAddVideo} className="hidden" disabled={uploadingVideo} />
               </label>
             </div>
 
@@ -406,7 +421,7 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
           <div className="flex gap-3 pt-2">
             <button
               onClick={handleSave}
-              disabled={saving}
+              disabled={saving || uploadingVideo}
               className="flex items-center gap-2 px-7 py-3 bg-primary text-primary-foreground font-display uppercase text-sm tracking-wider clip-corner hover:opacity-90 transition-opacity border-glow-cyan disabled:opacity-50"
             >
               {saving ? 'Сохранение...' : 'Сохранить'} <Icon name="Check" size={18} />
