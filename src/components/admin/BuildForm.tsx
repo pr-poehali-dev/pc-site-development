@@ -17,7 +17,7 @@ interface MediaItem {
 }
 
 const MAX_PHOTOS = 3;
-const MAX_VIDEO_MB = 100;
+const MAX_VIDEO_MB = 60;
 
 const DRAFT_KEY = 'wf_build_draft';
 
