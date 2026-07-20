@@ -201,7 +201,7 @@ export async function uploadVideoChunked(
   file: File,
   onProgress?: (percent: number) => void,
 ): Promise<string> {
-  const CHUNK = 3 * 1024 * 1024; // 3 МБ бинарных на запрос — с запасом под лимит
+  const CHUNK = 2 * 1024 * 1024; // 2 МБ бинарных: тело ~2.8 МБ, с запасом под лимит функции
   const total = Math.ceil(file.size / CHUNK);
 
   const init = await chunkAction({
