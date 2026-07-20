@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 
 export const SITE_URL = 'https://wf-pc.ru';
-const DEFAULT_OG = 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/files/og-image-1784549778234.png';
+const DEFAULT_OG = `${SITE_URL}/og-image.jpg?v=2`;
 
 interface SEOProps {
   title: string;
@@ -16,6 +16,7 @@ interface SEOProps {
 const SEO = ({ title, description, path = '/', image = DEFAULT_OG, type = 'website', noindex = false, jsonLd }: SEOProps) => {
   const url = `${SITE_URL}${path}`;
   const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+  const isDefaultImage = image === DEFAULT_OG;
 
   return (
     <Helmet>
@@ -29,6 +30,9 @@ const SEO = ({ title, description, path = '/', image = DEFAULT_OG, type = 'websi
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
       <meta property="og:image" content={image} />
+      {isDefaultImage && <meta property="og:image:width" content="1200" />}
+      {isDefaultImage && <meta property="og:image:height" content="630" />}
+      {isDefaultImage && <meta property="og:image:alt" content="White Friday PC — сборка компьютеров на заказ" />}
       <meta property="og:site_name" content="White Friday PC" />
       <meta property="og:locale" content="ru_RU" />
 
