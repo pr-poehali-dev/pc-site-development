@@ -169,8 +169,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-black/20 py-3 flex items-center justify-center gap-2 text-black/70 text-sm">
+        <div className="border-t border-black/20 py-3 flex flex-col sm:flex-row items-center justify-center gap-x-4 gap-y-1 text-black/70 text-sm text-center">
           <span>© 2026 White Friday PC. Все права защищены.</span>
+          <span className="hidden sm:inline">·</span>
+          <Link to="/privacy" className="hover:text-white transition-colors">Политика конфиденциальности</Link>
+          <span className="hidden sm:inline">·</span>
+          <Link to="/consent" className="hover:text-white transition-colors">Согласие на обработку данных</Link>
         </div>
       </footer>
     </div>

@@ -15,6 +15,8 @@ import Articles from "./pages/Articles";
 import ArticlePage from "./pages/ArticlePage";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import Privacy from "./pages/Privacy";
+import Consent from "./pages/Consent";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +37,8 @@ const App = () => (
           <Route path="/build" element={<BuildPC />} />
           <Route path="/articles" element={<Articles />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/consent" element={<Consent />} />
           <Route path="/yadirfetihwwork/login" element={<AdminLogin />} />
           <Route path="/yadirfetihwwork" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

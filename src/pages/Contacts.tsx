@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { socials, contactInfo } from '@/data/content';
@@ -31,6 +32,7 @@ const Contacts = () => {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
+  const [consent, setConsent] = useState(false);
 
   useEffect(() => {
     const build = searchParams.get('build');
@@ -41,6 +43,10 @@ const Contacts = () => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) {
       setError('Укажите имя и телефон');
+      return;
+    }
+    if (!consent) {
+      setError('Необходимо согласие на обработку персональных данных');
       return;
     }
     setError('');
@@ -65,6 +71,7 @@ const Contacts = () => {
       setTelegram('');
       setMessage('');
       setContactMethod('');
+      setConsent(false);
     } catch {
       setError('Не удалось отправить. Попробуйте позже или позвоните нам.');
     } finally {
@@ -173,8 +180,22 @@ const Contacts = () => {
                   ))}
                 </div>
               </div>
+              <label className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="mt-1 w-4 h-4 shrink-0 accent-primary"
+                />
+                <span className="text-xs text-muted-foreground leading-relaxed">
+                  Я согласен на обработку персональных данных и принимаю{' '}
+                  <Link to="/privacy" target="_blank" className="text-primary hover:underline">Политику конфиденциальности</Link>{' '}
+                  и{' '}
+                  <Link to="/consent" target="_blank" className="text-primary hover:underline">условия обработки данных</Link>.
+                </span>
+              </label>
               {error && <p className="text-sm text-destructive">{error}</p>}
-              <button type="submit" disabled={sending} className="w-full flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green disabled:opacity-40">
+              <button type="submit" disabled={sending || !consent} className="w-full flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green disabled:opacity-40">
                 {sending ? 'Отправка...' : 'Отправить заявку'} <Icon name="Send" size={18} />
               </button>
             </>

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { toast } from '@/hooks/use-toast';
@@ -97,6 +98,7 @@ const BuildPC = () => {
   const [cTelegram, setCTelegram] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   const canNextStep1 = purposes.length > 0 && prefMode && (prefMode === 'manager' || prefText.trim());
 
@@ -120,6 +122,10 @@ const BuildPC = () => {
     e.preventDefault();
     if (!cName.trim() || !cPhone.trim()) {
       toast({ title: 'Заполните имя и телефон', description: 'Они нужны, чтобы мы могли связаться с вами.' });
+      return;
+    }
+    if (!consent) {
+      toast({ title: 'Нужно согласие', description: 'Отметьте согласие на обработку персональных данных.' });
       return;
     }
     setSending(true);
@@ -706,6 +712,21 @@ const BuildPC = () => {
                 </div>
               </div>
 
+              <label className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="mt-1 w-4 h-4 shrink-0 accent-primary"
+                />
+                <span className="text-xs text-muted-foreground leading-relaxed">
+                  Я согласен на обработку персональных данных и принимаю{' '}
+                  <Link to="/privacy" target="_blank" className="text-primary hover:underline">Политику конфиденциальности</Link>{' '}
+                  и{' '}
+                  <Link to="/consent" target="_blank" className="text-primary hover:underline">условия обработки данных</Link>.
+                </span>
+              </label>
+
               <div className="flex gap-3">
                 <button
                   type="button"
@@ -716,7 +737,7 @@ const BuildPC = () => {
                 </button>
                 <button
                   type="submit"
-                  disabled={sending}
+                  disabled={sending || !consent}
                   className="flex-1 flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-display uppercase tracking-wider clip-corner btn-glow-green disabled:opacity-40"
                 >
                   {sending ? 'Отправка...' : 'Отправить заявку'} <Icon name="Send" size={18} />
