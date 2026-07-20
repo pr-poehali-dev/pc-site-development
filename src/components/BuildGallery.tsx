@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/icon';
 import SmartImage from '@/components/ui/SmartImage';
+import AutoPlayVideo from '@/components/AutoPlayVideo';
 import ImageLightbox from '@/components/ImageLightbox';
 import { toEmbedUrl } from '@/lib/videoEmbed';
 import type { Build, BuildMedia } from '@/data/builds';
@@ -56,11 +57,8 @@ const BuildGallery = ({ build, eager = false }: Props) => {
             );
           })()
         ) : current.type === 'video' ? (
-          <video
+          <AutoPlayVideo
             src={current.url}
-            controls
-            playsInline
-            preload="metadata"
             className="w-full h-full object-cover bg-black"
           />
         ) : (
