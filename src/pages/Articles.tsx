@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
+import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { type ApiArticle } from '@/lib/articlesApi';
 import { useArticles } from '@/hooks/usePublicData';
@@ -20,6 +21,11 @@ const Articles = () => {
 
   return (
     <Layout>
+      <SEO
+        title="Блог о сборке ПК и комплектующих — статьи и гайды | White Friday PC"
+        description="Полезные статьи и гайды о выборе комплектующих, сборке компьютеров и апгрейде. Разбираемся, какое железо выбрать под игры и работу в 2026 году."
+        path="/articles"
+      />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Блог</p>

@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
+import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { socials, contactInfo } from '@/data/content';
+import { localBusinessLd } from '@/data/seo';
 import func2url from '../../backend/func2url.json';
 
 const ORDERS_URL = func2url['orders'];
@@ -81,6 +83,12 @@ const Contacts = () => {
 
   return (
     <Layout>
+      <SEO
+        title="Контакты White Friday PC — адрес, телефон, режим работы"
+        description="Как с нами связаться: телефон, email, адрес мастерской в Москве, пункты выдачи в Санкт-Петербурге и Краснодаре. Ежедневно 12:00–21:00."
+        path="/contacts"
+        jsonLd={localBusinessLd}
+      />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Контакты и доставка</p>

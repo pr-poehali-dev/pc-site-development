@@ -1,4 +1,5 @@
 import Layout from '@/components/Layout';
+import SEO from '@/components/SEO';
 import { Link } from 'react-router-dom';
 
 const operator = 'ИП Киргизова Анастасия Владимировна';
@@ -8,6 +9,12 @@ const ogrnip = '324774600026339';
 const Consent = () => {
   return (
     <Layout>
+      <SEO
+        title="Согласие на обработку персональных данных | White Friday PC"
+        description="Согласие на обработку персональных данных White Friday PC."
+        path="/consent"
+        noindex
+      />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Документы</p>

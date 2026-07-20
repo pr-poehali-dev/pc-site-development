@@ -1,4 +1,5 @@
 import Layout from '@/components/Layout';
+import SEO from '@/components/SEO';
 import { contactInfo } from '@/data/content';
 
 const operator = 'ИП Киргизова Анастасия Владимировна';
@@ -9,6 +10,12 @@ const email = contactInfo.email;
 const Privacy = () => {
   return (
     <Layout>
+      <SEO
+        title="Политика конфиденциальности | White Friday PC"
+        description="Политика обработки персональных данных White Friday PC."
+        path="/privacy"
+        noindex
+      />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Документы</p>

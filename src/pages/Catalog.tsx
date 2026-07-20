@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import Layout from '@/components/Layout';
+import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
 import { useBuilds } from '@/hooks/usePublicData';
@@ -28,6 +29,11 @@ const Catalog = () => {
 
   return (
     <Layout>
+      <SEO
+        title="Каталог готовых сборок ПК — купить игровой компьютер | White Friday PC"
+        description="Каталог собранных игровых и рабочих компьютеров с ценами и характеристиками. Любую сборку меняем под ваши задачи. Гарантия до 3 лет, доставка по России."
+        path="/catalog"
+      />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Каталог</p>

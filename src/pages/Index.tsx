@@ -1,5 +1,7 @@
 import { useCallback, useState } from 'react';
 import Layout from '@/components/Layout';
+import SEO from '@/components/SEO';
+import { localBusinessLd, organizationLd, websiteLd } from '@/data/seo';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
 import { useBuilds } from '@/hooks/usePublicData';
@@ -35,8 +37,27 @@ const Index = () => {
   const [warrantyApi, setWarrantyApi] = useState<CarouselApi>();
   const handleBuildSelect = useCallback((i: number) => setActiveBuild(i), []);
 
+  const ratingLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ComputerStore',
+    name: 'White Friday PC',
+    url: 'https://wf-pc.ru',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '5',
+      reviewCount: String(reviews.length),
+      bestRating: '5',
+    },
+  };
+
   return (
     <Layout>
+      <SEO
+        title="White Friday PC — сборка игровых компьютеров на заказ под ключ"
+        description="Собираем мощные игровые и рабочие ПК на заказ под ваши задачи. Индивидуальный подбор комплектующих, гарантия до 3 лет, доставка по России. Оставьте заявку!"
+        path="/"
+        jsonLd={[organizationLd, localBusinessLd, websiteLd, ratingLd]}
+      />
       {/* HERO */}
       <section className="relative grid-bg overflow-hidden lg:min-h-screen flex items-center">
         {/* Фоновое фото сборки */}

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
+import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { toast } from '@/hooks/use-toast';
 import func2url from '../../backend/func2url.json';
@@ -189,6 +190,11 @@ const BuildPC = () => {
 
   return (
     <Layout>
+      <SEO
+        title="Собрать компьютер на заказ — конфигуратор ПК под ваши задачи | White Friday PC"
+        description="Соберём компьютер с нуля под ваш бюджет и задачи: игры, работа, стриминг, монтаж. Подберём комплектующие, соберём и протестируем. Гарантия до 3 лет."
+        path="/build"
+      />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">Конструктор заявки</p>

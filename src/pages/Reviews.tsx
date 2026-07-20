@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import { useLocation } from 'react-router-dom';
 import Layout from '@/components/Layout';
+import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { reviews, truncateReview } from '@/data/content';
 import {
@@ -82,8 +83,34 @@ const Reviews = () => {
     };
   }, [location.hash]);
 
+  const reviewsLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ComputerStore',
+    name: 'White Friday PC',
+    url: 'https://wf-pc.ru',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '5',
+      reviewCount: String(reviews.length),
+      bestRating: '5',
+    },
+    review: reviews.slice(0, 20).map((r) => ({
+      '@type': 'Review',
+      author: { '@type': 'Person', name: r.name },
+      datePublished: r.date,
+      reviewRating: { '@type': 'Rating', ratingValue: String(r.rating), bestRating: '5' },
+      reviewBody: r.text,
+    })),
+  };
+
   return (
     <Layout>
+      <SEO
+        title="Отзывы клиентов о сборке ПК — White Friday PC"
+        description="Реальные отзывы наших клиентов о сборке игровых и рабочих компьютеров. Фото собранных ПК, оценки и впечатления заказчиков White Friday PC."
+        path="/reviews"
+        jsonLd={reviewsLd}
+      />
       <section className="container py-12 md:py-16">
         <div ref={aboutRef} className="max-w-3xl mx-auto animate-fade-up scroll-mt-28">
           <p className="text-secondary font-display uppercase tracking-widest text-sm mb-2">О нас</p>

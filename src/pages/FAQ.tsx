@@ -1,4 +1,5 @@
 import Layout from '@/components/Layout';
+import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
 import { faq } from '@/data/content';
@@ -10,8 +11,24 @@ import {
 } from '@/components/ui/accordion';
 
 const FAQ = () => {
+  const faqLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+
   return (
     <Layout>
+      <SEO
+        title="Вопросы и ответы о сборке ПК — доставка, гарантия, оплата | White Friday PC"
+        description="Ответы на частые вопросы: как заказать сборку ПК, сроки, доставка по России, гарантия до 3 лет, оплата, trade-in. Всё о работе White Friday PC."
+        path="/faq"
+        jsonLd={faqLd}
+      />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
           <p className="text-secondary font-display uppercase tracking-widest text-xl md:text-3xl mb-2">FAQ</p>

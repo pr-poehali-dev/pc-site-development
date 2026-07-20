@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
+import SEO, { SITE_URL } from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 import { useArticle, useArticles } from '@/hooks/usePublicData';
@@ -32,8 +33,50 @@ const ArticlePage = () => {
     }
   };
 
+  const articleLd = article
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: article.title,
+        description: article.excerpt || article.title,
+        image: article.cover_url || undefined,
+        author: { '@type': article.author ? 'Person' : 'Organization', name: article.author || 'White Friday PC' },
+        publisher: {
+          '@type': 'Organization',
+          name: 'White Friday PC',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/85b4ce1f-a80b-4f4f-bbc3-300fafd4b67e.png',
+          },
+        },
+        datePublished: article.published_at || undefined,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/articles/${article.slug}` },
+      }
+    : null;
+
+  const breadcrumbLd = article
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Статьи', item: `${SITE_URL}/articles` },
+          { '@type': 'ListItem', position: 2, name: article.title, item: `${SITE_URL}/articles/${article.slug}` },
+        ],
+      }
+    : null;
+
   return (
     <Layout>
+      {article && (
+        <SEO
+          title={`${article.title} | White Friday PC`}
+          description={article.excerpt || article.title}
+          path={`/articles/${article.slug}`}
+          image={article.cover_url || undefined}
+          type="article"
+          jsonLd={[articleLd, breadcrumbLd].filter(Boolean) as object[]}
+        />
+      )}
       <section className="container py-12 md:py-16 max-w-3xl">
         <Link to="/articles" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8">
           <Icon name="ArrowLeft" size={18} /> Все статьи
