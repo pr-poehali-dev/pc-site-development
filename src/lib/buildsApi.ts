@@ -5,17 +5,19 @@ const BUILDS_URL = func2url.builds;
 
 const TOKEN_KEY = 'wf_admin_token';
 
+export type MediaType = 'photo' | 'video' | 'embed';
+
 export interface ApiMedia {
   id?: number;
   url: string;
-  media_type: 'photo' | 'video';
+  media_type: MediaType;
   sort_order?: number;
 }
 
 export interface MediaInput {
   url?: string;
   base64?: string;
-  media_type: 'photo' | 'video';
+  media_type: MediaType;
 }
 
 export interface ApiBuild {

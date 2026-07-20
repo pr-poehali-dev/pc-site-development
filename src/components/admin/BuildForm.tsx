@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Icon from '@/components/ui/icon';
 import { saveBuild, type ApiBuild, type BuildInput } from '@/lib/buildsApi';
+import { isEmbedSupported } from '@/lib/videoEmbed';
 
 interface Props {
   build: ApiBuild | null;
@@ -9,8 +10,8 @@ interface Props {
 }
 
 interface MediaItem {
-  type: 'photo' | 'video';
-  url?: string;      // уже загруженный (существующий)
+  type: 'photo' | 'video' | 'embed';
+  url?: string;      // уже загруженный (существующий) или ссылка для embed
   base64?: string;   // новый файл для загрузки
   preview: string;   // что показать в форме
 }
@@ -69,7 +70,12 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
   const [media, setMedia] = useState<MediaItem[]>(() => {
     if (build?.media && build.media.length > 0) {
       return build.media.map((m) => ({
-        type: m.media_type === 'video' ? ('video' as const) : ('photo' as const),
+        type:
+          m.media_type === 'video'
+            ? ('video' as const)
+            : m.media_type === 'embed'
+            ? ('embed' as const)
+            : ('photo' as const),
         url: m.url,
         preview: m.url,
       }));
@@ -79,11 +85,25 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
     }
     return [];
   });
+  const [videoLink, setVideoLink] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   const photos = media.filter((m) => m.type === 'photo');
   const videos = media.filter((m) => m.type === 'video');
+  const embeds = media.filter((m) => m.type === 'embed');
+
+  const handleAddLink = () => {
+    const link = videoLink.trim();
+    if (!link) return;
+    if (!isEmbedSupported(link)) {
+      setError('Ссылку не удалось распознать. Поддерживаются YouTube, VK и RuTube.');
+      return;
+    }
+    setMedia((m) => [...m, { type: 'embed', url: link, preview: link }]);
+    setVideoLink('');
+    setError('');
+  };
 
   // Автосохранение черновика для новой сборки
   useEffect(() => {
@@ -241,6 +261,11 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
                   <div key={i} className="relative w-28 h-20 clip-corner border border-border overflow-hidden group bg-background">
                     {m.type === 'photo' ? (
                       <img src={m.preview} alt="preview" className="w-full h-full object-cover" />
+                    ) : m.type === 'embed' ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center text-primary gap-1 px-1">
+                        <Icon name="Link" size={20} />
+                        <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Ссылка</span>
+                      </div>
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center text-primary gap-1">
                         <Icon name="Video" size={22} />
@@ -280,8 +305,28 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
                 <input type="file" accept="video/*" onChange={handleAddVideo} className="hidden" />
               </label>
             </div>
+
+            {/* Видео по ссылке */}
+            <div className="flex gap-2 mt-3">
+              <input
+                type="url"
+                value={videoLink}
+                onChange={(e) => setVideoLink(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddLink(); } }}
+                placeholder="Ссылка на видео (YouTube, VK, RuTube)"
+                className="flex-1 min-w-0 bg-background border border-border px-4 py-2.5 clip-corner focus:border-primary focus:outline-none transition-colors text-sm"
+              />
+              <button
+                type="button"
+                onClick={handleAddLink}
+                className="px-5 py-2.5 bg-muted text-foreground font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 transition-opacity inline-flex items-center gap-2 shrink-0"
+              >
+                <Icon name="Plus" size={14} /> Добавить {embeds.length > 0 && `(${embeds.length})`}
+              </button>
+            </div>
+
             <p className="text-[11px] text-muted-foreground mt-2">
-              Фото — до {MAX_PHOTOS} шт. Первое фото становится обложкой. Видео — один файл до {MAX_VIDEO_MB} МБ.
+              Фото — до {MAX_PHOTOS} шт. Первое фото становится обложкой. Видео — файл до {MAX_VIDEO_MB} МБ или ссылка на YouTube / VK / RuTube.
             </p>
           </div>
 

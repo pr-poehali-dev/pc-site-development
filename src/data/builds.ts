@@ -1,6 +1,6 @@
 export interface BuildMedia {
   url: string;
-  type: 'photo' | 'video';
+  type: 'photo' | 'video' | 'embed';
 }
 
 export interface Build {

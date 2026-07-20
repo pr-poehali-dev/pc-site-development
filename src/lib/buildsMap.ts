@@ -7,7 +7,12 @@ export function apiToBuilds(list: ApiBuild[]): Build[] {
   return list.map((b) => {
     const media = (b.media || []).map((m) => ({
       url: m.url,
-      type: m.media_type === 'video' ? ('video' as const) : ('photo' as const),
+      type:
+        m.media_type === 'video'
+          ? ('video' as const)
+          : m.media_type === 'embed'
+          ? ('embed' as const)
+          : ('photo' as const),
     }));
     const firstPhoto = media.find((m) => m.type === 'photo')?.url;
     return {

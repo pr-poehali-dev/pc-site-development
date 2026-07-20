@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Icon from '@/components/ui/icon';
 import SmartImage from '@/components/ui/SmartImage';
 import ImageLightbox from '@/components/ImageLightbox';
+import { toEmbedUrl } from '@/lib/videoEmbed';
 import type { Build, BuildMedia } from '@/data/builds';
 
 interface Props {
@@ -31,7 +32,30 @@ const BuildGallery = ({ build, eager = false }: Props) => {
   return (
     <div className="relative overflow-hidden">
       <div className="relative aspect-[4/3] bg-background">
-        {current.type === 'video' ? (
+        {current.type === 'embed' ? (
+          (() => {
+            const embed = toEmbedUrl(current.url);
+            return embed ? (
+              <iframe
+                src={embed}
+                title={build.name}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowFullScreen
+                className="w-full h-full bg-black border-0"
+              />
+            ) : (
+              <a
+                href={current.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full h-full flex flex-col items-center justify-center gap-2 bg-black text-primary"
+              >
+                <Icon name="ExternalLink" size={28} />
+                <span className="text-sm font-display uppercase tracking-wide">Смотреть видео</span>
+              </a>
+            );
+          })()
+        ) : current.type === 'video' ? (
           <video
             src={current.url}
             controls
@@ -96,7 +120,7 @@ const BuildGallery = ({ build, eager = false }: Props) => {
               }`}
               aria-label={`Медиа ${i + 1}`}
             >
-              {m.type === 'video' ? (
+              {m.type === 'video' || m.type === 'embed' ? (
                 <div className="w-full h-full flex items-center justify-center bg-background text-primary">
                   <Icon name="Play" size={18} />
                 </div>
