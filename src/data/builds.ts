@@ -1,9 +1,15 @@
+export interface BuildMedia {
+  url: string;
+  type: 'photo' | 'video';
+}
+
 export interface Build {
   id: number;
   name: string;
   tagline: string;
   price: number;
   image: string;
+  media: BuildMedia[];
   accent: 'cyan' | 'magenta';
   buildDate?: string;
   specs: {

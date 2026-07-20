@@ -8,6 +8,16 @@ interface Props {
   onSaved: (isNew: boolean) => void;
 }
 
+interface MediaItem {
+  type: 'photo' | 'video';
+  url?: string;      // уже загруженный (существующий)
+  base64?: string;   // новый файл для загрузки
+  preview: string;   // что показать в форме
+}
+
+const MAX_PHOTOS = 3;
+const MAX_VIDEO_MB = 40;
+
 const DRAFT_KEY = 'wf_build_draft';
 
 const fields: { key: keyof BuildInput; label: string; icon: string }[] = [
@@ -56,9 +66,24 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
     }
     return buildDefault(build);
   });
-  const [imagePreview, setImagePreview] = useState(form.image_url || build?.image_url || '');
+  const [media, setMedia] = useState<MediaItem[]>(() => {
+    if (build?.media && build.media.length > 0) {
+      return build.media.map((m) => ({
+        type: m.media_type === 'video' ? ('video' as const) : ('photo' as const),
+        url: m.url,
+        preview: m.url,
+      }));
+    }
+    if (build?.image_url) {
+      return [{ type: 'photo' as const, url: build.image_url, preview: build.image_url }];
+    }
+    return [];
+  });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+
+  const photos = media.filter((m) => m.type === 'photo');
+  const videos = media.filter((m) => m.type === 'video');
 
   // Автосохранение черновика для новой сборки
   useEffect(() => {
@@ -108,17 +133,59 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
       reader.readAsDataURL(file);
     });
 
-  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleAddPhotos = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
+    if (files.length === 0) return;
+    const room = MAX_PHOTOS - photos.length;
+    if (room <= 0) {
+      setError(`Можно добавить максимум ${MAX_PHOTOS} фото.`);
+      return;
+    }
     try {
-      const compressed = await compressImage(file);
-      setForm((f) => ({ ...f, image_base64: compressed }));
-      setImagePreview(compressed);
+      const toAdd: MediaItem[] = [];
+      for (const file of files.slice(0, room)) {
+        const compressed = await compressImage(file);
+        toAdd.push({ type: 'photo', base64: compressed, preview: compressed });
+      }
+      setMedia((m) => [...m, ...toAdd]);
       setError('');
     } catch {
       setError('Не удалось обработать изображение. Попробуйте другое фото.');
     }
+  };
+
+  const handleAddVideo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (file.size > MAX_VIDEO_MB * 1024 * 1024) {
+      setError(`Видео слишком большое (макс. ${MAX_VIDEO_MB} МБ). Сожмите файл или загрузите короче.`);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      setMedia((m) => [...m.filter((x) => x.type !== 'video'), { type: 'video', base64: dataUrl, preview: dataUrl }]);
+      setError('');
+    };
+    reader.onerror = () => setError('Не удалось прочитать видео.');
+    reader.readAsDataURL(file);
+  };
+
+  const removeMedia = (target: MediaItem) => {
+    setMedia((m) => m.filter((x) => x !== target));
+  };
+
+  const movePhoto = (target: MediaItem, dir: -1 | 1) => {
+    setMedia((m) => {
+      const arr = [...m];
+      const idx = arr.indexOf(target);
+      const swap = idx + dir;
+      if (swap < 0 || swap >= arr.length) return m;
+      [arr[idx], arr[swap]] = [arr[swap], arr[idx]];
+      return arr;
+    });
   };
 
   const handleSave = async () => {
@@ -129,7 +196,11 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
     setError('');
     setSaving(true);
     try {
-      await saveBuild(form);
+      const mediaPayload = media.map((m) => ({
+        media_type: m.type,
+        ...(m.base64 ? { base64: m.base64 } : { url: m.url }),
+      }));
+      await saveBuild({ ...form, media: mediaPayload });
       localStorage.removeItem(DRAFT_KEY);
       onSaved(!build);
     } catch (err) {
@@ -158,22 +229,60 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
         )}
 
         <div className="space-y-5">
-          {/* Фото */}
+          {/* Медиа: фото + видео */}
           <div>
-            <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">Фото сборки</label>
-            <div className="flex items-center gap-4">
-              {imagePreview ? (
-                <img src={imagePreview} alt="preview" className="w-28 h-20 object-cover clip-corner border border-border" />
-              ) : (
-                <div className="w-28 h-20 flex items-center justify-center bg-background border border-border clip-corner text-muted-foreground">
-                  <Icon name="Image" size={24} />
-                </div>
-              )}
+            <label className="block text-sm text-muted-foreground mb-2 font-display uppercase tracking-wide">
+              Медиа сборки — до {MAX_PHOTOS} фото и/или видео
+            </label>
+
+            {media.length > 0 && (
+              <div className="flex flex-wrap gap-3 mb-3">
+                {media.map((m, i) => (
+                  <div key={i} className="relative w-28 h-20 clip-corner border border-border overflow-hidden group bg-background">
+                    {m.type === 'photo' ? (
+                      <img src={m.preview} alt="preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center text-primary gap-1">
+                        <Icon name="Video" size={22} />
+                        <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Видео</span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                      {m.type === 'photo' && (
+                        <>
+                          <button type="button" onClick={() => movePhoto(m, -1)} className="w-7 h-7 flex items-center justify-center bg-card border border-border clip-corner hover:text-primary" aria-label="Левее">
+                            <Icon name="ChevronLeft" size={14} />
+                          </button>
+                          <button type="button" onClick={() => movePhoto(m, 1)} className="w-7 h-7 flex items-center justify-center bg-card border border-border clip-corner hover:text-primary" aria-label="Правее">
+                            <Icon name="ChevronRight" size={14} />
+                          </button>
+                        </>
+                      )}
+                      <button type="button" onClick={() => removeMedia(m)} className="w-7 h-7 flex items-center justify-center bg-card border border-border clip-corner hover:text-destructive" aria-label="Удалить">
+                        <Icon name="Trash2" size={14} />
+                      </button>
+                    </div>
+                    {i === 0 && m.type === 'photo' && (
+                      <span className="absolute top-1 left-1 px-1.5 py-0.5 bg-primary text-primary-foreground text-[9px] font-display uppercase tracking-wide clip-corner">Обложка</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-3">
+              <label className={`px-5 py-2.5 bg-muted text-foreground font-display uppercase text-xs tracking-wider clip-corner transition-opacity cursor-pointer ${photos.length >= MAX_PHOTOS ? 'opacity-40 pointer-events-none' : 'hover:opacity-90'}`}>
+                <span className="inline-flex items-center gap-2"><Icon name="ImagePlus" size={14} /> Добавить фото</span>
+                <input type="file" accept="image/*" multiple onChange={handleAddPhotos} className="hidden" />
+              </label>
               <label className="px-5 py-2.5 bg-muted text-foreground font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 transition-opacity cursor-pointer">
-                Загрузить файл
-                <input type="file" accept="image/*" onChange={handleImage} className="hidden" />
+                <span className="inline-flex items-center gap-2"><Icon name="Video" size={14} /> {videos.length ? 'Заменить видео' : 'Добавить видео'}</span>
+                <input type="file" accept="video/*" onChange={handleAddVideo} className="hidden" />
               </label>
             </div>
+            <p className="text-[11px] text-muted-foreground mt-2">
+              Фото — до {MAX_PHOTOS} шт. Первое фото становится обложкой. Видео — один файл до {MAX_VIDEO_MB} МБ.
+            </p>
           </div>
 
           {/* Название и описание */}
@@ -268,7 +377,7 @@ const BuildForm = ({ build, onClose, onSaved }: Props) => {
                 onClick={() => {
                   localStorage.removeItem(DRAFT_KEY);
                   setForm(buildDefault(null));
-                  setImagePreview('');
+                  setMedia([]);
                 }}
                 className="px-7 py-3 border border-border text-muted-foreground font-display uppercase text-sm tracking-wider clip-corner hover:border-destructive/50 hover:text-destructive transition-colors"
               >

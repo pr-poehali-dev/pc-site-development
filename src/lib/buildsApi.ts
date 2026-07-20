@@ -5,12 +5,26 @@ const BUILDS_URL = func2url.builds;
 
 const TOKEN_KEY = 'wf_admin_token';
 
+export interface ApiMedia {
+  id?: number;
+  url: string;
+  media_type: 'photo' | 'video';
+  sort_order?: number;
+}
+
+export interface MediaInput {
+  url?: string;
+  base64?: string;
+  media_type: 'photo' | 'video';
+}
+
 export interface ApiBuild {
   id: number;
   name: string;
   tagline: string | null;
   price: number;
   image_url: string | null;
+  media?: ApiMedia[];
   build_date: string | null;
   cpu: string | null;
   gpu: string | null;
@@ -26,8 +40,9 @@ export interface ApiBuild {
   sort_order: number;
 }
 
-export type BuildInput = Partial<Omit<ApiBuild, 'id'>> & {
+export type BuildInput = Partial<Omit<ApiBuild, 'id' | 'media'>> & {
   image_base64?: string;
+  media?: MediaInput[];
   id?: number;
 };
 
