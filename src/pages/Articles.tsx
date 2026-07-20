@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
-import { fetchArticles, type ApiArticle } from '@/lib/articlesApi';
+import { type ApiArticle } from '@/lib/articlesApi';
+import { useArticles } from '@/hooks/usePublicData';
+import { ArticlesGridSkeleton } from '@/components/skeletons/CardSkeletons';
 import {
   Carousel,
   CarouselContent,
@@ -12,22 +14,8 @@ import {
 import CarouselDots from '@/components/CarouselDots';
 
 const Articles = () => {
-  const [articles, setArticles] = useState<ApiArticle[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: articles = [], isLoading: loading } = useArticles();
   const [articlesApi, setArticlesApi] = useState<CarouselApi>();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const list = await fetchArticles(false);
-        setArticles(list);
-      } catch {
-        setArticles([]);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
 
   return (
     <Layout>
@@ -43,9 +31,7 @@ const Articles = () => {
 
       <section className="container py-12 md:py-16">
         {loading ? (
-          <div className="flex justify-center py-16">
-            <Icon name="Loader" size={32} className="text-primary animate-spin" />
-          </div>
+          <ArticlesGridSkeleton count={6} />
         ) : articles.length === 0 ? (
           <div className="max-w-xl mx-auto text-center p-10 md:p-14 bg-card border border-border clip-corner animate-fade-up">
             <div className="w-16 h-16 mx-auto flex items-center justify-center bg-primary/10 text-primary clip-corner mb-6 border-glow-cyan">

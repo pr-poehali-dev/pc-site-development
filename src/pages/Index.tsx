@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
-import { type Build } from '@/data/builds';
-import { apiToBuilds } from '@/lib/buildsMap';
-import { fetchBuilds } from '@/lib/buildsApi';
+import { useBuilds } from '@/hooks/usePublicData';
 import BuildsCarousel from '@/components/BuildsCarousel';
 import { reviews, faq, truncateReview } from '@/data/content';
 import {
@@ -31,28 +29,11 @@ const homeReviews = reviews.slice(0, 3);
 const homeFaq = [...faq.slice(0, 3), faq[faq.length - 1]];
 
 const Index = () => {
-  const [builds, setBuilds] = useState<Build[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const { data: builds = [], isLoading: loading, isError: error, refetch } = useBuilds();
   const [activeBuild, setActiveBuild] = useState(0);
   const [reviewsApi, setReviewsApi] = useState<CarouselApi>();
   const [warrantyApi, setWarrantyApi] = useState<CarouselApi>();
   const handleBuildSelect = useCallback((i: number) => setActiveBuild(i), []);
-
-  const load = useCallback(() => {
-    setLoading(true);
-    setError(false);
-    fetchBuilds()
-      .then((list) => {
-        setBuilds(list.length > 0 ? apiToBuilds(list) : []);
-      })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    load();
-  }, [load]);
 
   return (
     <Layout>
@@ -151,7 +132,7 @@ const Index = () => {
               </div>
               <p className="font-display text-xl uppercase tracking-wide">Не удалось загрузить сборки</p>
               <p className="text-muted-foreground text-sm max-w-md">Проверьте соединение с интернетом и попробуйте ещё раз.</p>
-              <button onClick={load} className="inline-flex items-center gap-2 px-6 py-3 btn-primary font-display uppercase tracking-wider clip-corner">
+              <button onClick={() => refetch()} className="inline-flex items-center gap-2 px-6 py-3 btn-primary font-display uppercase tracking-wider clip-corner">
                 <Icon name="RotateCw" size={18} /> Обновить
               </button>
             </div>

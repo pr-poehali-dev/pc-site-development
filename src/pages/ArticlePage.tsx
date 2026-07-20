@@ -1,17 +1,16 @@
-import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
-import { fetchArticleBySlug, fetchArticles, type ApiArticle } from '@/lib/articlesApi';
+import { useArticle, useArticles } from '@/hooks/usePublicData';
+import { ArticleDetailSkeleton } from '@/components/skeletons/CardSkeletons';
 
 const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { toast } = useToast();
-  const [article, setArticle] = useState<ApiArticle | null>(null);
-  const [others, setOthers] = useState<ApiArticle[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const { data: article, isLoading: loading, isError: error } = useArticle(slug);
+  const { data: allArticles = [] } = useArticles();
+  const others = allArticles.filter((a) => a.slug !== slug).slice(0, 3);
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -32,19 +31,6 @@ const ArticlePage = () => {
     }
   };
 
-  useEffect(() => {
-    if (!slug) return;
-    setLoading(true);
-    setError(false);
-    fetchArticleBySlug(slug)
-      .then(setArticle)
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-    fetchArticles(false)
-      .then((list) => setOthers(list.filter((a) => a.slug !== slug).slice(0, 3)))
-      .catch(() => setOthers([]));
-  }, [slug]);
-
   return (
     <Layout>
       <section className="container py-12 md:py-16 max-w-3xl">
@@ -53,9 +39,7 @@ const ArticlePage = () => {
         </Link>
 
         {loading ? (
-          <div className="flex justify-center py-20">
-            <Icon name="Loader" size={32} className="text-primary animate-spin" />
-          </div>
+          <ArticleDetailSkeleton />
         ) : error || !article ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 mx-auto flex items-center justify-center bg-destructive/10 text-destructive clip-corner mb-6">

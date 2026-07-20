@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Layout from '@/components/Layout';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
-import { type Build } from '@/data/builds';
-import { fetchBuilds } from '@/lib/buildsApi';
-import { apiToBuilds } from '@/lib/buildsMap';
+import { useBuilds } from '@/hooks/usePublicData';
+import { BuildsGridSkeleton } from '@/components/skeletons/CardSkeletons';
 import CatalogCard from '@/components/CatalogCard';
 import {
   Carousel,
@@ -15,9 +14,7 @@ import {
 import CarouselDots from '@/components/CarouselDots';
 
 const Catalog = () => {
-  const [builds, setBuilds] = useState<Build[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const { data: builds = [], isLoading, isError, refetch } = useBuilds();
   const [buildsApi, setBuildsApi] = useState<CarouselApi>();
   const [showAll, setShowAll] = useState(false);
   const gridTopRef = useRef<HTMLDivElement>(null);
@@ -28,21 +25,6 @@ const Catalog = () => {
       return !v;
     });
   };
-
-  const load = () => {
-    setLoading(true);
-    setError(false);
-    fetchBuilds()
-      .then((list) => {
-        setBuilds(list.length > 0 ? apiToBuilds(list) : []);
-      })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  };
-
-  useEffect(() => {
-    load();
-  }, []);
 
   return (
     <Layout>
@@ -57,18 +39,16 @@ const Catalog = () => {
       </section>
 
       <section className="container py-12 md:py-16">
-        {loading ? (
-          <div className="flex items-center justify-center py-20 text-muted-foreground">
-            <Icon name="LoaderCircle" size={28} className="animate-spin" />
-          </div>
-        ) : error ? (
+        {isLoading ? (
+          <BuildsGridSkeleton count={6} />
+        ) : isError ? (
           <div className="flex flex-col items-center text-center gap-4 py-16">
             <div className="w-14 h-14 flex items-center justify-center bg-destructive/10 text-destructive clip-corner">
               <Icon name="WifiOff" size={28} />
             </div>
             <p className="font-display text-xl uppercase tracking-wide">Не удалось загрузить сборки</p>
             <p className="text-muted-foreground text-sm max-w-md">Проверьте соединение с интернетом и попробуйте ещё раз.</p>
-            <button onClick={load} className="inline-flex items-center gap-2 px-6 py-3 btn-primary font-display uppercase tracking-wider clip-corner">
+            <button onClick={() => refetch()} className="inline-flex items-center gap-2 px-6 py-3 btn-primary font-display uppercase tracking-wider clip-corner">
               <Icon name="RotateCw" size={18} /> Обновить
             </button>
           </div>
