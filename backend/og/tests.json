@@ -1,0 +1,22 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS возвращает 200",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Без slug отдаёт дефолтную OG-страницу",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Несуществующий slug отдаёт дефолт",
+      "method": "GET",
+      "path": "/?slug=nesushestvuet-999",
+      "expectedStatus": 200
+    }
+  ]
+}
