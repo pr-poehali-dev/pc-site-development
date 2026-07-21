@@ -6,6 +6,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useArticle, useArticles } from '@/hooks/usePublicData';
 import { ArticleDetailSkeleton } from '@/components/skeletons/CardSkeletons';
 import SmartImage from '@/components/ui/SmartImage';
+import func2url from '../../backend/func2url.json';
+
+const OG_URL = func2url.og;
 
 const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -15,7 +18,9 @@ const ArticlePage = () => {
   const others = allArticles.filter((a) => a.slug !== slug).slice(0, 3);
 
   const handleShare = async () => {
-    const url = window.location.href;
+    const url = article?.slug
+      ? `${OG_URL}?slug=${encodeURIComponent(article.slug)}`
+      : window.location.href;
     const title = article?.title || 'Статья White Friday PC';
     if (navigator.share) {
       try {
