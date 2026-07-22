@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 
 export const SITE_URL = 'https://wf-pc.ru';
-const DEFAULT_OG = `${SITE_URL}/og-image.jpg?v=3`;
+const DEFAULT_OG = `${SITE_URL}/og-image-v4.jpg`;
 
 interface SEOProps {
   title: string;
