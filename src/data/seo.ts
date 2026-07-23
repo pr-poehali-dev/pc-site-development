@@ -6,7 +6,7 @@ export const organizationLd = {
   name: 'White Friday PC',
   url: SITE_URL,
   logo: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/85b4ce1f-a80b-4f4f-bbc3-300fafd4b67e.png',
-  description: 'Сборка игровых и рабочих компьютеров на заказ под ключ. Индивидуальный подбор комплектующих, гарантия до 3 лет.',
+  description: 'Сборка игровых и рабочих компьютеров на заказ под ключ. Индивидуальный подбор комплектующих, гарантия до 3 лет от мастерской и до 10 лет на комплектующие, доставка по России и СНГ.',
   telephone: '+7 909 909-95-90',
   email: 'whitefriday.pc@gmail.com',
   sameAs: [
