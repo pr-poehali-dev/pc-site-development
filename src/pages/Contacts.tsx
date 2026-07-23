@@ -22,7 +22,7 @@ const requisites = [
   { icon: 'Building2', label: 'Наименование', value: COMPANY_LEGAL_NAME },
   { icon: 'FileText', label: 'ИНН', value: COMPANY_INN },
   { icon: 'FileCheck', label: 'ОГРНИП', value: COMPANY_OGRNIP },
-  { icon: 'MapPin', label: 'Адрес', value: 'г. Москва, Нагатинская улица, дом 28к2' },
+  { icon: 'Landmark', label: 'Расчётный счёт', value: '40802810420000213855' },
   { icon: 'Phone', label: 'Телефон', value: contactInfo.phone },
   { icon: 'Mail', label: 'E-mail', value: contactInfo.email },
 ];
