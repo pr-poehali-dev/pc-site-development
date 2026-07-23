@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import Layout from '@/components/Layout';
 import SEO from '@/components/SEO';
-import { localBusinessLd, organizationLd, websiteLd } from '@/data/seo';
+import { localBusinessLd, organizationLd, websiteLd, aggregateRatingLd } from '@/data/seo';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
 import { useBuilds } from '@/hooks/usePublicData';
@@ -42,12 +42,7 @@ const Index = () => {
     '@type': 'ComputerStore',
     name: 'White Friday PC',
     url: 'https://wf-pc.ru',
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '5',
-      reviewCount: String(reviews.length),
-      bestRating: '5',
-    },
+    aggregateRating: aggregateRatingLd(reviews),
   };
 
   return (

@@ -1,14 +1,31 @@
 import { SITE_URL } from '@/components/SEO';
 
+export const COMPANY_INN = '772585008234';
+export const COMPANY_OGRNIP = '324774600026339';
+export const COMPANY_LEGAL_NAME = 'ИП Киргизова Анастасия Владимировна';
+
 export const organizationLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'White Friday PC',
+  legalName: COMPANY_LEGAL_NAME,
   url: SITE_URL,
   logo: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/85b4ce1f-a80b-4f4f-bbc3-300fafd4b67e.png',
   description: 'Сборка игровых и рабочих компьютеров на заказ под ключ. Индивидуальный подбор комплектующих, гарантия до 3 лет от мастерской и до 10 лет на комплектующие, доставка по России и СНГ.',
   telephone: '+7 909 909-95-90',
   email: 'whitefriday.pc@gmail.com',
+  taxID: COMPANY_INN,
+  vatID: COMPANY_INN,
+  identifier: [
+    { '@type': 'PropertyValue', propertyID: 'ИНН', value: COMPANY_INN },
+    { '@type': 'PropertyValue', propertyID: 'ОГРНИП', value: COMPANY_OGRNIP },
+  ],
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Нагатинская улица, дом 28к2',
+    addressLocality: 'Москва',
+    addressCountry: 'RU',
+  },
   sameAs: [
     'https://vk.com/whitefriday_pc',
     'https://t.me/White_Friday_PC',
@@ -20,10 +37,16 @@ export const localBusinessLd = {
   '@context': 'https://schema.org',
   '@type': 'ComputerStore',
   name: 'White Friday PC',
+  legalName: COMPANY_LEGAL_NAME,
   url: SITE_URL,
   image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/85b4ce1f-a80b-4f4f-bbc3-300fafd4b67e.png',
   telephone: '+7 909 909-95-90',
   email: 'whitefriday.pc@gmail.com',
+  taxID: COMPANY_INN,
+  identifier: [
+    { '@type': 'PropertyValue', propertyID: 'ИНН', value: COMPANY_INN },
+    { '@type': 'PropertyValue', propertyID: 'ОГРНИП', value: COMPANY_OGRNIP },
+  ],
   priceRange: '₽₽',
   address: {
     '@type': 'PostalAddress',
@@ -44,6 +67,21 @@ export const websiteLd = {
   '@type': 'WebSite',
   name: 'White Friday PC',
   url: SITE_URL,
+};
+
+export const aggregateRatingLd = (reviews: { rating: number }[]) => {
+  const rated = reviews.filter((r) => r.rating > 0);
+  const count = rated.length || reviews.length;
+  const avg = rated.length
+    ? rated.reduce((s, r) => s + r.rating, 0) / rated.length
+    : 5;
+  return {
+    '@type': 'AggregateRating',
+    ratingValue: (Math.round(avg * 10) / 10).toFixed(1),
+    reviewCount: String(count),
+    bestRating: '5',
+    worstRating: '1',
+  };
 };
 
 interface BuildForLd {

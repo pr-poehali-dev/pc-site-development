@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/carousel';
 import CarouselDots from '@/components/CarouselDots';
 import ImageLightbox from '@/components/ImageLightbox';
-import { breadcrumbLd } from '@/data/seo';
+import { breadcrumbLd, aggregateRatingLd } from '@/data/seo';
 
 const aboutPhotos = [
   'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/7be32455-2ecb-4133-adaa-36c1f44dd867.jpg',
@@ -89,12 +89,7 @@ const Reviews = () => {
     '@type': 'ComputerStore',
     name: 'White Friday PC',
     url: 'https://wf-pc.ru',
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '5',
-      reviewCount: String(reviews.length),
-      bestRating: '5',
-    },
+    aggregateRating: aggregateRatingLd(reviews),
     review: reviews.slice(0, 20).map((r) => ({
       '@type': 'Review',
       author: { '@type': 'Person', name: r.name },
