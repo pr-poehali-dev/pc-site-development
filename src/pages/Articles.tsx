@@ -14,6 +14,7 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel';
 import CarouselDots from '@/components/CarouselDots';
+import { breadcrumbLd } from '@/data/seo';
 
 const Articles = () => {
   const { data: articles = [], isLoading: loading } = useArticles();
@@ -25,6 +26,10 @@ const Articles = () => {
         title="Блог о сборке ПК и комплектующих — статьи и гайды | White Friday PC"
         description="Полезные статьи и гайды о выборе комплектующих, сборке компьютеров и апгрейде. Разбираемся, какое железо выбрать под игры и работу в 2026 году."
         path="/articles"
+        jsonLd={breadcrumbLd([
+          { name: 'Главная', path: '/' },
+          { name: 'Статьи', path: '/articles' },
+        ])}
       />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">

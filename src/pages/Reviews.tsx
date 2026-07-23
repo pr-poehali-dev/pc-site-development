@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/carousel';
 import CarouselDots from '@/components/CarouselDots';
 import ImageLightbox from '@/components/ImageLightbox';
+import { breadcrumbLd } from '@/data/seo';
 
 const aboutPhotos = [
   'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/7be32455-2ecb-4133-adaa-36c1f44dd867.jpg',
@@ -109,7 +110,13 @@ const Reviews = () => {
         title="Отзывы клиентов о сборке ПК — White Friday PC"
         description="Реальные отзывы наших клиентов о сборке игровых и рабочих компьютеров. Фото собранных ПК, оценки и впечатления заказчиков White Friday PC."
         path="/reviews"
-        jsonLd={reviewsLd}
+        jsonLd={[
+          reviewsLd,
+          breadcrumbLd([
+            { name: 'Главная', path: '/' },
+            { name: 'Отзывы', path: '/reviews' },
+          ]),
+        ]}
       />
       <section className="container py-12 md:py-16">
         <div ref={aboutRef} className="max-w-3xl mx-auto animate-fade-up scroll-mt-28">

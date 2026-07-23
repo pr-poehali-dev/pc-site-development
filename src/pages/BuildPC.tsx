@@ -5,6 +5,7 @@ import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { toast } from '@/hooks/use-toast';
 import func2url from '../../backend/func2url.json';
+import { breadcrumbLd } from '@/data/seo';
 
 const ORDERS_URL = func2url['orders'];
 
@@ -194,6 +195,10 @@ const BuildPC = () => {
         title="Собрать компьютер на заказ — конфигуратор ПК под ваши задачи | White Friday PC"
         description="Соберём компьютер с нуля под ваш бюджет и задачи: игры, работа, стриминг, монтаж. Подберём комплектующие, соберём и протестируем. Гарантия до 3 лет."
         path="/build"
+        jsonLd={breadcrumbLd([
+          { name: 'Главная', path: '/' },
+          { name: 'Собрать ПК', path: '/build' },
+        ])}
       />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
@@ -212,7 +217,7 @@ const BuildPC = () => {
               <Icon name="CheckCircle2" size={36} />
             </div>
             <h2 className="font-display text-2xl md:text-3xl uppercase tracking-wide">Ваша заявка отправлена!</h2>
-            <p className="text-muted-foreground text-sm max-w-md">Наши менеджеры отвечают на заявки с 11 до 22 часов по Московскому времени!</p>
+            <p className="text-muted-foreground text-sm max-w-md">Наши менеджеры отвечают на заявки с 11 до 21 часа по Московскому времени!</p>
           </div>
         ) : (
         <>

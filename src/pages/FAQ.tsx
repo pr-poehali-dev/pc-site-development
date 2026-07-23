@@ -3,6 +3,7 @@ import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
 import { faq } from '@/data/content';
+import { breadcrumbLd } from '@/data/seo';
 import {
   Accordion,
   AccordionContent,
@@ -27,7 +28,13 @@ const FAQ = () => {
         title="Вопросы и ответы о сборке ПК — доставка, гарантия, оплата | White Friday PC"
         description="Ответы на частые вопросы: как заказать сборку ПК, сроки, доставка по России, гарантия до 3 лет, оплата, trade-in. Всё о работе White Friday PC."
         path="/faq"
-        jsonLd={faqLd}
+        jsonLd={[
+          faqLd,
+          breadcrumbLd([
+            { name: 'Главная', path: '/' },
+            { name: 'Вопросы и ответы', path: '/faq' },
+          ]),
+        ]}
       />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">

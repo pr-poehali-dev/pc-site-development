@@ -5,7 +5,7 @@ import Layout from '@/components/Layout';
 import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { socials, contactInfo } from '@/data/content';
-import { localBusinessLd } from '@/data/seo';
+import { localBusinessLd, breadcrumbLd } from '@/data/seo';
 import func2url from '../../backend/func2url.json';
 
 const ORDERS_URL = func2url['orders'];
@@ -85,9 +85,15 @@ const Contacts = () => {
     <Layout>
       <SEO
         title="Контакты White Friday PC — адрес, телефон, режим работы"
-        description="Как с нами связаться: телефон, email, адрес мастерской в Москве, пункты выдачи в Санкт-Петербурге и Краснодаре. Ежедневно 12:00–21:00."
+        description="Как с нами связаться: телефон, email, адрес мастерской в Москве, пункты выдачи в Санкт-Петербурге и Краснодаре. Ежедневно 11:00–21:00."
         path="/contacts"
-        jsonLd={localBusinessLd}
+        jsonLd={[
+          localBusinessLd,
+          breadcrumbLd([
+            { name: 'Главная', path: '/' },
+            { name: 'Контакты', path: '/contacts' },
+          ]),
+        ]}
       />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">
@@ -151,7 +157,7 @@ const Contacts = () => {
                 <Icon name="CheckCircle2" size={30} />
               </div>
               <p className="font-display text-xl uppercase tracking-wide">Ваша заявка отправлена!</p>
-              <p className="text-muted-foreground text-sm">Наши менеджеры отвечают на заявки с 11 до 22 часов по Московскому времени!</p>
+              <p className="text-muted-foreground text-sm">Наши менеджеры отвечают на заявки с 11 до 21 часа по Московскому времени!</p>
             </div>
           ) : (
             <>

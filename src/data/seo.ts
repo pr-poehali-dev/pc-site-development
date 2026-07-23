@@ -31,7 +31,7 @@ export const localBusinessLd = {
     addressLocality: 'Москва',
     addressCountry: 'RU',
   },
-  openingHours: 'Mo-Su 12:00-21:00',
+  openingHours: 'Mo-Su 11:00-21:00',
   sameAs: [
     'https://vk.com/whitefriday_pc',
     'https://t.me/White_Friday_PC',
@@ -45,3 +45,14 @@ export const websiteLd = {
   name: 'White Friday PC',
   url: SITE_URL,
 };
+
+export const breadcrumbLd = (items: { name: string; path: string }[]) => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: item.name,
+    item: `${SITE_URL}${item.path}`,
+  })),
+});
