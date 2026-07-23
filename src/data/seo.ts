@@ -73,7 +73,7 @@ export const catalogItemListLd = (builds: BuildForLd[]) => ({
         '@type': 'Offer',
         price: b.price,
         priceCurrency: 'RUB',
-        availability: 'https://schema.org/InStock',
+        availability: 'https://schema.org/PreOrder',
         url: `${SITE_URL}/catalog`,
         seller: { '@type': 'Organization', name: 'White Friday PC' },
       };
