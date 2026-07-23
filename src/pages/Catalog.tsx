@@ -13,7 +13,7 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel';
 import CarouselDots from '@/components/CarouselDots';
-import { breadcrumbLd } from '@/data/seo';
+import { breadcrumbLd, catalogItemListLd } from '@/data/seo';
 
 const Catalog = () => {
   const { data: builds = [], isLoading, isError, refetch } = useBuilds();
@@ -34,10 +34,13 @@ const Catalog = () => {
         title="Каталог готовых сборок ПК — купить игровой компьютер | White Friday PC"
         description="Каталог собранных игровых и рабочих компьютеров с ценами и характеристиками. Любую сборку меняем под ваши задачи. Гарантия до 3 лет, доставка по России."
         path="/catalog"
-        jsonLd={breadcrumbLd([
-          { name: 'Главная', path: '/' },
-          { name: 'Каталог', path: '/catalog' },
-        ])}
+        jsonLd={[
+          breadcrumbLd([
+            { name: 'Главная', path: '/' },
+            { name: 'Каталог', path: '/catalog' },
+          ]),
+          ...(builds.length > 0 ? [catalogItemListLd(builds)] : []),
+        ]}
       />
       <section className="grid-bg border-b border-border">
         <div className="container py-12 md:py-16 text-center">

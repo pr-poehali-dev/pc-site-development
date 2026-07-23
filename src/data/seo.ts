@@ -46,6 +46,42 @@ export const websiteLd = {
   url: SITE_URL,
 };
 
+interface BuildForLd {
+  name: string;
+  tagline?: string;
+  price: number;
+  image?: string;
+  specs?: { cpu?: string; gpu?: string };
+}
+
+export const catalogItemListLd = (builds: BuildForLd[]) => ({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Каталог сборок ПК White Friday PC',
+  itemListElement: builds.map((b, i) => {
+    const desc = b.tagline || [b.specs?.cpu, b.specs?.gpu].filter(Boolean).join(', ');
+    const product: Record<string, unknown> = {
+      '@type': 'Product',
+      name: b.name,
+      brand: { '@type': 'Brand', name: 'White Friday PC' },
+      category: 'Игровые и рабочие компьютеры',
+    };
+    if (desc) product.description = desc;
+    if (b.image && !b.image.startsWith('data:')) product.image = b.image;
+    if (b.price > 0) {
+      product.offers = {
+        '@type': 'Offer',
+        price: b.price,
+        priceCurrency: 'RUB',
+        availability: 'https://schema.org/InStock',
+        url: `${SITE_URL}/catalog`,
+        seller: { '@type': 'Organization', name: 'White Friday PC' },
+      };
+    }
+    return { '@type': 'ListItem', position: i + 1, item: product };
+  }),
+});
+
 export const breadcrumbLd = (items: { name: string; path: string }[]) => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
