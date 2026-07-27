@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { ReactNode, useState } from 'react';
 import { socials, contactInfo } from '@/data/content';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 const navItems = [
   { to: '/', label: 'Главная' },
@@ -177,6 +178,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <Link to="/consent" className="hover:text-white transition-colors">Согласие на обработку данных</Link>
         </div>
       </footer>
+
+      <ScrollToTopButton />
     </div>
   );
 };

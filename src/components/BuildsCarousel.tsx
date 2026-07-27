@@ -35,10 +35,12 @@ const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: 
       onSelect?.(i);
     };
     emblaApi.on('select', handleSelect);
+    emblaApi.on('pointerDown', resetAutoplay);
     handleSelect();
     resetAutoplay();
     return () => {
       emblaApi.off('select', handleSelect);
+      emblaApi.off('pointerDown', resetAutoplay);
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [emblaApi, resetAutoplay, onSelect]);
