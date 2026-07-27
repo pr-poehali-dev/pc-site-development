@@ -28,7 +28,7 @@ const SmartImage = ({
         alt={alt}
         loading={eager ? 'eager' : 'lazy'}
         decoding="async"
-        fetchPriority={eager ? 'high' : 'auto'}
+        {...{ fetchpriority: eager ? 'high' : 'auto' }}
         onLoad={() => setLoaded(true)}
         className={cn(
           'transition-opacity duration-500 ease-out',
