@@ -56,6 +56,12 @@ export const localBusinessLd = {
     addressCountry: 'RU',
   },
   openingHours: 'Mo-Su 11:00-21:00',
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: '55.676605',
+    longitude: '37.657341',
+  },
+  hasMap: 'https://yandex.ru/maps/?pt=37.657341,55.676605&z=17',
   sameAs: [
     'https://vk.com/whitefriday_pc',
     'https://t.me/White_Friday_PC',
