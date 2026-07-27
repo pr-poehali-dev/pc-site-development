@@ -6,10 +6,7 @@ const ScrollToTopButton = () => {
 
   useEffect(() => {
     const onScroll = () => {
-      const scrolled = window.scrollY;
-      const height = document.documentElement.scrollHeight - window.innerHeight;
-      const ratio = height > 0 ? scrolled / height : 0;
-      setVisible(ratio >= 0.45);
+      setVisible(window.scrollY > 400);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -26,11 +23,11 @@ const ScrollToTopButton = () => {
     <button
       onClick={scrollTop}
       aria-label="Наверх"
-      className={`md:hidden fixed bottom-5 right-5 z-50 w-12 h-12 flex items-center justify-center bg-primary text-primary-foreground border border-primary/60 clip-corner btn-glow-green transition-all duration-300 ${
+      className={`md:hidden fixed bottom-6 right-4 z-50 w-14 h-14 flex items-center justify-center rounded-full bg-primary text-primary-foreground border-2 border-primary shadow-[0_0_20px_rgba(34,197,94,0.7)] transition-all duration-300 active:scale-90 ${
         visible ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
       }`}
     >
-      <Icon name="ChevronUp" size={26} />
+      <Icon name="ArrowUp" size={28} />
     </button>
   );
 };
