@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
+import SEO from '@/components/SEO';
 import BuildForm from '@/components/admin/BuildForm';
 import ArticleForm from '@/components/admin/ArticleForm';
 import AdminCreate from '@/components/admin/AdminCreate';
@@ -168,6 +169,7 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-background grid-bg">
+      <SEO title="Админ-панель — White Friday PC" description="Служебная страница" path="/yadirfetihwwork" noindex />
       {toast && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-3 px-6 py-4 bg-green-600 text-white font-display uppercase text-sm tracking-wide clip-corner shadow-lg animate-fade-up">
           <Icon name="CircleCheck" size={20} />

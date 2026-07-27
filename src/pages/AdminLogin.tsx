@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
+import SEO from '@/components/SEO';
 import { login, needsSetup, setupAdmin } from '@/lib/buildsApi';
 
 const AdminLogin = () => {
@@ -47,6 +48,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background grid-bg px-4">
+      <SEO title="Вход — White Friday PC" description="Служебная страница" path="/yadirfetihwwork/login" noindex />
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md p-8 bg-card border border-border clip-corner space-y-5"
