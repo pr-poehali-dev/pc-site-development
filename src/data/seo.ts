@@ -3,6 +3,7 @@ import { SITE_URL } from '@/components/SEO';
 export const COMPANY_INN = '772585008234';
 export const COMPANY_OGRNIP = '324774600026339';
 export const COMPANY_LEGAL_NAME = 'ИП Киргизова Анастасия Владимировна';
+export const COMPANY_PHONE = '+79099099590';
 
 export const organizationLd = {
   '@context': 'https://schema.org',
@@ -12,7 +13,7 @@ export const organizationLd = {
   url: SITE_URL,
   logo: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/85b4ce1f-a80b-4f4f-bbc3-300fafd4b67e.png',
   description: 'Сборка игровых и рабочих компьютеров на заказ под ключ. Индивидуальный подбор комплектующих, гарантия до 3 лет от мастерской и до 10 лет на комплектующие, доставка по России и СНГ.',
-  telephone: '+7 909 909-95-90',
+  telephone: COMPANY_PHONE,
   email: 'whitefriday.pc@gmail.com',
   taxID: COMPANY_INN,
   vatID: COMPANY_INN,
@@ -40,7 +41,7 @@ export const localBusinessLd = {
   legalName: COMPANY_LEGAL_NAME,
   url: SITE_URL,
   image: 'https://cdn.poehali.dev/projects/0a71aae6-cb4d-4e72-8bca-09cec031315c/bucket/85b4ce1f-a80b-4f4f-bbc3-300fafd4b67e.png',
-  telephone: '+7 909 909-95-90',
+  telephone: COMPANY_PHONE,
   email: 'whitefriday.pc@gmail.com',
   taxID: COMPANY_INN,
   identifier: [
