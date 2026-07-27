@@ -91,7 +91,7 @@ const BuildsCarousel = ({ builds, onSelect }: { builds: Build[]; onSelect?: (i: 
                   </div>
 
                   <div className="flex flex-wrap md:flex-nowrap gap-3">
-                    <Link to="/contacts" className="px-5 py-2.5 btn-primary font-display uppercase text-xs tracking-wider clip-corner btn-glow-green whitespace-nowrap">
+                    <Link to={`/contacts?build=${encodeURIComponent(b.name)}`} className="px-5 py-2.5 btn-primary font-display uppercase text-xs tracking-wider clip-corner btn-glow-green whitespace-nowrap">
                       Нужен этот вариант
                     </Link>
                     <Link to="/catalog" className="px-5 py-2.5 btn-primary font-display uppercase text-xs tracking-wider clip-corner whitespace-nowrap">
