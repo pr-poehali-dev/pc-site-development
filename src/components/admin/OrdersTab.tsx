@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import Icon from '@/components/ui/icon';
 import {
   fetchOrders,
+  fetchOrderHistory,
   markOrderViewed,
   setOrderStatus,
   STATUS_LABEL,
   type ApiOrder,
   type OrderStatus,
+  type OrderHistoryItem,
 } from '@/lib/ordersApi';
 
 const STATUS_STYLE: Record<OrderStatus, string> = {
@@ -61,6 +63,16 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
   const [expanded, setExpanded] = useState<number | null>(null);
   const [busy, setBusy] = useState<number | null>(null);
   const [filter, setFilter] = useState<OrderStatus>('new');
+  const [history, setHistory] = useState<Record<number, OrderHistoryItem[]>>({});
+
+  const loadHistory = async (id: number) => {
+    try {
+      const h = await fetchOrderHistory(id);
+      setHistory((m) => ({ ...m, [id]: h }));
+    } catch {
+      /* ignore */
+    }
+  };
 
   const load = async () => {
     try {
@@ -84,11 +96,14 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
   const openCard = async (o: ApiOrder) => {
     const next = expanded === o.id ? null : o.id;
     setExpanded(next);
-    if (next !== null && !o.viewed_by) {
-      try {
-        patch(await markOrderViewed(o.id));
-      } catch {
-        /* ignore */
+    if (next !== null) {
+      loadHistory(o.id);
+      if (!o.viewed_by) {
+        try {
+          patch(await markOrderViewed(o.id));
+        } catch {
+          /* ignore */
+        }
       }
     }
   };
@@ -98,6 +113,7 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
     try {
       patch(await setOrderStatus(o.id, status));
       onToast(`Статус заявки #${o.order_number}: ${STATUS_LABEL[status]}`);
+      loadHistory(o.id);
     } catch (e) {
       onToast(e instanceof Error ? e.message : 'Ошибка');
     } finally {
@@ -272,6 +288,32 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
                         </button>
                       ))}
                     </div>
+
+                    {history[o.id] && history[o.id].length > 0 && (
+                      <div className="pt-3 mt-1 border-t border-border">
+                        <p className="flex items-center gap-1.5 text-muted-foreground font-display uppercase text-xs tracking-wider mb-3">
+                          <Icon name="History" size={14} /> История статусов
+                        </p>
+                        <div className="space-y-0">
+                          {history[o.id].map((h, i) => (
+                            <div key={i} className="flex items-start gap-3 pb-3 last:pb-0 relative">
+                              <div className="flex flex-col items-center shrink-0 pt-0.5">
+                                <span className={`w-6 h-6 flex items-center justify-center border clip-corner ${STATUS_STYLE[h.status] || 'border-border text-muted-foreground'}`}>
+                                  <Icon name={STATUS_ICON[h.status] || 'Circle'} size={12} />
+                                </span>
+                                {i < history[o.id].length - 1 && <span className="w-px flex-1 min-h-4 bg-border mt-1" />}
+                              </div>
+                              <div className="min-w-0 pb-1">
+                                <p className="text-sm font-display">{STATUS_LABEL[h.status] || h.status}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {h.changed_by === 'site' ? 'Заявка с сайта' : h.changed_by || '—'} · {fmtDate(h.created_at)}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

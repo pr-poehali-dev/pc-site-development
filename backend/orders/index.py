@@ -255,6 +255,18 @@ def update_status(conn, order_id: int, status: str, admin_name: str) -> dict:
     return serialize(dict(order)) if order else None
 
 
+def list_history(conn, order_id: int) -> list:
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(
+        "SELECT status, changed_by, created_at FROM order_status_history "
+        "WHERE order_id = %s ORDER BY created_at ASC, id ASC",
+        (order_id,)
+    )
+    rows = cur.fetchall()
+    cur.close()
+    return [serialize(dict(r)) for r in rows]
+
+
 def handler(event: dict, context) -> dict:
     '''Заявки: приём с сайта (POST), список и управление статусами для админов (GET/PUT).'''
     method = event.get('httpMethod', 'POST')
@@ -296,6 +308,9 @@ def handler(event: dict, context) -> dict:
             if action == 'view':
                 order = mark_viewed(conn, int(order_id), admin_name)
                 return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'order': order})}
+
+            if action == 'history':
+                return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'history': list_history(conn, int(order_id))})}
 
             if action == 'status':
                 status = body.get('status')

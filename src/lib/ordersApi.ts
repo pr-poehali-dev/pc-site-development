@@ -75,3 +75,20 @@ export async function setOrderStatus(id: number, status: OrderStatus): Promise<A
   if (!res.ok) throw new Error(data.error || 'Ошибка изменения статуса');
   return data.order || null;
 }
+
+export interface OrderHistoryItem {
+  status: OrderStatus;
+  changed_by: string | null;
+  created_at: string;
+}
+
+export async function fetchOrderHistory(id: number): Promise<OrderHistoryItem[]> {
+  const res = await fetch(ORDERS_URL, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Auth-Token': getToken() || '' },
+    body: JSON.stringify({ id, action: 'history' }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Ошибка загрузки истории');
+  return data.history || [];
+}
