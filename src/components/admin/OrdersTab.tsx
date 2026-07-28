@@ -57,6 +57,20 @@ const DETAIL_LABELS: Record<string, string> = {
 const fmtDate = (s: string | null) =>
   s ? new Date(s).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
 
+const STALE_DAYS = 3;
+const FINAL_STATUSES: OrderStatus[] = ['done', 'rejected'];
+
+const daysStale = (o: ApiOrder): number => {
+  if (FINAL_STATUSES.includes(o.status)) return 0;
+  const last = new Date(o.updated_at || o.created_at).getTime();
+  if (!last) return 0;
+  const days = Math.floor((Date.now() - last) / 86400000);
+  return days >= STALE_DAYS ? days : 0;
+};
+
+const pluralDays = (n: number) =>
+  n % 10 === 1 && n % 100 !== 11 ? 'день' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'дня' : 'дней';
+
 const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
   const [orders, setOrders] = useState<ApiOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -198,11 +212,12 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
         <div className="space-y-3">
           {visible.map((o) => {
             const isOpen = expanded === o.id;
+            const stale = daysStale(o);
             return (
               <div
                 key={o.id}
                 className={`bg-card border clip-corner transition-colors ${
-                  o.status === 'new' ? 'border-primary/40' : 'border-border'
+                  stale ? 'border-red-500/60 shadow-[0_0_0_1px_rgba(239,68,68,0.35)]' : o.status === 'new' ? 'border-primary/40' : 'border-border'
                 }`}
               >
                 <button
@@ -222,6 +237,11 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
                         {o.customer_phone && <span className="flex items-center gap-1"><Icon name="Phone" size={12} /> {o.customer_phone}</span>}
                         <span>{SOURCE_LABEL[o.source || 'site'] || o.source}</span>
                         <span className="flex items-center gap-1"><Icon name="Clock" size={12} /> {fmtDate(o.created_at)}</span>
+                        {stale > 0 && (
+                          <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-red-500/15 text-red-400 font-display uppercase text-[10px] tracking-wider">
+                            <Icon name="TriangleAlert" size={12} /> Без движения {stale} {pluralDays(stale)}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
