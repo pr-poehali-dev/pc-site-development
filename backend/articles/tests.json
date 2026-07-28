@@ -28,6 +28,24 @@
       "method": "OPTIONS",
       "path": "/",
       "expectedStatus": 200
+    },
+    {
+      "name": "Просмотр несуществующей статьи возвращает 404",
+      "method": "POST",
+      "path": "/",
+      "body": {"action": "view", "id": 999999},
+      "expectedStatus": 404,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Голос с некорректными данными отклоняется",
+      "method": "POST",
+      "path": "/",
+      "body": {"action": "vote", "id": 999999, "vote": 5, "visitor_id": "abc"},
+      "expectedStatus": 400,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
     }
   ]
 }

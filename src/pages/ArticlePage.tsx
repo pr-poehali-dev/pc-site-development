@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useArticle, useArticles } from '@/hooks/usePublicData';
 import { ArticleDetailSkeleton } from '@/components/skeletons/CardSkeletons';
 import SmartImage from '@/components/ui/SmartImage';
+import ArticleRating from '@/components/ArticleRating';
 
 const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -134,6 +135,8 @@ const ArticlePage = () => {
             <div className="prose prose-invert max-w-none whitespace-pre-wrap leading-relaxed text-foreground/90">
               {article.content}
             </div>
+
+            <ArticleRating article={article} />
 
             {others.length > 0 && (
               <div className="mt-16 pt-10 border-t border-border">

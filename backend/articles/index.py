@@ -67,11 +67,23 @@ def _upload_cover(cover_base64: str) -> str:
     return f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{key}"
 
 
+def _get_visitor_vote(cur, article_id: int, visitor_id: str):
+    if not visitor_id:
+        return None
+    cur.execute(
+        "SELECT vote FROM article_votes WHERE article_id = %s AND visitor_id = %s",
+        (article_id, visitor_id)
+    )
+    row = cur.fetchone()
+    return row['vote'] if row else None
+
+
 def handler(event: dict, context):
     '''
     Управление статьями блога White Friday PC.
     GET — список опубликованных статей (или все с ?all=1 и токеном админа).
     POST/PUT/DELETE — создание, изменение и удаление статей (только для админов).
+    POST action=view/vote — просмотры и оценки (лайк/дизлайк), доступно всем.
     '''
     method = event.get('httpMethod', 'GET')
     if method == 'OPTIONS':
@@ -86,10 +98,63 @@ def handler(event: dict, context):
         headers = event.get('headers') or {}
         token = headers.get('X-Auth-Token') or headers.get('x-auth-token') or ''
 
+        # --- Публичные действия: просмотр и голосование (без авторизации) ---
+        if method == 'POST':
+            try:
+                pre_body = json.loads(event.get('body') or '{}')
+            except Exception:
+                pre_body = {}
+            action = pre_body.get('action')
+
+            if action == 'view':
+                aid = pre_body.get('id')
+                if not aid:
+                    return _resp(400, {'error': 'Не указан id статьи'})
+                cur.execute(
+                    "UPDATE articles SET views = COALESCE(views, 0) + 1 WHERE id = %s "
+                    "RETURNING views, likes, dislikes",
+                    (aid,)
+                )
+                r = cur.fetchone()
+                if not r:
+                    return _resp(404, {'error': 'Статья не найдена'})
+                return _resp(200, {'views': r['views'], 'likes': r['likes'], 'dislikes': r['dislikes']})
+
+            if action == 'vote':
+                aid = pre_body.get('id')
+                visitor = (pre_body.get('visitor_id') or '').strip()[:64]
+                vote = pre_body.get('vote')
+                if not aid or not visitor or vote not in (1, -1):
+                    return _resp(400, {'error': 'Некорректные данные оценки'})
+                cur.execute(
+                    "SELECT vote FROM article_votes WHERE article_id = %s AND visitor_id = %s",
+                    (aid, visitor)
+                )
+                if cur.fetchone():
+                    cur.execute("SELECT likes, dislikes FROM articles WHERE id = %s", (aid,))
+                    r = cur.fetchone() or {'likes': 0, 'dislikes': 0}
+                    return _resp(200, {'likes': r['likes'], 'dislikes': r['dislikes'],
+                                       'my_vote': None, 'already': True})
+                cur.execute(
+                    "INSERT INTO article_votes (article_id, visitor_id, vote) VALUES (%s, %s, %s)",
+                    (aid, visitor, vote)
+                )
+                col = 'likes' if vote == 1 else 'dislikes'
+                cur.execute(
+                    f"UPDATE articles SET {col} = COALESCE({col}, 0) + 1 WHERE id = %s "
+                    "RETURNING likes, dislikes",
+                    (aid,)
+                )
+                r = cur.fetchone()
+                if not r:
+                    return _resp(404, {'error': 'Статья не найдена'})
+                return _resp(200, {'likes': r['likes'], 'dislikes': r['dislikes'], 'my_vote': vote})
+
         if method == 'GET':
             params = event.get('queryStringParameters') or {}
             want_all = params.get('all') == '1'
             slug = params.get('slug')
+            visitor = (params.get('visitor_id') or '').strip()[:64]
 
             if slug:
                 cur.execute("SELECT * FROM articles WHERE slug = %s", (slug,))
@@ -98,7 +163,9 @@ def handler(event: dict, context):
                     return _resp(404, {'error': 'Статья не найдена'})
                 if not row['is_published'] and not _is_admin(cur, token):
                     return _resp(404, {'error': 'Статья не найдена'})
-                return _resp(200, {'article': _row_to_dict(row)})
+                article = _row_to_dict(row)
+                article['my_vote'] = _get_visitor_vote(cur, row['id'], visitor)
+                return _resp(200, {'article': article})
 
             if want_all:
                 if not _is_admin(cur, token):

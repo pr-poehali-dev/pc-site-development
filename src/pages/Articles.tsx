@@ -71,7 +71,12 @@ const Articles = () => {
                 <div className="p-6 flex flex-col flex-1">
                   <h3 className="font-display text-xl uppercase tracking-wide mb-2 group-hover:text-primary transition-colors">{a.title}</h3>
                   {a.excerpt && <p className="text-muted-foreground text-sm flex-1">{a.excerpt}</p>}
-                  <div className="flex items-center justify-between gap-2 mt-4 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-3 mt-4 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1"><Icon name="Eye" size={13} /> {(a.views ?? 0).toLocaleString('ru-RU')}</span>
+                    <span className="flex items-center gap-1"><Icon name="ThumbsUp" size={13} /> {a.likes ?? 0}</span>
+                    <span className="flex items-center gap-1"><Icon name="ThumbsDown" size={13} /> {a.dislikes ?? 0}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 mt-2 text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">
                       {a.author && <span>{a.author}</span>}
                       {a.published_at && (
