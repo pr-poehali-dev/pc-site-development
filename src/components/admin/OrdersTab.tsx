@@ -64,6 +64,7 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
   const [busy, setBusy] = useState<number | null>(null);
   const [filter, setFilter] = useState<OrderStatus>('new');
   const [history, setHistory] = useState<Record<number, OrderHistoryItem[]>>({});
+  const [note, setNote] = useState<Record<number, string>>({});
 
   const loadHistory = async (id: number) => {
     try {
@@ -110,9 +111,11 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
 
   const changeStatus = async (o: ApiOrder, status: OrderStatus) => {
     setBusy(o.id);
+    const comment = (note[o.id] || '').trim();
     try {
-      patch(await setOrderStatus(o.id, status));
+      patch(await setOrderStatus(o.id, status, comment || undefined));
       onToast(`Статус заявки #${o.order_number}: ${STATUS_LABEL[status]}`);
+      setNote((m) => ({ ...m, [o.id]: '' }));
       loadHistory(o.id);
     } catch (e) {
       onToast(e instanceof Error ? e.message : 'Ошибка');
@@ -273,6 +276,22 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
                       )}
                     </div>
 
+                    <div className="pt-1">
+                      <label className="flex items-center gap-1.5 text-muted-foreground font-display uppercase text-xs tracking-wider mb-2">
+                        <Icon name="MessageSquarePlus" size={14} /> Комментарий менеджера
+                      </label>
+                      <textarea
+                        value={note[o.id] || ''}
+                        onChange={(e) => setNote((m) => ({ ...m, [o.id]: e.target.value }))}
+                        rows={2}
+                        placeholder="Важная информация по заказу: причина отказа, детали закупки, договорённости с клиентом…"
+                        className="w-full bg-background border border-border px-3 py-2 clip-corner text-sm focus:border-primary focus:outline-none transition-colors resize-y"
+                      />
+                      <p className="text-[11px] text-muted-foreground mt-1">
+                        Текст сохранится в историю рядом с выбранным ниже статусом.
+                      </p>
+                    </div>
+
                     <div className="flex flex-wrap gap-2 pt-1">
                       {(['test', 'waiting', 'in_work', 'procurement', 'assembling', 'delivering', 'done', 'rejected'] as OrderStatus[]).map((st) => (
                         <button
@@ -308,6 +327,11 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
                                 <p className="text-xs text-muted-foreground">
                                   {h.changed_by === 'site' ? 'Заявка с сайта' : h.changed_by || '—'} · {fmtDate(h.created_at)}
                                 </p>
+                                {h.comment && (
+                                  <p className="mt-1 text-sm bg-muted/40 border-l-2 border-primary/50 pl-2 py-1 whitespace-pre-wrap break-words">
+                                    {h.comment}
+                                  </p>
+                                )}
                               </div>
                             </div>
                           ))}

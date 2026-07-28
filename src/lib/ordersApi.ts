@@ -65,11 +65,11 @@ export async function markOrderViewed(id: number): Promise<ApiOrder | null> {
   return data.order || null;
 }
 
-export async function setOrderStatus(id: number, status: OrderStatus): Promise<ApiOrder | null> {
+export async function setOrderStatus(id: number, status: OrderStatus, comment?: string): Promise<ApiOrder | null> {
   const res = await fetch(ORDERS_URL, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'X-Auth-Token': getToken() || '' },
-    body: JSON.stringify({ id, action: 'status', status }),
+    body: JSON.stringify({ id, action: 'status', status, comment }),
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Ошибка изменения статуса');
@@ -79,6 +79,7 @@ export async function setOrderStatus(id: number, status: OrderStatus): Promise<A
 export interface OrderHistoryItem {
   status: OrderStatus;
   changed_by: string | null;
+  comment: string | null;
   created_at: string;
 }
 

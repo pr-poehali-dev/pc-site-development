@@ -132,7 +132,7 @@ def notify_new_order(conn, order: dict):
     _send_to_topic("\n".join(lines), keyboard)
 
 
-def notify_status(conn, order: dict, status: str, admin_name: str):
+def notify_status(conn, order: dict, status: str, admin_name: str, comment: str = None):
     if not BOT_TOKEN:
         return
     emoji = STATUS_EMOJI.get(status, '🔄')
@@ -144,6 +144,8 @@ def notify_status(conn, order: dict, status: str, admin_name: str):
         lines.append(f"👤 {_esc(order['customer_name'])}")
     if admin_name:
         lines.append(f"👨‍🔧 Изменил: {_esc(admin_name)}")
+    if comment and comment.strip():
+        lines.append(f"📝 {_esc(comment.strip())}")
     _send_to_topic("\n".join(lines))
 
 
@@ -231,7 +233,7 @@ def mark_viewed(conn, order_id: int, admin_name: str) -> dict:
     return serialize(dict(row)) if row else None
 
 
-def update_status(conn, order_id: int, status: str, admin_name: str) -> dict:
+def update_status(conn, order_id: int, status: str, admin_name: str, comment: str = None) -> dict:
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     if status == 'in_work':
         cur.execute(
@@ -247,8 +249,8 @@ def update_status(conn, order_id: int, status: str, admin_name: str) -> dict:
     order = cur.fetchone()
     if order:
         cur.execute(
-            "INSERT INTO order_status_history (order_id, status, changed_by) VALUES (%s, %s, %s)",
-            (order_id, status, admin_name)
+            "INSERT INTO order_status_history (order_id, status, changed_by, comment) VALUES (%s, %s, %s, %s)",
+            (order_id, status, admin_name, (comment or '').strip() or None)
         )
     conn.commit()
     cur.close()
@@ -258,7 +260,7 @@ def update_status(conn, order_id: int, status: str, admin_name: str) -> dict:
 def list_history(conn, order_id: int) -> list:
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute(
-        "SELECT status, changed_by, created_at FROM order_status_history "
+        "SELECT status, changed_by, comment, created_at FROM order_status_history "
         "WHERE order_id = %s ORDER BY created_at ASC, id ASC",
         (order_id,)
     )
@@ -316,9 +318,10 @@ def handler(event: dict, context) -> dict:
                 status = body.get('status')
                 if status not in STATUS_LABELS:
                     return {'statusCode': 400, 'headers': CORS, 'body': json.dumps({'error': 'bad status'})}
-                order = update_status(conn, int(order_id), status, admin_name)
+                comment = body.get('comment')
+                order = update_status(conn, int(order_id), status, admin_name, comment)
                 if order:
-                    notify_status(conn, order, status, admin_name)
+                    notify_status(conn, order, status, admin_name, comment)
                 return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'order': order})}
 
             return {'statusCode': 400, 'headers': CORS, 'body': json.dumps({'error': 'unknown action'})}
