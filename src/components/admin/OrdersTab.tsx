@@ -14,6 +14,23 @@ const STATUS_STYLE: Record<OrderStatus, string> = {
   in_work: 'bg-amber-500/15 text-amber-400 border-amber-500/40',
   test: 'bg-purple-500/15 text-purple-400 border-purple-500/40',
   done: 'bg-green-600/15 text-green-500 border-green-600/40',
+  waiting: 'bg-orange-500/15 text-orange-400 border-orange-500/40',
+  procurement: 'bg-indigo-500/15 text-indigo-400 border-indigo-500/40',
+  assembling: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/40',
+  delivering: 'bg-sky-500/15 text-sky-400 border-sky-500/40',
+  rejected: 'bg-red-600/15 text-red-500 border-red-600/40',
+};
+
+const STATUS_ICON: Record<OrderStatus, string> = {
+  new: 'Sparkles',
+  in_work: 'Wrench',
+  test: 'FlaskConical',
+  done: 'CircleCheck',
+  waiting: 'Clock',
+  procurement: 'ShoppingCart',
+  assembling: 'Cpu',
+  delivering: 'Truck',
+  rejected: 'CircleX',
 };
 
 const SOURCE_LABEL: Record<string, string> = {
@@ -93,8 +110,13 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
   const SUB_TABS: { key: OrderStatus; label: string }[] = [
     { key: 'new', label: 'Новый заказ' },
     { key: 'test', label: 'Тест' },
+    { key: 'waiting', label: 'Ожидание решения' },
     { key: 'in_work', label: 'В работе' },
+    { key: 'procurement', label: 'В закупке' },
+    { key: 'assembling', label: 'В сборке' },
+    { key: 'delivering', label: 'В доставке' },
     { key: 'done', label: 'Готов' },
+    { key: 'rejected', label: 'Отказ' },
   ];
 
   if (loading) {
@@ -236,7 +258,7 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
                     </div>
 
                     <div className="flex flex-wrap gap-2 pt-1">
-                      {(['in_work', 'test', 'done'] as OrderStatus[]).map((st) => (
+                      {(['test', 'waiting', 'in_work', 'procurement', 'assembling', 'delivering', 'done', 'rejected'] as OrderStatus[]).map((st) => (
                         <button
                           key={st}
                           disabled={busy === o.id || o.status === st}
@@ -245,8 +267,8 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
                             o.status === st ? STATUS_STYLE[st] : 'border-border text-foreground hover:border-primary/50'
                           }`}
                         >
-                          <Icon name={st === 'in_work' ? 'Wrench' : st === 'test' ? 'FlaskConical' : 'CircleCheck'} size={14} />
-                          {st === 'in_work' ? 'Взять в работу' : st === 'test' ? 'Тест' : 'Готово'}
+                          <Icon name={STATUS_ICON[st]} size={14} />
+                          {st === 'in_work' ? 'Взять в работу' : STATUS_LABEL[st]}
                         </button>
                       ))}
                     </div>

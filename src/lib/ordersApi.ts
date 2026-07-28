@@ -3,7 +3,16 @@ import { getToken } from '@/lib/buildsApi';
 
 const ORDERS_URL = func2url.orders;
 
-export type OrderStatus = 'new' | 'in_work' | 'test' | 'done';
+export type OrderStatus =
+  | 'new'
+  | 'in_work'
+  | 'test'
+  | 'done'
+  | 'waiting'
+  | 'procurement'
+  | 'assembling'
+  | 'delivering'
+  | 'rejected';
 
 export interface ApiOrder {
   id: number;
@@ -29,6 +38,11 @@ export const STATUS_LABEL: Record<OrderStatus, string> = {
   in_work: 'В работе',
   test: 'Тест',
   done: 'Готово',
+  waiting: 'Ожидание решения',
+  procurement: 'В закупке',
+  assembling: 'В сборке',
+  delivering: 'В доставке',
+  rejected: 'Отказ',
 };
 
 export async function fetchOrders(): Promise<ApiOrder[]> {

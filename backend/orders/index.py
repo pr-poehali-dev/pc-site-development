@@ -29,6 +29,11 @@ STATUS_LABELS = {
     'in_work': 'Взят в работу',
     'test': 'На тестировании',
     'done': 'Готово',
+    'waiting': 'Ожидание решения',
+    'procurement': 'В закупке',
+    'assembling': 'В сборке',
+    'delivering': 'В доставке',
+    'rejected': 'Отказ',
 }
 
 STATUS_EMOJI = {
@@ -36,6 +41,11 @@ STATUS_EMOJI = {
     'in_work': '🛠',
     'test': '🧪',
     'done': '✅',
+    'waiting': '⏳',
+    'procurement': '🛒',
+    'assembling': '⚙️',
+    'delivering': '🚚',
+    'rejected': '❌',
 }
 
 SOURCE_LABELS = {
