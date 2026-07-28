@@ -34,6 +34,14 @@
       "expectedStatus": 401,
       "expectedBody": {"error": "string"},
       "bodyMatcher": "partial"
+    },
+    {
+      "name": "Remind stale without key returns 403",
+      "method": "GET",
+      "path": "/?action=remind_stale&key=wrong",
+      "expectedStatus": 403,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
     }
   ]
 }

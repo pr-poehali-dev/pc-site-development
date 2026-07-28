@@ -1,0 +1,45 @@
+{
+  "tests": [
+    {
+      "name": "GET published builds returns 200",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "GET all without auth returns 401",
+      "method": "GET",
+      "path": "/?all=1",
+      "expectedStatus": 401,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "POST without auth returns 401",
+      "method": "POST",
+      "path": "/",
+      "body": {"name": "Test Build"},
+      "expectedStatus": 401,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "PUT without auth returns 401",
+      "method": "PUT",
+      "path": "/",
+      "body": {"id": 1, "sort_order": 0},
+      "expectedStatus": 401,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "DELETE without auth returns 401",
+      "method": "DELETE",
+      "path": "/",
+      "body": {"id": 1},
+      "expectedStatus": 401,
+      "expectedBody": {"error": "string"},
+      "bodyMatcher": "partial"
+    }
+  ]
+}

@@ -171,6 +171,57 @@ def _send_to_topic(text: str, keyboard=None):
     print(f'[TG] sendMessage failed after retries: {last_err}')
 
 
+STALE_DAYS = int(os.environ.get('ORDERS_STALE_DAYS', '3'))
+REMIND_KEY = os.environ.get('BOT_ADMIN_PASSWORD', '')
+
+
+def _plural_days(n: int) -> str:
+    if n % 10 == 1 and n % 100 != 11:
+        return 'день'
+    if n % 10 in (2, 3, 4) and n % 100 not in (12, 13, 14):
+        return 'дня'
+    return 'дней'
+
+
+def list_stale_orders(conn) -> list:
+    '''Активные заказы без движения дольше STALE_DAYS дней (исключая готовые и отказы).'''
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(
+        "SELECT id, order_number, customer_name, status, taken_by, "
+        "GREATEST(0, EXTRACT(DAY FROM NOW() - COALESCE(updated_at, created_at))::int) AS days "
+        "FROM orders "
+        "WHERE status NOT IN ('done', 'rejected') "
+        "AND COALESCE(updated_at, created_at) < NOW() - INTERVAL '%s days' "
+        "ORDER BY COALESCE(updated_at, created_at) ASC" % STALE_DAYS
+    )
+    rows = cur.fetchall()
+    cur.close()
+    return [dict(r) for r in rows]
+
+
+def notify_stale(conn) -> int:
+    '''Формирует и отправляет в Telegram сводку зависших заказов. Возвращает их количество.'''
+    stale = list_stale_orders(conn)
+    if not stale:
+        return 0
+    lines = [f"⚠️ <b>Заказы без движения ({len(stale)})</b>",
+             f"Не меняли статус дольше {STALE_DAYS} дн. — стоит проверить:", ""]
+    for o in stale[:30]:
+        d = int(o.get('days') or 0)
+        label = STATUS_LABELS.get(o['status'], o['status'])
+        name = o.get('customer_name') or 'Без имени'
+        taken = f" · {_esc(o['taken_by'])}" if o.get('taken_by') else ''
+        lines.append(
+            f"• <b>#{_esc(o['order_number'])}</b> {_esc(name)} — {_esc(label)} "
+            f"({d} {_plural_days(d)}){taken}"
+        )
+    if len(stale) > 30:
+        lines.append(f"…и ещё {len(stale) - 30}")
+    keyboard = {'inline_keyboard': [[{'text': '🔧 Открыть заявки в админке', 'url': ADMIN_ORDERS_URL}]]}
+    _send_to_topic("\n".join(lines), keyboard)
+    return len(stale)
+
+
 def gen_order_number(conn) -> str:
     cur = conn.cursor()
     cur.execute("SELECT COALESCE(MAX(id), 0) + 1001 FROM orders")
@@ -277,6 +328,18 @@ def handler(event: dict, context) -> dict:
 
     headers = event.get('headers') or {}
     token = headers.get('X-Auth-Token') or headers.get('x-auth-token') or ''
+    params = event.get('queryStringParameters') or {}
+
+    # GET ?action=remind_stale&key=... — ежедневное напоминание о зависших заказах (для планировщика)
+    if method == 'GET' and params.get('action') == 'remind_stale':
+        if not REMIND_KEY or params.get('key') != REMIND_KEY:
+            return {'statusCode': 403, 'headers': CORS, 'body': json.dumps({'error': 'forbidden'})}
+        conn = db()
+        try:
+            count = notify_stale(conn)
+            return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'stale': count})}
+        finally:
+            conn.close()
 
     # GET — список заказов для админки (нужна авторизация)
     if method == 'GET':
