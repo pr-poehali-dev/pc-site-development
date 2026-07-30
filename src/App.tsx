@@ -19,7 +19,7 @@ import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 import Privacy from "./pages/Privacy";
 import Consent from "./pages/Consent";
-import NotFound from "./pages/NotFound";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,7 +55,7 @@ const App = () => (
           <Route path="/yadirfetihwwork/login" element={<AdminLogin />} />
           <Route path="/yadirfetihwwork" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         </ErrorBoundary>
       </BrowserRouter>
