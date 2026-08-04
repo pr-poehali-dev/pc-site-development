@@ -111,17 +111,26 @@ const Index = () => {
       <section className="relative overflow-hidden py-12">
         {/* Размытое фото активной сборки на фоне всей секции */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          {builds.map((b, i) => (
-            <img
-              key={b.id}
-              src={b.image}
-              alt=""
-              aria-hidden
-              className={`absolute inset-0 w-full h-full object-cover blur-lg scale-105 transition-opacity duration-700 ${
-                activeBuild === i ? 'opacity-80' : 'opacity-0'
-              }`}
-            />
-          ))}
+          {builds.map((b, i) => {
+            const near =
+              i === activeBuild ||
+              i === (activeBuild + 1) % builds.length ||
+              i === (activeBuild - 1 + builds.length) % builds.length;
+            if (!near) return null;
+            return (
+              <img
+                key={b.id}
+                src={b.image}
+                alt=""
+                aria-hidden
+                loading="lazy"
+                decoding="async"
+                className={`absolute inset-0 w-full h-full object-cover blur-lg scale-105 transition-opacity duration-700 will-change-[opacity] ${
+                  activeBuild === i ? 'opacity-80' : 'opacity-0'
+                }`}
+              />
+            );
+          })}
           <div className="absolute inset-0 bg-background/40" />
           {/* Плавное затухание сверху и снизу для мягкого перехода */}
           <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />

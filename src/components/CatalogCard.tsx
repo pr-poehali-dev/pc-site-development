@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import GpuIcon from '@/components/ui/GpuIcon';
@@ -10,27 +10,46 @@ const fmt = (n: number) => n.toLocaleString('ru-RU') + ' ₽';
 const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
   const [open, setOpen] = useState(false);
 
-  const shortSpecs: { type: 'gpu' | 'icon'; icon?: string; value?: string }[] = [
-    { type: 'icon', icon: 'Cpu', value: b.specs.cpu },
-    { type: 'gpu', value: b.specs.gpu },
-    { type: 'icon', icon: 'MemoryStick', value: b.specs.ram },
-  ];
+  const ok = (v?: string) => !!v && v !== '—' && v !== '';
 
-  const restSpecs: { type: 'gpu' | 'icon'; icon?: string; label: string; value?: string }[] = [
-    { type: 'icon', icon: 'CircuitBoard', label: 'Материнская плата', value: b.specs.motherboard },
-    { type: 'icon', icon: 'HardDrive', label: 'Накопитель', value: b.specs.storage },
-    { type: 'icon', icon: 'Plug', label: 'Блок питания', value: b.specs.psu },
-    { type: 'icon', icon: 'Fan', label: 'Охлаждение CPU', value: b.specs.cooling },
-    { type: 'icon', icon: 'Wind', label: 'Вентиляторы', value: b.specs.fans },
-    { type: 'icon', icon: 'Monitor', label: 'Экраны и прочее', value: b.specs.extras },
-    { type: 'icon', icon: 'Box', label: 'Корпус', value: b.specs.caseModel },
-  ];
+  const visibleShort = useMemo(
+    () =>
+      (
+        [
+          { type: 'icon', icon: 'Cpu', value: b.specs.cpu },
+          { type: 'gpu', value: b.specs.gpu },
+          { type: 'icon', icon: 'MemoryStick', value: b.specs.ram },
+        ] as { type: 'gpu' | 'icon'; icon?: string; value?: string }[]
+      ).filter((s) => ok(s.value)),
+    [b.specs.cpu, b.specs.gpu, b.specs.ram],
+  );
 
-  const visibleShort = shortSpecs.filter((s) => s.value && s.value !== '—' && s.value !== '');
-  const visibleRest = restSpecs.filter((s) => s.value && s.value !== '—' && s.value !== '');
+  const visibleRest = useMemo(
+    () =>
+      (
+        [
+          { type: 'icon', icon: 'CircuitBoard', label: 'Материнская плата', value: b.specs.motherboard },
+          { type: 'icon', icon: 'HardDrive', label: 'Накопитель', value: b.specs.storage },
+          { type: 'icon', icon: 'Plug', label: 'Блок питания', value: b.specs.psu },
+          { type: 'icon', icon: 'Fan', label: 'Охлаждение CPU', value: b.specs.cooling },
+          { type: 'icon', icon: 'Wind', label: 'Вентиляторы', value: b.specs.fans },
+          { type: 'icon', icon: 'Monitor', label: 'Экраны и прочее', value: b.specs.extras },
+          { type: 'icon', icon: 'Box', label: 'Корпус', value: b.specs.caseModel },
+        ] as { type: 'gpu' | 'icon'; icon?: string; label: string; value?: string }[]
+      ).filter((s) => ok(s.value)),
+    [
+      b.specs.motherboard,
+      b.specs.storage,
+      b.specs.psu,
+      b.specs.cooling,
+      b.specs.fans,
+      b.specs.extras,
+      b.specs.caseModel,
+    ],
+  );
 
   return (
-    <div className="group min-w-0 h-full flex flex-col bg-card border border-border clip-corner overflow-hidden hover-glow-green animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
+    <div className="group min-w-0 h-full flex flex-col bg-card border border-border clip-corner overflow-hidden hover-glow-green animate-fade-up" style={{ animationDelay: `${Math.min(index, 5) * 0.08}s` }}>
       <div className="relative p-3 pb-0">
         <BuildGallery build={b} eager={index < 3} />
         {b.buildDate && (
@@ -97,4 +116,4 @@ const CatalogCard = ({ build: b, index }: { build: Build; index: number }) => {
   );
 };
 
-export default CatalogCard;
+export default memo(CatalogCard);

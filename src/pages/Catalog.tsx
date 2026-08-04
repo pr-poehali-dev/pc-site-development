@@ -13,10 +13,12 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel';
 import CarouselDots from '@/components/CarouselDots';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { breadcrumbLd, catalogItemListLd } from '@/data/seo';
 
 const Catalog = () => {
   const { data: builds = [], isLoading, isError, refetch } = useBuilds();
+  const isMobile = useIsMobile();
   const [buildsApi, setBuildsApi] = useState<CarouselApi>();
   const [showAll, setShowAll] = useState(false);
   const gridTopRef = useRef<HTMLDivElement>(null);
@@ -73,7 +75,8 @@ const Catalog = () => {
           </div>
         ) : (
           <>
-            <div className="hidden md:block">
+            {!isMobile && (
+            <div className="block">
               <div ref={gridTopRef} className="scroll-mt-28 grid md:grid-cols-3 gap-6 items-stretch">
                 {builds.slice(0, 6).map((b, i) => (
                   <CatalogCard key={b.id} build={b} index={i} />
@@ -107,7 +110,9 @@ const Catalog = () => {
                 </div>
               )}
             </div>
-            <Carousel setApi={setBuildsApi} opts={{ align: 'start' }} className="md:hidden">
+            )}
+            {isMobile && (
+            <Carousel setApi={setBuildsApi} opts={{ align: 'start' }}>
               <CarouselContent>
                 {builds.map((b, i) => (
                   <CarouselItem key={b.id}>
@@ -117,6 +122,7 @@ const Catalog = () => {
               </CarouselContent>
               <CarouselDots api={buildsApi} className="mt-6" />
             </Carousel>
+            )}
           </>
         )}
 

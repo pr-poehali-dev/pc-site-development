@@ -14,10 +14,12 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel';
 import CarouselDots from '@/components/CarouselDots';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { breadcrumbLd } from '@/data/seo';
 
 const Articles = () => {
   const { data: articles = [], isLoading: loading } = useArticles();
+  const isMobile = useIsMobile();
   const [articlesApi, setArticlesApi] = useState<CarouselApi>();
 
   return (
@@ -95,21 +97,25 @@ const Articles = () => {
             );
             return (
               <>
-                <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {articles.map((a, i) => (
-                    <div key={a.id} className="animate-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
-                      {articleCard(a)}
-                    </div>
-                  ))}
-                </div>
-                <Carousel setApi={setArticlesApi} opts={{ align: 'start' }} className="md:hidden">
-                  <CarouselContent>
-                    {articles.map((a) => (
-                      <CarouselItem key={a.id}>{articleCard(a)}</CarouselItem>
+                {!isMobile && (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {articles.map((a, i) => (
+                      <div key={a.id} className="animate-fade-up" style={{ animationDelay: `${Math.min(i, 5) * 0.08}s` }}>
+                        {articleCard(a)}
+                      </div>
                     ))}
-                  </CarouselContent>
-                  <CarouselDots api={articlesApi} className="mt-6" />
-                </Carousel>
+                  </div>
+                )}
+                {isMobile && (
+                  <Carousel setApi={setArticlesApi} opts={{ align: 'start' }}>
+                    <CarouselContent>
+                      {articles.map((a) => (
+                        <CarouselItem key={a.id}>{articleCard(a)}</CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselDots api={articlesApi} className="mt-6" />
+                  </Carousel>
+                )}
               </>
             );
           })()

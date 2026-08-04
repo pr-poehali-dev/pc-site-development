@@ -123,7 +123,15 @@ const BuildGallery = ({ build, eager = false }: Props) => {
                   <Icon name="Play" size={18} />
                 </div>
               ) : (
-                <img src={m.url} alt="" className="w-full h-full object-cover" />
+                <img
+                  src={m.url}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  width={64}
+                  height={48}
+                  className="w-full h-full object-cover"
+                />
               )}
             </button>
           ))}
