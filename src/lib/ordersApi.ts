@@ -12,7 +12,8 @@ export type OrderStatus =
   | 'procurement'
   | 'assembling'
   | 'delivering'
-  | 'rejected';
+  | 'rejected'
+  | 'duplicate';
 
 export interface ApiOrder {
   id: number;
@@ -31,6 +32,7 @@ export interface ApiOrder {
   taken_at: string | null;
   created_at: string;
   updated_at: string;
+  duplicate_of: number | null;
 }
 
 export const STATUS_LABEL: Record<OrderStatus, string> = {
@@ -43,6 +45,7 @@ export const STATUS_LABEL: Record<OrderStatus, string> = {
   assembling: 'В сборке',
   delivering: 'В доставке',
   rejected: 'Отказ',
+  duplicate: 'Дубль',
 };
 
 export async function fetchOrders(): Promise<ApiOrder[]> {
@@ -73,6 +76,28 @@ export async function setOrderStatus(id: number, status: OrderStatus, comment?: 
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Ошибка изменения статуса');
+  return data.order || null;
+}
+
+export async function markOrderDuplicate(id: number, target: string, comment?: string): Promise<ApiOrder | null> {
+  const res = await fetch(ORDERS_URL, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Auth-Token': getToken() || '' },
+    body: JSON.stringify({ id, action: 'duplicate', target, comment }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Не удалось связать заказы');
+  return data.order || null;
+}
+
+export async function unmarkOrderDuplicate(id: number): Promise<ApiOrder | null> {
+  const res = await fetch(ORDERS_URL, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Auth-Token': getToken() || '' },
+    body: JSON.stringify({ id, action: 'unduplicate' }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Не удалось снять пометку');
   return data.order || null;
 }
 

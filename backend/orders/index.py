@@ -34,6 +34,7 @@ STATUS_LABELS = {
     'assembling': 'В сборке',
     'delivering': 'В доставке',
     'rejected': 'Отказ',
+    'duplicate': 'Дубль',
 }
 
 STATUS_EMOJI = {
@@ -46,6 +47,7 @@ STATUS_EMOJI = {
     'assembling': '⚙️',
     'delivering': '🚚',
     'rejected': '❌',
+    'duplicate': '🔗',
 }
 
 SOURCE_LABELS = {
@@ -190,7 +192,7 @@ def list_stale_orders(conn) -> list:
         "SELECT id, order_number, customer_name, status, taken_by, "
         "GREATEST(0, EXTRACT(DAY FROM NOW() - COALESCE(updated_at, created_at))::int) AS days "
         "FROM orders "
-        "WHERE status NOT IN ('done', 'rejected') "
+        "WHERE status NOT IN ('done', 'rejected', 'duplicate') "
         "AND COALESCE(updated_at, created_at) < NOW() - INTERVAL '%s days' "
         "ORDER BY COALESCE(updated_at, created_at) ASC" % STALE_DAYS
     )
@@ -308,6 +310,72 @@ def update_status(conn, order_id: int, status: str, admin_name: str, comment: st
     return serialize(dict(order)) if order else None
 
 
+def mark_duplicate(conn, order_id: int, target: str, admin_name: str, comment: str = None) -> dict:
+    '''Помечает заказ дублем другого. target — номер заказа (order_number) или его id.'''
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    target = (target or '').strip().lstrip('#')
+
+    cur.execute("SELECT id, order_number FROM orders WHERE order_number = %s", (target,))
+    main = cur.fetchone()
+    if not main and target.isdigit():
+        cur.execute("SELECT id, order_number FROM orders WHERE id = %s", (int(target),))
+        main = cur.fetchone()
+
+    if not main:
+        cur.close()
+        return {'error': 'Основной заказ с таким номером не найден'}
+    if main['id'] == order_id:
+        cur.close()
+        return {'error': 'Нельзя связать заказ сам с собой'}
+
+    # Если основной сам является дублем — привязываем к его первоисточнику
+    cur.execute("SELECT duplicate_of FROM orders WHERE id = %s", (main['id'],))
+    row = cur.fetchone()
+    main_id = row['duplicate_of'] if row and row['duplicate_of'] else main['id']
+    if main_id == order_id:
+        cur.close()
+        return {'error': 'Нельзя связать заказ сам с собой'}
+
+    cur.execute(
+        "UPDATE orders SET duplicate_of = %s, status = 'duplicate', updated_at = NOW() "
+        "WHERE id = %s RETURNING *",
+        (main_id, order_id)
+    )
+    order = cur.fetchone()
+    if order:
+        cur.execute("SELECT order_number FROM orders WHERE id = %s", (main_id,))
+        mrow = cur.fetchone()
+        note = f"Дубль заказа #{mrow['order_number'] if mrow else main_id}"
+        if (comment or '').strip():
+            note += f". {comment.strip()}"
+        cur.execute(
+            "INSERT INTO order_status_history (order_id, status, changed_by, comment) VALUES (%s, %s, %s, %s)",
+            (order_id, 'duplicate', admin_name, note)
+        )
+    conn.commit()
+    cur.close()
+    return serialize(dict(order)) if order else None
+
+
+def unmark_duplicate(conn, order_id: int, admin_name: str) -> dict:
+    '''Снимает пометку дубля, возвращает заказ в статус «Новый».'''
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(
+        "UPDATE orders SET duplicate_of = NULL, status = 'new', updated_at = NOW() "
+        "WHERE id = %s RETURNING *",
+        (order_id,)
+    )
+    order = cur.fetchone()
+    if order:
+        cur.execute(
+            "INSERT INTO order_status_history (order_id, status, changed_by, comment) VALUES (%s, %s, %s, %s)",
+            (order_id, 'new', admin_name, 'Пометка дубля снята')
+        )
+    conn.commit()
+    cur.close()
+    return serialize(dict(order)) if order else None
+
+
 def list_history(conn, order_id: int) -> list:
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute(
@@ -385,6 +453,19 @@ def handler(event: dict, context) -> dict:
                 order = update_status(conn, int(order_id), status, admin_name, comment)
                 if order:
                     notify_status(conn, order, status, admin_name, comment)
+                return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'order': order})}
+
+            if action == 'duplicate':
+                target = body.get('target')
+                if not target:
+                    return {'statusCode': 400, 'headers': CORS, 'body': json.dumps({'error': 'Укажите номер основного заказа'})}
+                res = mark_duplicate(conn, int(order_id), str(target), admin_name, body.get('comment'))
+                if isinstance(res, dict) and res.get('error'):
+                    return {'statusCode': 400, 'headers': CORS, 'body': json.dumps(res)}
+                return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'order': res})}
+
+            if action == 'unduplicate':
+                order = unmark_duplicate(conn, int(order_id), admin_name)
                 return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'order': order})}
 
             return {'statusCode': 400, 'headers': CORS, 'body': json.dumps({'error': 'unknown action'})}

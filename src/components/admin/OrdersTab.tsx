@@ -5,6 +5,8 @@ import {
   fetchOrderHistory,
   markOrderViewed,
   setOrderStatus,
+  markOrderDuplicate,
+  unmarkOrderDuplicate,
   STATUS_LABEL,
   type ApiOrder,
   type OrderStatus,
@@ -21,6 +23,7 @@ const STATUS_STYLE: Record<OrderStatus, string> = {
   assembling: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/40',
   delivering: 'bg-sky-500/15 text-sky-400 border-sky-500/40',
   rejected: 'bg-red-600/15 text-red-500 border-red-600/40',
+  duplicate: 'bg-zinc-500/15 text-zinc-400 border-zinc-500/40',
 };
 
 const STATUS_ICON: Record<OrderStatus, string> = {
@@ -33,6 +36,7 @@ const STATUS_ICON: Record<OrderStatus, string> = {
   assembling: 'Cpu',
   delivering: 'Truck',
   rejected: 'CircleX',
+  duplicate: 'Copy',
 };
 
 const SOURCE_LABEL: Record<string, string> = {
@@ -58,7 +62,7 @@ const fmtDate = (s: string | null) =>
   s ? new Date(s).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
 
 const STALE_DAYS = 3;
-const FINAL_STATUSES: OrderStatus[] = ['done', 'rejected'];
+const FINAL_STATUSES: OrderStatus[] = ['done', 'rejected', 'duplicate'];
 
 const daysStale = (o: ApiOrder): number => {
   if (FINAL_STATUSES.includes(o.status)) return 0;
@@ -79,6 +83,8 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
   const [filter, setFilter] = useState<OrderStatus>('new');
   const [history, setHistory] = useState<Record<number, OrderHistoryItem[]>>({});
   const [note, setNote] = useState<Record<number, string>>({});
+  const [dupOpen, setDupOpen] = useState<number | null>(null);
+  const [dupTarget, setDupTarget] = useState<Record<number, string>>({});
 
   const loadHistory = async (id: number) => {
     try {
@@ -138,6 +144,45 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
     }
   };
 
+  const linkDuplicate = async (o: ApiOrder) => {
+    const target = (dupTarget[o.id] || '').trim();
+    if (!target) {
+      onToast('Укажите номер основного заказа');
+      return;
+    }
+    setBusy(o.id);
+    try {
+      patch(await markOrderDuplicate(o.id, target, (note[o.id] || '').trim() || undefined));
+      onToast(`Заявка #${o.order_number} привязана к #${target.replace(/^#/, '')}`);
+      setDupOpen(null);
+      setDupTarget((m) => ({ ...m, [o.id]: '' }));
+      setNote((m) => ({ ...m, [o.id]: '' }));
+      loadHistory(o.id);
+      load();
+    } catch (e) {
+      onToast(e instanceof Error ? e.message : 'Ошибка');
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const unlinkDuplicate = async (o: ApiOrder) => {
+    setBusy(o.id);
+    try {
+      patch(await unmarkOrderDuplicate(o.id));
+      onToast(`С заявки #${o.order_number} снята пометка дубля`);
+      loadHistory(o.id);
+      load();
+    } catch (e) {
+      onToast(e instanceof Error ? e.message : 'Ошибка');
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const orderById = (id: number | null) => (id ? orders.find((x) => x.id === id) || null : null);
+  const duplicatesOf = (id: number) => orders.filter((x) => x.duplicate_of === id);
+
   const countBy = (st: OrderStatus) => orders.filter((o) => o.status === st).length;
   const visible = orders.filter((o) => o.status === filter);
   const SUB_TABS: { key: OrderStatus; label: string }[] = [
@@ -150,6 +195,7 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
     { key: 'delivering', label: 'В доставке' },
     { key: 'done', label: 'Готов' },
     { key: 'rejected', label: 'Отказ' },
+    { key: 'duplicate', label: 'Дубли' },
   ];
 
   if (loading) {
@@ -242,6 +288,16 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
                             <Icon name="TriangleAlert" size={12} /> Без движения {stale} {pluralDays(stale)}
                           </span>
                         )}
+                        {o.duplicate_of && (
+                          <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-500/15 text-zinc-400 font-display uppercase text-[10px] tracking-wider">
+                            <Icon name="Copy" size={12} /> Дубль #{orderById(o.duplicate_of)?.order_number || o.duplicate_of}
+                          </span>
+                        )}
+                        {!o.duplicate_of && duplicatesOf(o.id).length > 0 && (
+                          <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-primary/15 text-primary font-display uppercase text-[10px] tracking-wider">
+                            <Icon name="Layers" size={12} /> +{duplicatesOf(o.id).length} заявк{duplicatesOf(o.id).length === 1 ? 'а' : 'и'}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -312,7 +368,125 @@ const OrdersTab = ({ onToast }: { onToast: (msg: string) => void }) => {
                       </p>
                     </div>
 
+                    {/* Связь дублей */}
+                    {o.duplicate_of ? (
+                      <div className="p-3 bg-zinc-500/10 border border-zinc-500/40 clip-corner text-sm">
+                        <p className="flex items-center gap-1.5 font-display uppercase text-xs tracking-wider text-zinc-400 mb-2">
+                          <Icon name="Copy" size={14} /> Это дубль заявки
+                        </p>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <span>
+                            Основной заказ:{' '}
+                            <button
+                              onClick={() => {
+                                const main = orderById(o.duplicate_of);
+                                if (main) {
+                                  setFilter(main.status);
+                                  setExpanded(main.id);
+                                  loadHistory(main.id);
+                                }
+                              }}
+                              className="font-display text-primary hover:underline"
+                            >
+                              #{orderById(o.duplicate_of)?.order_number || o.duplicate_of}
+                            </button>
+                          </span>
+                          <button
+                            disabled={busy === o.id}
+                            onClick={() => unlinkDuplicate(o)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 border border-border font-display uppercase text-[11px] tracking-wider clip-corner hover:border-primary/50 transition-colors disabled:opacity-40"
+                          >
+                            <Icon name="Unlink" size={13} /> Снять пометку
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      duplicatesOf(o.id).length > 0 && (
+                        <div className="p-3 bg-background border border-primary/30 clip-corner text-sm space-y-3">
+                          <p className="flex items-center gap-1.5 font-display uppercase text-xs tracking-wider text-primary">
+                            <Icon name="Layers" size={14} /> Объединённые заявки ({duplicatesOf(o.id).length})
+                          </p>
+                          {duplicatesOf(o.id).map((d) => (
+                            <div key={d.id} className="border-l-2 border-primary/40 pl-3 space-y-1">
+                              <p className="font-display text-sm">
+                                #{d.order_number} · {fmtDate(d.created_at)}
+                              </p>
+                              {d.comment && (
+                                <p className="text-xs">
+                                  <span className="text-muted-foreground">Комментарий: </span>
+                                  {d.comment}
+                                </p>
+                              )}
+                              {d.details && Object.keys(d.details).length > 0 && (
+                                <div className="text-xs space-y-0.5">
+                                  {Object.entries(d.details).map(([k, v]) => {
+                                    const same = o.details ? JSON.stringify(o.details[k]) === JSON.stringify(v) : false;
+                                    if (!v || same) return null;
+                                    return (
+                                      <div key={k} className="flex gap-2">
+                                        <span className="text-muted-foreground">{DETAIL_LABELS[k] || k}:</span>
+                                        <span className="text-amber-400">
+                                          {Array.isArray(v) ? v.join(', ') : String(v)}
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                              <p className="text-[11px] text-muted-foreground">
+                                Жёлтым отмечены отличия от основного заказа
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )
+                    )}
+
+                    {!o.duplicate_of && dupOpen === o.id && (
+                      <div className="p-3 bg-background border border-border clip-corner space-y-2">
+                        <label className="block font-display uppercase text-xs tracking-wider text-muted-foreground">
+                          Номер основного заказа
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          <input
+                            value={dupTarget[o.id] || ''}
+                            onChange={(e) => setDupTarget((m) => ({ ...m, [o.id]: e.target.value }))}
+                            onKeyDown={(e) => e.key === 'Enter' && linkDuplicate(o)}
+                            placeholder="Например: 1043"
+                            className="flex-1 min-w-[160px] bg-card border border-border px-3 py-2 clip-corner text-sm focus:border-primary focus:outline-none"
+                          />
+                          <button
+                            disabled={busy === o.id}
+                            onClick={() => linkDuplicate(o)}
+                            className="flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground font-display uppercase text-xs tracking-wider clip-corner hover:opacity-90 disabled:opacity-40"
+                          >
+                            <Icon name="Link" size={14} /> Связать
+                          </button>
+                          <button
+                            onClick={() => setDupOpen(null)}
+                            className="px-4 py-2 border border-border font-display uppercase text-xs tracking-wider clip-corner hover:border-primary/50"
+                          >
+                            Отмена
+                          </button>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground">
+                          Заявка станет дублем указанного заказа. Её данные будут показаны в основном заказе.
+                        </p>
+                      </div>
+                    )}
+
                     <div className="flex flex-wrap gap-2 pt-1">
+                      {!o.duplicate_of && (
+                        <button
+                          disabled={busy === o.id}
+                          onClick={() => setDupOpen(dupOpen === o.id ? null : o.id)}
+                          className={`flex items-center gap-1.5 px-4 py-2 border font-display uppercase text-xs tracking-wider clip-corner transition-colors disabled:opacity-40 ${
+                            dupOpen === o.id ? STATUS_STYLE.duplicate : 'border-border text-foreground hover:border-primary/50'
+                          }`}
+                        >
+                          <Icon name="Copy" size={14} /> Дубль
+                        </button>
+                      )}
                       {(['test', 'waiting', 'in_work', 'procurement', 'assembling', 'delivering', 'done', 'rejected'] as OrderStatus[]).map((st) => (
                         <button
                           key={st}
