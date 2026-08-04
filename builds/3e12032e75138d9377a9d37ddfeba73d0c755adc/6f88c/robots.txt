@@ -19,4 +19,5 @@ Allow: /
 Disallow: /yadirfetihwwork
 
 Sitemap: https://wf-pc.ru/sitemap.xml
+Sitemap: https://functions.poehali.dev/9a12ab92-0f4f-4182-9c9a-8b44d495fca2
 Host: https://wf-pc.ru
