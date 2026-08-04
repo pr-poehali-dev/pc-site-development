@@ -41,25 +41,6 @@
     <meta name="twitter:image" content="https://wf-pc.ru/og-image-v4.jpg">
     <meta name="twitter:card" content="summary_large_image">
 
-    <!-- Ранняя пометка несуществующих страниц как noindex (до отрисовки приложения) -->
-    <script>
-      (function () {
-        var known = ['/', '/catalog', '/reviews', '/faq', '/contacts', '/build', '/articles', '/privacy', '/consent'];
-        var p = location.pathname.replace(/\/+$/, '') || '/';
-        var ok = known.indexOf(p) !== -1 || /^\/articles\/[^/]+$/.test(p) || p.indexOf('/yadirfetihwwork') === 0;
-        if (!ok) {
-          var m = document.createElement('meta');
-          m.name = 'robots';
-          m.content = 'noindex, nofollow';
-          document.head.appendChild(m);
-          var s = document.createElement('meta');
-          s.name = 'prerender-status-code';
-          s.content = '404';
-          document.head.appendChild(s);
-        }
-      })();
-    </script>
-
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS COMMENT! -->
 
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS COMMENT! -->
@@ -70,11 +51,12 @@
 
     <meta name="pp-name" value="pc-site-development">
       <script src="https://cdn.poehali.dev/intertnal/js/inspector-min.js"></script>
+    <script type="module" crossorigin src="/assets/index-1kCFHPge.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dw4WWT94.css">
   </head>
 
 <body>
 <div id="root"></div>
-<script type="module" src="/src/main.tsx"></script>
 
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
