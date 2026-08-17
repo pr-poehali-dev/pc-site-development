@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -20,6 +21,7 @@ import AdminLogin from "./pages/AdminLogin";
 import Privacy from "./pages/Privacy";
 import Consent from "./pages/Consent";
 import NotFoundPage from "./pages/NotFoundPage";
+import { pingTelegramQueue } from "@/lib/tgHeartbeat";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,7 +34,14 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
+const App = () => {
+  useEffect(() => {
+    pingTelegramQueue();
+    const t = setInterval(pingTelegramQueue, 5 * 60 * 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
   <HelmetProvider>
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -62,6 +71,7 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
   </HelmetProvider>
-);
+  );
+};
 
 export default App;

@@ -198,29 +198,49 @@ def _outbox_done(row_id: int, error: str = None):
         print(f'[TG] outbox update failed: {e}')
 
 
-def flush_outbox(limit: int = 5):
-    '''Досылает накопившиеся уведомления. Вызывается при любом обращении к функции.'''
+MAX_ATTEMPTS = int(os.environ.get('TG_MAX_ATTEMPTS', '2000'))
+
+
+def flush_outbox(limit: int = 5) -> int:
+    '''Досылает накопившиеся уведомления. Возвращает число успешно отправленных.'''
     if not BOT_TOKEN:
-        return
+        return 0
     try:
         conn = db()
+    except Exception as e:
+        print(f'[TG] outbox connect failed: {e}')
+        return 0
+    sent = 0
+    try:
         cur = conn.cursor()
         cur.execute(
-            "SELECT id, payload FROM tg_outbox WHERE sent_at IS NULL AND attempts < 20 "
-            "ORDER BY id ASC LIMIT %s" % int(limit)
+            "SELECT id, payload FROM tg_outbox WHERE sent_at IS NULL AND attempts < %d "
+            "ORDER BY id ASC LIMIT %d" % (MAX_ATTEMPTS, int(limit))
         )
         rows = cur.fetchall()
+        for row_id, payload in rows:
+            data = payload if isinstance(payload, dict) else json.loads(payload)
+            ok, err = _tg_post(data)
+            if ok:
+                cur.execute(
+                    "UPDATE tg_outbox SET sent_at = NOW(), attempts = attempts + 1 WHERE id = %s",
+                    (row_id,)
+                )
+                conn.commit()
+                sent += 1
+            else:
+                cur.execute(
+                    "UPDATE tg_outbox SET attempts = attempts + 1, last_error = %s WHERE id = %s",
+                    (err, row_id)
+                )
+                conn.commit()
+                break
         cur.close()
-        conn.close()
     except Exception as e:
-        print(f'[TG] outbox read failed: {e}')
-        return
-    for row_id, payload in rows:
-        data = payload if isinstance(payload, dict) else json.loads(payload)
-        ok, err = _tg_post(data)
-        _outbox_done(row_id, None if ok else err)
-        if not ok:
-            break
+        print(f'[TG] outbox flush failed: {e}')
+    finally:
+        conn.close()
+    return sent
 
 
 def _send_to_topic(text: str, keyboard=None):
@@ -486,18 +506,19 @@ def handler(event: dict, context) -> dict:
 
     # GET ?action=flush_tg — досылка отложенных уведомлений (для планировщика)
     if method == 'GET' and params.get('action') == 'flush_tg':
-        sent = 0
+        sent, pending = 0, 0
         try:
-            flush_outbox(20)
+            sent = flush_outbox(20)
             conn = db()
             cur = conn.cursor()
-            cur.execute("SELECT COUNT(*) FROM tg_outbox WHERE sent_at IS NULL AND attempts < 20")
-            sent = cur.fetchone()[0]
+            cur.execute("SELECT COUNT(*) FROM tg_outbox WHERE sent_at IS NULL")
+            pending = cur.fetchone()[0]
             cur.close()
             conn.close()
         except Exception as e:
             print(f'[TG] flush endpoint failed: {e}')
-        return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'pending': sent})}
+        return {'statusCode': 200, 'headers': CORS,
+                'body': json.dumps({'ok': True, 'sent': sent, 'pending': pending})}
 
     # GET ?action=remind_stale&key=... — ежедневное напоминание о зависших заказах (для планировщика)
     if method == 'GET' and params.get('action') == 'remind_stale':

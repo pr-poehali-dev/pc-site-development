@@ -36,6 +36,14 @@
       "bodyMatcher": "partial"
     },
     {
+      "name": "Flush telegram queue",
+      "method": "GET",
+      "path": "/?action=flush_tg",
+      "expectedStatus": 200,
+      "expectedBody": {"ok": true},
+      "bodyMatcher": "partial"
+    },
+    {
       "name": "Remind stale without key returns 403",
       "method": "GET",
       "path": "/?action=remind_stale&key=wrong",
