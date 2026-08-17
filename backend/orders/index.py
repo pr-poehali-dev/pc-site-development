@@ -151,8 +151,80 @@ def notify_status(conn, order: dict, status: str, admin_name: str, comment: str 
     _send_to_topic("\n".join(lines))
 
 
+TG_TIMEOUT = float(os.environ.get('TG_TIMEOUT', '2.5'))
+
+
+def _tg_post(payload: dict):
+    '''Одна быстрая попытка отправки. Возвращает (ok, error).'''
+    try:
+        r = requests.post(f'{API_URL}/sendMessage', json=payload, timeout=TG_TIMEOUT)
+        if r.ok:
+            return True, None
+        return False, f'{r.status_code}: {r.text[:300]}'
+    except Exception as e:
+        return False, str(e)[:300]
+
+
+def _outbox_add(payload: dict) -> int:
+    '''Кладёт сообщение в очередь, чтобы отправить позже. Не должно ломать основной поток.'''
+    try:
+        conn = db()
+        cur = conn.cursor()
+        cur.execute("INSERT INTO tg_outbox (payload) VALUES (%s) RETURNING id", (json.dumps(payload),))
+        row_id = cur.fetchone()[0]
+        conn.commit()
+        cur.close()
+        conn.close()
+        return row_id
+    except Exception as e:
+        print(f'[TG] outbox insert failed: {e}')
+        return 0
+
+
+def _outbox_done(row_id: int, error: str = None):
+    if not row_id:
+        return
+    try:
+        conn = db()
+        cur = conn.cursor()
+        if error is None:
+            cur.execute("UPDATE tg_outbox SET sent_at = NOW(), attempts = attempts + 1 WHERE id = %s", (row_id,))
+        else:
+            cur.execute("UPDATE tg_outbox SET attempts = attempts + 1, last_error = %s WHERE id = %s", (error, row_id))
+        conn.commit()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print(f'[TG] outbox update failed: {e}')
+
+
+def flush_outbox(limit: int = 5):
+    '''Досылает накопившиеся уведомления. Вызывается при любом обращении к функции.'''
+    if not BOT_TOKEN:
+        return
+    try:
+        conn = db()
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT id, payload FROM tg_outbox WHERE sent_at IS NULL AND attempts < 20 "
+            "ORDER BY id ASC LIMIT %s" % int(limit)
+        )
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print(f'[TG] outbox read failed: {e}')
+        return
+    for row_id, payload in rows:
+        data = payload if isinstance(payload, dict) else json.loads(payload)
+        ok, err = _tg_post(data)
+        _outbox_done(row_id, None if ok else err)
+        if not ok:
+            break
+
+
 def _send_to_topic(text: str, keyboard=None):
-    '''Отправляет сообщение в тему "Новый заказ с сайта" рабочего чата.'''
+    '''Отправляет сообщение в тему "Новый заказ с сайта". При сбое Telegram кладёт в очередь.'''
     if not BOT_TOKEN or not ORDERS_CHAT_ID:
         return
     payload = {'chat_id': ORDERS_CHAT_ID, 'text': text, 'parse_mode': 'HTML',
@@ -161,16 +233,14 @@ def _send_to_topic(text: str, keyboard=None):
         payload['reply_markup'] = keyboard
     if ORDERS_TOPIC_ID:
         payload['message_thread_id'] = int(ORDERS_TOPIC_ID)
-    last_err = None
-    for attempt in range(4):
-        try:
-            r = requests.post(f'{API_URL}/sendMessage', json=payload, timeout=8)
-            if r.ok:
-                return
-            last_err = f'{r.status_code}: {r.text}'
-        except Exception as e:
-            last_err = str(e)
-    print(f'[TG] sendMessage failed after retries: {last_err}')
+
+    row_id = _outbox_add(payload)
+    ok, err = _tg_post(payload)
+    if ok:
+        _outbox_done(row_id)
+    else:
+        print(f'[TG] deferred to outbox #{row_id}: {err}')
+        _outbox_done(row_id, err)
 
 
 STALE_DAYS = int(os.environ.get('ORDERS_STALE_DAYS', '3'))
@@ -230,6 +300,22 @@ def gen_order_number(conn) -> str:
     n = cur.fetchone()[0]
     cur.close()
     return str(n)
+
+
+def find_recent_same(conn, body: dict):
+    '''Ищет заявку с тем же телефоном и источником за последние 5 минут — защита от повторной отправки.'''
+    phone = (body.get('phone') or '').strip()
+    if not phone:
+        return None
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(
+        "SELECT * FROM orders WHERE customer_phone = %s AND COALESCE(source, '') = %s "
+        "AND created_at > NOW() - INTERVAL '5 minutes' ORDER BY id DESC LIMIT 1",
+        (phone, body.get('source', 'site') or '')
+    )
+    row = cur.fetchone()
+    cur.close()
+    return dict(row) if row else None
 
 
 def create_order(conn, body: dict) -> dict:
@@ -398,6 +484,21 @@ def handler(event: dict, context) -> dict:
     token = headers.get('X-Auth-Token') or headers.get('x-auth-token') or ''
     params = event.get('queryStringParameters') or {}
 
+    # GET ?action=flush_tg — досылка отложенных уведомлений (для планировщика)
+    if method == 'GET' and params.get('action') == 'flush_tg':
+        sent = 0
+        try:
+            flush_outbox(20)
+            conn = db()
+            cur = conn.cursor()
+            cur.execute("SELECT COUNT(*) FROM tg_outbox WHERE sent_at IS NULL AND attempts < 20")
+            sent = cur.fetchone()[0]
+            cur.close()
+            conn.close()
+        except Exception as e:
+            print(f'[TG] flush endpoint failed: {e}')
+        return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'ok': True, 'pending': sent})}
+
     # GET ?action=remind_stale&key=... — ежедневное напоминание о зависших заказах (для планировщика)
     if method == 'GET' and params.get('action') == 'remind_stale':
         if not REMIND_KEY or params.get('key') != REMIND_KEY:
@@ -416,9 +517,14 @@ def handler(event: dict, context) -> dict:
             admin = get_admin(conn, token)
             if not admin:
                 return {'statusCode': 401, 'headers': CORS, 'body': json.dumps({'error': 'Требуется авторизация'})}
-            return {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'orders': list_orders(conn)})}
+            result = {'statusCode': 200, 'headers': CORS, 'body': json.dumps({'orders': list_orders(conn)})}
         finally:
             conn.close()
+        try:
+            flush_outbox()
+        except Exception as e:
+            print(f'[TG] flush failed: {e}')
+        return result
 
     try:
         body = json.loads(event.get('body') or '{}')
@@ -478,10 +584,23 @@ def handler(event: dict, context) -> dict:
 
     conn = db()
     try:
+        existing = find_recent_same(conn, body)
+        if existing:
+            return {
+                'statusCode': 200,
+                'headers': CORS,
+                'body': json.dumps({'ok': True, 'order_number': existing['order_number'], 'duplicate': True})
+            }
         order = create_order(conn, body)
-        notify_new_order(conn, dict(order))
     finally:
         conn.close()
+
+    # Уведомление не должно влиять на успех заявки: при сбое Telegram оно уйдёт из очереди позже
+    try:
+        flush_outbox(2)
+        notify_new_order(None, dict(order))
+    except Exception as e:
+        print(f'[TG] notify_new_order failed: {e}')
 
     return {
         'statusCode': 200,

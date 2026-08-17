@@ -6,9 +6,7 @@ import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { socials, contactInfo } from '@/data/content';
 import { localBusinessLd, breadcrumbLd, COMPANY_LEGAL_NAME, COMPANY_INN, COMPANY_OGRNIP } from '@/data/seo';
-import func2url from '../../backend/func2url.json';
-
-const ORDERS_URL = func2url['orders'];
+import { submitOrder } from '@/lib/submitOrder';
 
 const contacts = [
   { icon: 'Phone', title: 'Телефон', value: contactInfo.phone, sub: 'Звоните с 11 до 21 по МСК времени!', href: contactInfo.phoneHref },
@@ -62,20 +60,17 @@ const Contacts = () => {
     }
     setError('');
     setSending(true);
-    try {
-      const res = await fetch(ORDERS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          phone,
-          telegram,
-          comment: message,
-          contact_method: contactMethod === 'text' ? 'text' : contactMethod === 'call' ? 'call' : undefined,
-          source: 'contacts',
-        }),
-      });
-      if (!res.ok) throw new Error('fail');
+    const ok = await submitOrder(
+      JSON.stringify({
+        name,
+        phone,
+        telegram,
+        comment: message,
+        contact_method: contactMethod === 'text' ? 'text' : contactMethod === 'call' ? 'call' : undefined,
+        source: 'contacts',
+      }),
+    );
+    if (ok) {
       setSent(true);
       setName('');
       setPhone('');
@@ -83,11 +78,10 @@ const Contacts = () => {
       setMessage('');
       setContactMethod('');
       setConsent(false);
-    } catch {
-      setError('Не удалось отправить. Попробуйте позже или позвоните нам.');
-    } finally {
-      setSending(false);
+    } else {
+      setError(`Не удалось отправить. Проверьте интернет и попробуйте снова или позвоните нам: ${contactInfo.phone}`);
     }
+    setSending(false);
   };
 
   return (

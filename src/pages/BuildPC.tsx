@@ -4,10 +4,9 @@ import Layout from '@/components/Layout';
 import SEO from '@/components/SEO';
 import Icon from '@/components/ui/icon';
 import { toast } from '@/hooks/use-toast';
-import func2url from '../../backend/func2url.json';
+import { submitOrder } from '@/lib/submitOrder';
+import { contactInfo } from '@/data/content';
 import { breadcrumbLd } from '@/data/seo';
-
-const ORDERS_URL = func2url['orders'];
 
 const purposeOptions = [
   { id: 'aaa', title: 'Игры с высоким разрешением и максимальными настройками графики (AAA)', icon: 'Gamepad2' },
@@ -132,26 +131,24 @@ const BuildPC = () => {
     }
     setSending(true);
     const details = Object.fromEntries(summary.map((row) => [row.label, row.value]));
-    try {
-      const res = await fetch(ORDERS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: cName,
-          phone: cPhone,
-          telegram: cTelegram,
-          contact_method: contactMethod || undefined,
-          source: 'build-pc',
-          details,
-        }),
-      });
-      if (!res.ok) throw new Error('fail');
+    const payload = JSON.stringify({
+      name: cName,
+      phone: cPhone,
+      telegram: cTelegram,
+      contact_method: contactMethod || undefined,
+      source: 'build-pc',
+      details,
+    });
+    const ok = await submitOrder(payload);
+    if (ok) {
       setSent(true);
-    } catch {
-      toast({ title: 'Не удалось отправить', description: 'Попробуйте позже или позвоните нам.' });
-    } finally {
-      setSending(false);
+    } else {
+      toast({
+        title: 'Не удалось отправить заявку',
+        description: `Проверьте интернет и попробуйте снова или позвоните нам: ${contactInfo.phone}`,
+      });
     }
+    setSending(false);
   };
 
   const [minB, maxB] = budgetSteps[budgetIdx];
